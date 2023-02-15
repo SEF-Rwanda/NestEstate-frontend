@@ -3,6 +3,8 @@ services:
   app:
     build:
       context: .
+    environment:
+      - WATCHPACK_POLLING=true
     volumes:
       - .:/nestestate_frontend
     ports:
