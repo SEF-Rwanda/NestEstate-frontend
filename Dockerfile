@@ -1,4 +1,4 @@
-FROM node:18.13.0
+FROM node:19-alpine3.16
 
 WORKDIR /nestestate_frontend
 
@@ -8,7 +8,7 @@ COPY package.json ./
 RUN npm install
 
 COPY . .
- 
+
 EXPOSE 3000
 
 CMD ["npm","start"]
