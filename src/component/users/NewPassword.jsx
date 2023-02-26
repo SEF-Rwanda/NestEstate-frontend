@@ -4,11 +4,12 @@ import axios from "axios";
 import { Form, Button, Container, Row, Col } from "react-bootstrap";
 import { Link } from "react-router-dom";
 
-const Login = () => {
+const ResetPassword = () => {
   const navigate = useNavigate();
-  const [email, setEmail] = useState("");
+  //   const [email, setEmail] = useState("");
   const [error, setError] = useState("");
   const [password, setPassword] = useState("");
+  const [passwordConfirm, setPasswordConfirm] = useState("");
 
   useEffect(() => {
     const timeout = setTimeout(() => {
@@ -19,12 +20,12 @@ const Login = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const loginInfo = { email, password };
-    console.log(loginInfo);
+    const resetPassword = { password, passwordConfirm };
+    console.log(resetPassword);
     try {
       const { data } = await axios.post(
-        "http://localhost:5000/api/v1/users/login",
-        loginInfo
+        "http://localhost:5000/api/v1/users/resetPassword/:token",
+        resetPassword
       );
       localStorage.setItem("token", data.token);
       navigate("/");
@@ -40,19 +41,10 @@ const Login = () => {
         <Col>
           <div style={{ marginTop: "25px" }}>
             <h5 className="login-text" style={{ textAlign: "center" }}>
-              Login Here
+              Fill the form to reset your password
             </h5>
             {error && <p style={{ color: "red" }}>{error}</p>}
             <Form onSubmit={handleSubmit} className="login-form">
-              <Form.Group className="mb-3" controlId="formBasicEmail">
-                <Form.Label>Email address</Form.Label>
-                <Form.Control
-                  onChange={(e) => setEmail(e.target.value)}
-                  type="email"
-                  placeholder="Enter email"
-                />
-              </Form.Group>
-
               <Form.Group className="mb-3" controlId="formBasicPassword">
                 <Form.Label>Password</Form.Label>
                 <Form.Control
@@ -61,12 +53,16 @@ const Login = () => {
                   placeholder="Password"
                 />
               </Form.Group>
-              <Link to="/send-email"> Forgot Password ? </Link>
-              <br />
 
-              <Form.Group className="mb-3" controlId="formBasicCheckbox">
-                <Form.Check type="checkbox" label="Check me out" />
+              <Form.Group className="mb-3" controlId="formBasicPassword">
+                <Form.Label> Confirm Password</Form.Label>
+                <Form.Control
+                  onChange={(e) => setPasswordConfirm(e.target.value)}
+                  type="password"
+                  placeholder="confirm Password"
+                />
               </Form.Group>
+
               <Button variant="primary" type="submit">
                 Submit
               </Button>
@@ -78,5 +74,4 @@ const Login = () => {
     </Container>
   );
 };
-
-export default Login;
+export default ResetPassword;
