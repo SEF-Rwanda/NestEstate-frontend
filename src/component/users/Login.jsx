@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from 'react-router-dom';
 import axios from "axios";
-import { Form, Button, Container, Row, Col } from "react-bootstrap";
+import { Form, Button } from "react-bootstrap";
 
 const Login = () => {
     const navigate = useNavigate();
@@ -33,17 +33,16 @@ const Login = () => {
     }
 
     return (
-        <Container>
-            <Row>
-                <Col>
+        <div className="container">
+            <div className="row justify-content-left">
+                <div className="col-md-4">
                     <div style={{ marginTop: '25px' }}>
-                        <h5 className="login-text" style={{ textAlign: "center" }}>Login Here</h5>
+                        <h5 className="login-text">Sign In to Real Estate Application</h5>
                         {error && <p style={{ color: 'red' }}>{error}</p>}
                         <Form onSubmit={handleSubmit} className='login-form'>
-
                             <Form.Group className="mb-3" controlId="formBasicEmail">
                                 <Form.Label>Email address</Form.Label>
-                                <Form.Control onChange={(e) => setEmail(e.target.value)} type="email" placeholder="Enter email" />
+                                <Form.Control className="input-form" onChange={(e) => setEmail(e.target.value)} type="email" placeholder="Enter email" />
 
                             </Form.Group>
 
@@ -52,19 +51,20 @@ const Login = () => {
                                 <Form.Control onChange={(e) => setPassword(e.target.value)} type="password" placeholder="Password" />
                             </Form.Group>
                             <Form.Group className="mb-3" controlId="formBasicCheckbox">
-                                <Form.Check type="checkbox" label="Check me out" />
+                                <Form.Check type="checkbox" label="Remember Me" />
                             </Form.Group>
                             <Button variant="primary" type="submit">
                                 Submit
                             </Button>
                         </Form>
                     </div>
-                </Col>
-                <Col>
-
-                </Col>
-            </Row>
-        </Container>
+                </div>
+                <div className="col-md-4">
+                    {/* Add a photo */}
+                    <img src="images/login_undraw.svg" alt="login" style={{ width: '100%', height: '100%' }} />
+                </div>
+            </div>
+        </div>
     )
 };
 

@@ -14,16 +14,26 @@ const HeaderComponent = () => {
                     <Nav className="me-auto">
                         <Nav className="mt-2">
                             <DropdownButton id="dropdown-basic-button" title="All">
+                                <Dropdown.Item>Apartments</Dropdown.Item>
                                 <Dropdown.Item>Houses</Dropdown.Item>
-                                <Dropdown.Item>Plots</Dropdown.Item>
+                                <Dropdown.Item>Lands</Dropdown.Item>
                             </DropdownButton>
                             <InputGroup className="mb-2">
                                 <Form.Control type="password" placeholder="Search for property..." />
-                                <Button variant="warning"><i className="bi bi-search"></i></Button>
+                                <Button variant="warning"><i className="bi bi-search"></i>Search</Button>
                             </InputGroup>
                         </Nav>
                     </Nav>
                     <Nav>
+                        <LinkContainer to='/about'>
+                            <Nav.Link>About</Nav.Link>
+                        </LinkContainer>
+                        <LinkContainer to='/home'>
+                            <Nav.Link>Home</Nav.Link>
+                        </LinkContainer>
+                        <LinkContainer to='/contact'>
+                            <Nav.Link>Contact</Nav.Link>
+                        </LinkContainer>
                         <LinkContainer to='/login'>
                             <Nav.Link>Login</Nav.Link>
                         </LinkContainer>
