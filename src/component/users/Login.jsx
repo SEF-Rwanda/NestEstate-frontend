@@ -1,37 +1,39 @@
 import React, { useState, useEffect } from "react";
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from "react-router-dom";
 import axios from "axios";
-import { Form, Button } from "react-bootstrap";
+
+import { Form, Button, Container, Row, Col } from "react-bootstrap";
+import { Link } from "react-router-dom";
 
 const Login = () => {
-    const navigate = useNavigate();
-    const [email, setEmail] = useState("");
-    const [error, setError] = useState("");
-    const [password, setPassword] = useState("");
+  const navigate = useNavigate();
+  const [email, setEmail] = useState("");
+  const [error, setError] = useState("");
+  const [password, setPassword] = useState("");
 
-    useEffect(() => {
-        const timeout = setTimeout(() => {
-            setError(null);
-        }, 5000);
-        return () => clearTimeout(timeout);
-    }, [error]);
+  useEffect(() => {
+    const timeout = setTimeout(() => {
+      setError(null);
+    }, 5000);
+    return () => clearTimeout(timeout);
+  }, [error]);
 
-    const handleSubmit = async (e) => {
-        e.preventDefault();
-        const loginInfo = { email, password };
-        console.log(loginInfo);
-        try {
-
-            const { data } = await axios.post("http://localhost:5000/api/v1/users/login", loginInfo);
-            localStorage.setItem("token", data.token)
-            navigate("/");
-            window.location.reload();
-        } catch (error) {
-            setError(error.response.data);
-        }
-
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    const loginInfo = { email, password };
+    console.log(loginInfo);
+    try {
+      const { data } = await axios.post(
+        "http://localhost:5000/api/v1/users/login",
+        loginInfo
+      );
+      localStorage.setItem("token", data.token);
+      navigate("/");
+      window.location.reload();
+    } catch (error) {
+      setError(error.response.data);
     }
-
+  };
     return (
         <div className="container">
             <div className="row justify-content-left">
@@ -50,6 +52,8 @@ const Login = () => {
                                 <Form.Label>Password</Form.Label>
                                 <Form.Control onChange={(e) => setPassword(e.target.value)} type="password" placeholder="Password" />
                             </Form.Group>
+                            <Link to="/send-email"> Forgot Password ? </Link>
+                            <br />
                             <Form.Group className="mb-3" controlId="formBasicCheckbox">
                                 <Form.Check type="checkbox" label="Remember Me" />
                             </Form.Group>
