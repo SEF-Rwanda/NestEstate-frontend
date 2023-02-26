@@ -1,16 +1,22 @@
 html {
-    position: relative;
-    height: 100%;
+  position: relative;
+  height: 100%;
 }
 
 body {
     margin-top: 170px;
+  margin-top: 170px;
 }
 
 footer {
-    margin-top: 170px;
-    bottom: 0;
-    width: 100%;
+  margin-top: 170px;
+  bottom: 0;
+  width: 100%;
+}
+@media only screen and (max-width: 768px) {
+  .create-image {
+    display: none;
+  }
 }
 
 /* style the form input */

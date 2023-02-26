@@ -1,6 +1,11 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { Container, Form, Button, Row, Col } from "react-bootstrap";
+import { useNavigate } from "react-router-dom";
+import axios from "axios";
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import Input from "../component/Input";
+const baseAPIUrl = "http://localhost:5000/api/v1";
 
 function SignupForm() {
   const [fname, setFname] = useState("");
@@ -11,14 +16,27 @@ function SignupForm() {
   const [confirmPassword, setConfirmPassword] = useState("");
   const [termsAccepted, setTermsAccepted] = useState(false);
 
-  const handleSubmit = (event) => {
-    event.preventDefault();
-    // handle form submission here
-  };
+  const navigate = useNavigate();
 
-  useEffect(() => {
-    console.log(fname);
-  });
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+    const newUser = {
+      firstName: fname,
+      lastName: lname,
+      email: email,
+      password: password,
+      phone: phone,
+      passwordConfirm: confirmPassword,
+    };
+    try {
+      const { data } = await axios.post(`${baseAPIUrl}/users/signup`, newUser);
+      const token = data.data.token;
+      localStorage.setItem("verificationToken", token);
+      navigate("/verify-account");
+    } catch (error) {
+      toast.error(error.response.data.error);
+    }
+  };
 
   return (
     <Container>
@@ -68,7 +86,7 @@ function SignupForm() {
             <Input
               controlId="confirmPassword"
               labelText="Confirm Password"
-              type="confirmPassword"
+              type="password"
               name="confirmPassword"
               value={confirmPassword}
               onChange={setConfirmPassword}
@@ -92,8 +110,8 @@ function SignupForm() {
             </div>
           </Form>
         </Col>
-        <Col md={6}>
-          <img src="logo512.png" alt="description of " />
+        <Col md={6} className="create-image" style={{ marginTop: "60px" }}>
+          <img src="images/login_undraw.svg" alt="description of " style={{}} />
         </Col>
       </Row>
     </Container>
