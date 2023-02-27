@@ -18,16 +18,16 @@ const ResetPassword = () => {
     return () => clearTimeout(timeout);
   }, [error]);
 
+  const token = localStorage.getItem("resetTOken");
   const handleSubmit = async (e) => {
     e.preventDefault();
     const resetPassword = { password, passwordConfirm };
     console.log(resetPassword);
     try {
-      const { data } = await axios.post(
-        "http://localhost:5000/api/v1/users/resetPassword/:token",
+      const { data } = await axios.patch(
+        `http://localhost:5000/api/v1/users/resetPassword/${token}`,
         resetPassword
       );
-      localStorage.setItem("token", data.token);
       navigate("/");
       window.location.reload();
     } catch (error) {

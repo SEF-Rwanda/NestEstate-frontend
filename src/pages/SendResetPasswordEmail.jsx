@@ -20,14 +20,16 @@ const SendingEmail = () => {
     const sendEmail = { email };
     console.log(sendEmail);
     try {
-      const data = await axios.post(
+      const { data } = await axios.post(
         "http://localhost:5000/api/v1/users/forgotPassword",
         sendEmail
       );
       console.log("Hello world");
-      //   localStorage.setItem("token", data.token);
-      navigate("/");
-      window.location.reload();
+      console.log(data);
+      console.log(data.resetToken);
+      localStorage.setItem("resetToken", data.resetToken);
+      // navigate("/");
+      // window.location.reload();
     } catch (error) {
       console.log(error.message);
       setError(error.response.data);
