@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { Form, Button, Container, Row, Col } from "react-bootstrap";
-import { Link } from "react-router-dom";
+import { useParams } from "react-router-dom";
 
 const ResetPassword = () => {
   const navigate = useNavigate();
@@ -10,7 +10,7 @@ const ResetPassword = () => {
   const [error, setError] = useState("");
   const [password, setPassword] = useState("");
   const [passwordConfirm, setPasswordConfirm] = useState("");
-
+  const { token } = useParams();
   useEffect(() => {
     const timeout = setTimeout(() => {
       setError(null);
@@ -18,7 +18,8 @@ const ResetPassword = () => {
     return () => clearTimeout(timeout);
   }, [error]);
 
-  const token = localStorage.getItem("resetTOken");
+  console.log(token);
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     const resetPassword = { password, passwordConfirm };
@@ -28,10 +29,14 @@ const ResetPassword = () => {
         `http://localhost:5000/api/v1/users/resetPassword/${token}`,
         resetPassword
       );
+      console.log(data);
+
       navigate("/");
       window.location.reload();
     } catch (error) {
-      setError(error.response.data);
+      console.log(error.response);
+
+      // setError(error.response.data);
     }
   };
 
