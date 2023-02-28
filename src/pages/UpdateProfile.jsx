@@ -3,15 +3,20 @@ import { useState, useEffect} from "react";
 import axios from "axios";
 // import { useNavigate } from 'react-router-dom';
 import jwt_decode from "jwt-decode";
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 
 
 
 
-const UserProfile = () => {
+const UpdateUserProfile = () => {
+    // const navigate = useNavigate();
     const token = localStorage.getItem("token");
-    const user = jwt_decode(token);
-    console.log(user)
+    let user = null;
+    if (token) {
+      user = jwt_decode(token);
+    }
 
     const [firstName, setFirstName] = useState("");
     const [lastName, setLastName] = useState("");
@@ -30,18 +35,17 @@ const UserProfile = () => {
       e.preventDefault();
       
       const updateProfileInfo = { firstName, lastName };
-      console.log(updateProfileInfo);
-      const config = {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      };
+
       try {
           
 
-          // const { data } = await axios.put("http://localhost:5000/api/v1/users/profile", updateProfileInfo, config);
+         
           const { data } = await axios.put(`http://localhost:5000/api/v1/users/profile/${user.id}`, updateProfileInfo);
-          localStorage.setItem("token", data.token)
+          // toast.success("User profile updated successfully.");
+          console.log(data)
+          window.location.href = '/profile'
+          // localStorage.setItem("token", data.token);
+          // navigate("/profile");
       } catch (error) {
         // setError(error.response.data);
       }
@@ -49,12 +53,13 @@ const UserProfile = () => {
   }
   return (
     <Container>
+
       <Row className="mt-5 justify-content-md-center">
         <Col md={6}>
-          <h1>Change your profile</h1>
+          {/* <h4>Edit profile</h4> */}
           <Form noValidate  onSubmit={handleSubmit}>
             <Form.Group className="mb-3" controlId="validationCustom01">
-              <Form.Label>Your name</Form.Label>np
+              <Form.Label style={{color: '#C1BDBD', fontFamily:'Poppins', fonSize:'20em' }} >First name</Form.Label>
               <Form.Control
                 required
                 type="text"
@@ -67,7 +72,7 @@ const UserProfile = () => {
               </Form.Control.Feedback>
             </Form.Group>
             <Form.Group className="mb-3" controlId="formBasicLastName">
-              <Form.Label>Your last name</Form.Label>
+              <Form.Label>Last name</Form.Label>
               <Form.Control
                 required
                 type="text"
@@ -90,4 +95,4 @@ const UserProfile = () => {
   );
 };
 
-export default UserProfile;
+export default UpdateUserProfile;
