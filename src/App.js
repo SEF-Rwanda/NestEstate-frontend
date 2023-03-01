@@ -7,7 +7,8 @@ import Login from "./pages/Login";
 import Home from "./pages/Home";
 import SendingEmail from "./pages/SendResetPasswordEmail";
 import ResetPassword from "./pages/NewPassword";
-import Profile from "./pages/Profile";
+import UpdateProfile from "./pages/UpdateProfile";
+import MyProfile from "./pages/MyProfile";
 import Register from "./pages/Register";
 import HeaderComponent from "./component/HeaderComponent";
 import { store } from "./state/store";
@@ -23,7 +24,8 @@ function App() {
         <Route path="/login" element={<Login />} />
         <Route path="/send-email" element={<SendingEmail />} />
         <Route path="/reset-password/:token" element={<ResetPassword />} />
-        <Route path="/user" element={<Profile />} />
+        <Route path="/profile" element={<MyProfile />} />
+        <Route path="/profile/update" element={<UpdateProfile />} />
         <Route path="/register" element={<Register />} />
         <Route path="/verify-account" element={<VerifyAccount />} />
         <Route path="/*" element={<h1>404 Not Found</h1>} />

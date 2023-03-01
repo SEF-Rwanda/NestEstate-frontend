@@ -70,13 +70,13 @@ const HeaderComponent = () => {
               <Nav.Link>Register</Nav.Link>
             </LinkContainer>
 
-            {user?.id?.length ? (
+            {user && user?.id?.length ? (
               <NavDropdown
                 id="nav-dropdown-dark-example"
                 title={user.firstName}
                 menuVariant="dark"
               >
-                <NavDropdown.Item as={Link} to="/user">
+                <NavDropdown.Item as={Link} to="/profile">
                   Profile
                 </NavDropdown.Item>
                 <NavDropdown.Item as={Link} onClick={handleOnClickLogout}>
