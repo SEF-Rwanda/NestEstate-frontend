@@ -28,9 +28,15 @@ const HeaderComponent = () => {
   };
 
   return (
-    <Navbar collapseOnSelect expand="lg" bg="dark" variant="dark">
+    <Navbar
+      collapseOnSelect
+      expand="lg"
+      bg="dark"
+      variant="dark"
+      style={{ height: "8vh" }}
+    >
       <Container>
-        <LinkContainer to="/home">
+        <LinkContainer to="/">
           <Navbar.Brand>Real Estate</Navbar.Brand>
         </LinkContainer>
         <Navbar.Toggle aria-controls="responsive-navbar-nav" />
@@ -57,7 +63,7 @@ const HeaderComponent = () => {
             <LinkContainer to="/about">
               <Nav.Link>About</Nav.Link>
             </LinkContainer>
-            <LinkContainer to="/home">
+            <LinkContainer to="/">
               <Nav.Link>Home</Nav.Link>
             </LinkContainer>
             <LinkContainer to="/contact">

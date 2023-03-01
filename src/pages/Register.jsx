@@ -1,11 +1,13 @@
-import React, { useState } from "react";
-import { Container, Form, Button, Row, Col } from "react-bootstrap";
+import React, { useState, useEffect } from "react";
+import { Container, Form, Button, Row, Col, Spinner } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
-import axios from "axios";
 import { toast } from "react-toastify";
+import { Link } from "react-router-dom";
+import { useDispatch } from "react-redux";
 import "react-toastify/dist/ReactToastify.css";
 import Input from "../component/Input";
-const baseAPIUrl = "http://localhost:5000/api/v1";
+import { signup } from "../state/user/userSlice";
+import { store } from "../state/store";
 
 function SignupForm() {
   const [fname, setFname] = useState("");
@@ -15,8 +17,10 @@ function SignupForm() {
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [termsAccepted, setTermsAccepted] = useState(false);
+  const [isFormLoading, setIsFormLoading] = useState(false);
 
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -28,21 +32,39 @@ function SignupForm() {
       phone: phone,
       passwordConfirm: confirmPassword,
     };
-    try {
-      const { data } = await axios.post(`${baseAPIUrl}/users/signup`, newUser);
-      const token = data.data.token;
-      localStorage.setItem("verificationToken", token);
-      navigate("/verify-account");
-    } catch (error) {
-      toast.error(error.response.data.error);
-    }
+    dispatch(signup(newUser));
   };
+  useEffect(() => {
+    const unsubscribe = store.subscribe(() => {
+      const newIsLoading = store.getState().user.loading;
+      const isSuccess = store.getState().user.success;
+      const error = store.getState().user.error;
+      setIsFormLoading(newIsLoading);
+
+      if (isSuccess) {
+        navigate("/verify-account");
+      } else if (error) {
+        toast.error(error);
+      }
+    });
+    return () => unsubscribe();
+  });
 
   return (
-    <Container>
+    <Container
+      style={{
+        height: "calc(100vh - 8vh)",
+        width: "100vw",
+      }}
+      className="d-flex justify-content-center align-items-center"
+    >
       <Row>
-        <Col md={6} className="d-flex justify-content-center">
+        <Col
+          md={6}
+          className="d-flex justify-content-center align-items-center"
+        >
           <Form onSubmit={handleSubmit}>
+            <h3 className="text-secondary mb-5">Create user account</h3>
             <Input
               controlId="fname"
               labelText="First Name"
@@ -95,22 +117,48 @@ function SignupForm() {
             <Form.Group controlId="termsAccepted">
               <Form.Check
                 type="checkbox"
-                label="I accept the terms and conditions"
+                label="By signing up, you agree to the terms and conditions for this application."
                 checked={termsAccepted}
                 onChange={(event) => setTermsAccepted(event.target.checked)}
               />
             </Form.Group>
-
-            <Button variant="primary" type="submit" disabled={!termsAccepted}>
-              Submit
-            </Button>
-            <div>
+            <Container className="d-flex justify-content-center align-items-center">
+              <Button
+                variant="primary"
+                type="submit"
+                disabled={!termsAccepted}
+                style={{ background: "#6736CF" }}
+              >
+                {!isFormLoading ? (
+                  "Submit"
+                ) : (
+                  <Spinner
+                    as="span"
+                    animation="border"
+                    size="sm"
+                    role="status"
+                    aria-hidden="true"
+                    style={{ marginRight: "5px" }}
+                  />
+                )}
+              </Button>
+            </Container>
+            <Container className="d-flex justify-content-center align-items-center">
               {" "}
-              <span>Already have an account? Click here</span>
-            </div>
+              <span>
+                Already have an account? Click
+                <Link
+                  to="/login"
+                  style={{ textDecoration: "none", color: "#6736CF" }}
+                >
+                  {" "}
+                  here
+                </Link>
+              </span>
+            </Container>
           </Form>
         </Col>
-        <Col md={6} className="create-image" style={{ marginTop: "60px" }}>
+        <Col md={6} className="create-image">
           <img src="images/login_undraw.svg" alt="description of " style={{}} />
         </Col>
       </Row>

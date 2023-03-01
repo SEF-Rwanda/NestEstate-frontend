@@ -1,42 +1,45 @@
-import React, { useState } from "react";
-import { Form, Button } from "react-bootstrap";
+import React, { useState, useEffect } from "react";
+import { Form, Button, Spinner } from "react-bootstrap";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
 import "react-toastify/dist/ReactToastify.css";
-import axios from "axios";
-const baseAPIUrl = "http://localhost:5000/api/v1";
+import { useDispatch } from "react-redux";
+import { verifyAccount } from "../state/user/userSlice";
+import { store } from "../state/store";
 
 const VerifyOTP = () => {
   const [otp, setOTP] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
+
   const navigate = useNavigate();
+  const dispatch = useDispatch();
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (otp === "") {
       toast.error("Please enter the OTP to continue.");
     } else {
-      try {
-        const token = localStorage.getItem("verificationToken");
-
-        const config = {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        };
-
-        await axios.post(
-          `${baseAPIUrl}/users/verifyEmail`,
-          {
-            otp: otp,
-          },
-          config
-        );
-
-        navigate("/");
-      } catch (err) {
-        toast.error(err.response.data.error);
-      }
+      dispatch(
+        verifyAccount({
+          otp: otp,
+        })
+      );
     }
   };
+  useEffect(() => {
+    const unsubscribe = store.subscribe(() => {
+      const newIsLoading = store.getState().user.isVerifyLoading;
+      const isSuccess = store.getState().user.isVerifySuccess;
+      const error = store.getState().user.verifyError;
+      setIsLoading(newIsLoading);
+      if (isSuccess) {
+        navigate("/");
+      } else if (error) {
+        toast.error(error);
+      }
+    });
+    return () => unsubscribe();
+  });
 
   return (
     <div
@@ -44,11 +47,10 @@ const VerifyOTP = () => {
       style={{ marginTop: "45px" }}
     >
       <div className="card p-3">
-        <h3 className="text-center">Verify OTP</h3>
+        <h4 className=" text-secondary text-center">Verify OTP</h4>
 
         <Form onSubmit={handleSubmit}>
           <Form.Group controlId="formOTP">
-            <Form.Label>OTP</Form.Label>
             <Form.Control
               type="text"
               placeholder="Enter OTP"
@@ -59,10 +61,21 @@ const VerifyOTP = () => {
           <Button
             variant="primary"
             type="submit"
-            style={{ marginTop: "15px" }}
+            style={{ marginTop: "15px", background: "#6736CF" }}
             block
           >
-            Verify OTP
+            {!isLoading ? (
+              "Verify OTP"
+            ) : (
+              <Spinner
+                as="span"
+                animation="border"
+                size="sm"
+                role="status"
+                aria-hidden="true"
+                style={{ marginRight: "5px" }}
+              />
+            )}
           </Button>
         </Form>
       </div>
