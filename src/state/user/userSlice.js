@@ -1,5 +1,7 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
+import jwt_decode from "jwt-decode";
+
 const baseAPIUrl = "http://localhost:5000/api/v1";
 
 export const signup = createAsyncThunk("user/signup", async (newUserData) => {
@@ -29,6 +31,24 @@ export const verifyAccount = createAsyncThunk(
   }
 );
 
+const token = localStorage.getItem("token");
+let usr = null;
+if (token) {
+  usr = jwt_decode(token);
+}
+export const updateUserProfile = createAsyncThunk(
+  'user/updateUserProfile',
+  
+  async ({firstName, lastName}, thuknAPI) => {
+    console.log("slice", firstName, lastName);
+    try{
+      const response = await axios.put(`${baseAPIUrl}/users/profile/${usr.id}`, {firstName, lastName});
+      return response.data; 
+    }catch(err){
+      return thuknAPI.rejectWithValue(err.response.data)
+    }
+  })
+
 export const userSlice = createSlice({
   name: "user",
   initialState: {
@@ -38,6 +58,7 @@ export const userSlice = createSlice({
     isVerifyLoading: false,
     isVerifySuccess: false,
     verifyError: null,
+    userUpdated: {}
   },
   reducers: {},
   extraReducers: (builder) => {
@@ -71,12 +92,32 @@ export const userSlice = createSlice({
         state.isVerifyLoading = false;
         state.isVerifySuccess = false;
         state.verifyError = action.error.message;
-      });
+      })
+      .addCase(updateUserProfile.pending, (state) => {
+        state.loading = true;
+        state.success = false;
+        state.error = null;
+        state.userUpdated={};
+      })
+      .addCase(updateUserProfile.fulfilled, (state,action) => {
+        state.loading = false;
+        state.success = true;
+        state.error = null;
+        state.userUpdated=action.payload;
+      })
+      .addCase(updateUserProfile.rejected, (state,action) => {
+        state.loading = false;
+        state.success = false;
+        state.userUpdated={};
+        state.error = action.error.message;
+      })
+     
   },
 });
 
 export const selectSuccess = (state) => state.user.success;
 export const selectLoading = (state) => state.user.loading;
+export const selectUpdated = (state) => state.user.userUpdated;
 export const selectError = (state) => state.user.error;
 
 export default userSlice.reducer;
