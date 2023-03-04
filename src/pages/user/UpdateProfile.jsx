@@ -1,50 +1,56 @@
-import { Container, Row, Col, Form, Button} from "react-bootstrap";
-import { useState, useEffect} from "react";
-import http from "../utils/http";
+import { Container, Row, Col, Form, Button } from "react-bootstrap";
+import { useState, useEffect } from "react";
+import http from "../../utils/http";
 import { useDispatch } from "react-redux";
 import jwt_decode from "jwt-decode";
 import "react-toastify/dist/ReactToastify.css";
-import { updateUserProfile } from "../state/user/userSlice";
+import { updateUserProfile } from "../../state/user/userSlice";
 
 const UpdateUserProfile = () => {
-    const dispatch = useDispatch();
-    // const navigate = useNavigate();
-    const token = localStorage.getItem("token");
-    let user = null;
-    if (token) {
-      user = jwt_decode(token);
-    }
-    const [userdata, setUserData] = useState({})
-    const getProfile = async (id) => {
-    const response = await http.get(`/users/profile/${id}`)
+  const dispatch = useDispatch();
+  // const navigate = useNavigate();
+  const token = localStorage.getItem("token");
+  let user = null;
+  if (token) {
+    user = jwt_decode(token);
+  }
+  const [userdata, setUserData] = useState({});
+  const getProfile = async (id) => {
+    const response = await http.get(`/users/profile/${id}`);
     // console.log(response.data.data);
     setUserData(response.data.data);
     return response;
-    }
-    
-    useEffect(() => {
-      getProfile(user.id);
+  };
 
+  useEffect(() => {
+    getProfile(user.id);
   }, [user.id]);
 
-    const [firstName, setFirstName] = useState("");
-    const [lastName, setLastName] = useState("");
-    const handleSubmit = async (e) => {
-      e.preventDefault();
-      dispatch(updateUserProfile({ firstName, lastName }))
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    dispatch(updateUserProfile({ firstName, lastName }))
       .unwrap()
       .then((response) => {
-        window.location.href="/profile";
-      })
-    }
+        window.location.href = "/profile";
+      });
+  };
   return (
     <Container>
-
       <Row className="mt-5 justify-content-md-center">
         <Col md={6}>
-          <Form noValidate  onSubmit={handleSubmit}>
+          <Form noValidate onSubmit={handleSubmit}>
             <Form.Group className="mb-3" controlId="validationCustom01">
-              <Form.Label style={{color: '#C1BDBD', fontFamily:'Poppins', fonSize:'20em' }} >First name</Form.Label>
+              <Form.Label
+                style={{
+                  color: "#C1BDBD",
+                  fontFamily: "Poppins",
+                  fonSize: "20em",
+                }}
+              >
+                First name
+              </Form.Label>
               <Form.Control
                 required
                 type="text"
