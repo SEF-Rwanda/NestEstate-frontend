@@ -5,9 +5,9 @@ import { toast } from "react-toastify";
 import { Link } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import "react-toastify/dist/ReactToastify.css";
-import Input from "../component/Input";
-import { signup } from "../state/user/userSlice";
-import { store } from "../state/store";
+import Input from "../../component/Input";
+import { signup } from "../../state/user/userSlice";
+import { store } from "../../state/store";
 
 function SignupForm() {
   const [fname, setFname] = useState("");
@@ -54,7 +54,8 @@ function SignupForm() {
     <Container
       style={{
         height: "calc(100vh - 8vh)",
-        width: "100vw",
+        // // width: "100vw",
+        // backgroundColor: "#F5F5F5"
       }}
       className="d-flex justify-content-center align-items-center"
     >
@@ -63,13 +64,25 @@ function SignupForm() {
           md={6}
           className="d-flex justify-content-center align-items-center"
         >
-          <Form onSubmit={handleSubmit}>
-            <h3 className="text-secondary mb-5">Create user account</h3>
+          <Form onSubmit={handleSubmit} className="mobile-phone_input">
+            <h3
+              className="mb-3"
+              style={{
+                fontFamily: "Poppins",
+                fontStyle: "normal",
+                fontWeight: "700",
+                fontSize: "30px",
+                color: "#000000",
+              }}
+            >
+              Create user account
+            </h3>
             <Input
               controlId="fname"
               labelText="First Name"
               type="text"
               name="fname"
+              placeholder="Enter your first Name"
               value={fname}
               onChange={setFname}
             />
@@ -78,6 +91,7 @@ function SignupForm() {
               labelText="Last Name"
               type="text"
               name="fname"
+              placeholder="Enter your last name"
               value={lname}
               onChange={setLname}
             />
@@ -86,6 +100,7 @@ function SignupForm() {
               labelText="Email"
               type="email"
               name="email"
+              placeholder="Enter your email"
               value={email}
               onChange={setEmail}
             />
@@ -94,6 +109,7 @@ function SignupForm() {
               labelText="Phone"
               type="phone"
               name="phone"
+              placeholder="Enter your phone number"
               value={phone}
               onChange={setPhone}
             />
@@ -102,6 +118,7 @@ function SignupForm() {
               labelText="Password"
               type="password"
               name="password"
+              placeholder="Enter your password"
               value={password}
               onChange={setPassword}
             />
@@ -110,24 +127,41 @@ function SignupForm() {
               labelText="Confirm Password"
               type="password"
               name="confirmPassword"
+              placeholder="Confirm your password"
               value={confirmPassword}
               onChange={setConfirmPassword}
             />
 
-            <Form.Group controlId="termsAccepted">
+            <Form.Group controlId="termsAccepted" className="terms">
               <Form.Check
                 type="checkbox"
                 label="By signing up, you agree to the terms and conditions for this application."
                 checked={termsAccepted}
+                style={{
+                  fontFamily: "Poppins",
+                  fontStyle: "normal",
+                  fontWeight: "700",
+                  fontSize: "12px",
+                  color: "#000000",
+                }}
                 onChange={(event) => setTermsAccepted(event.target.checked)}
               />
             </Form.Group>
-            <Container className="d-flex justify-content-center align-items-center">
+            <Container
+              className="justify-content-center align-items-center"
+              style={{ width: "188px" }}
+            >
               <Button
                 variant="primary"
                 type="submit"
                 disabled={!termsAccepted}
-                style={{ background: "#6736CF" }}
+                style={{
+                  background: "#6736CF",
+                  borderRadius: "25px",
+                  marginTop: "10px",
+                  marginBottom: "10px",
+                  width: "188px",
+                }}
               >
                 {!isFormLoading ? (
                   "Submit"
@@ -145,16 +179,17 @@ function SignupForm() {
             </Container>
             <Container className="d-flex justify-content-center align-items-center">
               {" "}
-              <span>
-                Already have an account? Click
-                <Link
-                  to="/login"
-                  style={{ textDecoration: "none", color: "#6736CF" }}
-                >
-                  {" "}
-                  here
-                </Link>
-              </span>
+              <span>Already have an account? Click </span>
+              <Link
+                to="/login"
+                style={{
+                  textDecoration: "none",
+                  color: "#6736CF",
+                  marginLeft: "3px",
+                }}
+              >
+                {` here`}
+              </Link>
             </Container>
           </Form>
         </Col>

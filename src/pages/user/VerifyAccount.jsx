@@ -4,8 +4,8 @@ import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
 import "react-toastify/dist/ReactToastify.css";
 import { useDispatch } from "react-redux";
-import { verifyAccount } from "../state/user/userSlice";
-import { store } from "../state/store";
+import { verifyAccount } from "../../state/user/userSlice";
+import { store } from "../../state/store";
 
 const VerifyOTP = () => {
   const [otp, setOTP] = useState("");
