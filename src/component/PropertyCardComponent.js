@@ -1,4 +1,4 @@
-import { Col, Row, Card, Container } from "react-bootstrap"
+import { Col, Row, Card, Container, Button } from "react-bootstrap"
 const CategoryCardComponent = ({ category, id }) => {
     const propertiesData = [
         {
@@ -17,6 +17,7 @@ const CategoryCardComponent = ({ category, id }) => {
             bedrooms: 4,
             bathrooms: 2,
             price: 200000,
+            type: "Buy"
         },
         {
             id: 3,
@@ -25,6 +26,7 @@ const CategoryCardComponent = ({ category, id }) => {
             bedrooms: 6,
             bathrooms: 3,
             price: 150000,
+            type: "Rent"
         },
         {
             id: 3,
@@ -33,8 +35,16 @@ const CategoryCardComponent = ({ category, id }) => {
             bedrooms: 10,
             bathrooms: 4,
             price: 300000,
+            type: "Rent"
         },
     ];
+
+    const whyChooseUs = [
+        { icon: 'bi bi-send', title: 'Service', description: 'We deliver high quality and exceptional service to our clients.' },
+        { icon: 'bi bi-eject', title: 'Experience', description: 'Over 10 years in providing professional real estate solutions.' },
+        { icon: 'bi bi-house-gear', title: 'Our Staff', description: 'Highly motivated and dedicated to meet your real estate needs.' },
+
+    ]
 
     return (
         <Container>
@@ -47,17 +57,37 @@ const CategoryCardComponent = ({ category, id }) => {
                             <Card>
                                 <Card.Img variant="top" src={property.imageUrl} style={{ height: "200px", objectFit: "cover" }} />
                                 <Card.Body>
-                                    {/* <Card.Title>{property.title}</Card.Title> */}
                                     <Card.Text>{property.description}</Card.Text>
                                     <p> {property.bedrooms} Bedrooms & {property.bathrooms} bathrooms</p>
-                                    <p style={{fontWeight: "bold", fontSize: "18px"}}>$ {property.price}</p>
+                                    <Card.Text className="d-flex justify-content-between align-items-center">
+                                        <span style={{ fontWeight: "bold", fontSize: "18px" }}>${property.price}</span>
+                                        <Button style={{ backgroundColor: "#6736CF", border: "none" }}>{property.type} Now</Button>
+                                    </Card.Text>
                                 </Card.Body>
+
                             </Card>
                         </Col>
                     );
                 })}
             </Row>
-        </Container>
+            <h4 style={{ marginTop: "10px", marginBottom: "10px", textAlign: "center" }}>Why choosing us</h4>
+            <Row>
+                {whyChooseUs.map((item) => {
+                    return (
+                        <Col md={4} sm={6}>
+                            <Card className="text-center">
+                                <Card.Body>
+                                    <i className={item.icon} style={{ fontSize: "30px" }}></i>
+                                    <Card.Title style={{ fontSize: "30px" }}>{item.title}</Card.Title>
+                                    <Card.Text>{item.description}</Card.Text>
+                                </Card.Body>
+                            </Card>
+                        </Col>
+                    )
+                })}
+
+            </Row>
+        </Container >
     );
 
 }
