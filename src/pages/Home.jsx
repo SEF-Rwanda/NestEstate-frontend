@@ -2,7 +2,7 @@ import React from "react";
 import FooterComponent from "../component/FooterComponent";
 
 import PropertyCarouselComponent from "../component/PropertyCarouselComponent";
-import HouseCardComponent from "../component/HouseCardComponent";
+import HouseCardComponent from "../component/PropertyCardComponent";
 
 const Home = () => {
   return (
