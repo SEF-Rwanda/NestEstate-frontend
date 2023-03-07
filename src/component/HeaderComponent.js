@@ -76,7 +76,7 @@ const HeaderComponent = () => {
               <Nav.Link>Register</Nav.Link>
             </LinkContainer>
 
-            {user && user?.id?.length ? (
+            {user && user?._id?.length ? (
               <NavDropdown
                 id="nav-dropdown-dark-example"
                 title={user.firstName}
