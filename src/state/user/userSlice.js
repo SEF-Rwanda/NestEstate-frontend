@@ -42,7 +42,7 @@ export const updateUserProfile = createAsyncThunk(
   async ({firstName, lastName}, thuknAPI) => {
     console.log("slice", firstName, lastName);
     try{
-      const response = await axios.put(`${baseAPIUrl}/users/profile/${usr.id}`, {firstName, lastName});
+      const response = await axios.put(`${baseAPIUrl}/users/profile/${usr._id}`, {firstName, lastName});
       return response.data; 
     }catch(err){
       return thuknAPI.rejectWithValue(err.response.data)

@@ -23,8 +23,8 @@ const MyProfile = () => {
     return response;
   };
   useEffect(() => {
-    getProfile(user.id);
-  }, [user.id]);
+    getProfile(user._id);
+  }, [user._id]);
 
   const [show, setShow] = useState(false);
   const handleClose = () => setShow(false);

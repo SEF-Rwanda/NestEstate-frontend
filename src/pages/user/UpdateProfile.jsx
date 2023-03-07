@@ -14,6 +14,7 @@ const UpdateUserProfile = () => {
   if (token) {
     user = jwt_decode(token);
   }
+  // console.log(user.id)
   const [userdata, setUserData] = useState({});
   const getProfile = async (id) => {
     const response = await http.get(`/users/profile/${id}`);
@@ -21,10 +22,10 @@ const UpdateUserProfile = () => {
     setUserData(response.data.data);
     return response;
   };
-
+  console.log(user)
   useEffect(() => {
-    getProfile(user.id);
-  }, [user.id]);
+    getProfile(user._id);
+  }, [user._id]);
 
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
