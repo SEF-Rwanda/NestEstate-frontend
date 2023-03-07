@@ -44,7 +44,7 @@ const Login = () => {
             <Form onSubmit={handleSubmit} className="login-form">
               <Input
                 controlId="email"
-                labelText="First Name"
+                labelText="Email"
                 type="email"
                 name="email"
                 placeholder="Enter your Email"
