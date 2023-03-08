@@ -7,69 +7,83 @@ import "react-toastify/dist/ReactToastify.css";
 import { updateProperty } from "../../state/property/propertySlice";
 
 const UpdateProperty = () => {
-  const dispatch = useDispatch();
-  // const navigate = useNavigate();
-//   const token = localStorage.getItem("token");
-//   let user = null;
-//   if (token) {
-//     user = jwt_decode(token);
-//   }
-  const [propertyData, setPropertyData] = useState({});
-  const getProperty = async (id) => {
-    const response = await http.get(`/properties/${id}`);
-    setPropertyData(response.data.data);
-    return response;
-  };
-  useEffect(() => {
-    getProperty("6407395882aa7065a6d20a00");//property._id
-  }, ["6407395882aa7065a6d20a00"]);
 
-  const [title, setTitle] = useState("");
-  const [category, setCategory] = useState("");
-  const [section, setSection] = useState("");
-  const [price, setPrice] = useState("");
-  const [size, setSize] = useState("");
-  const [negociable, setNegociable] = useState("");
-  const [upi, setUpi] = useState("");
-  const [description, setDescription] = useState("");
-  const [mainImage, setMainImage] = useState("");
-  const [otherImages, setOtherImages] = useState("");
-  const [bedrooms, setBedrooms] = useState("");
-  const [bathrooms, setBathrooms] = useState("");
-  const [masterPlanUse, setMasterPlanUse] = useState("");
-  const [masterPlanLevel, setMasterPlanLevel] = useState("");
-  
-  const [streetAddress, setStreetAddress] = useState("");
-  const [geoLocation, setGeoLocation] = useState("");
-  const [tank, setTank] = useState("");
-  const [furnished, setFurnished] = useState("");
-  const [internet, setInternet] = useState("");
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    dispatch(updateProperty({
-         title,
-         category,
-         section,
-         price,
-         size,
-         upi,
-         description,
-         mainImage,
-         otherImages,
-         bedrooms,
-         bathrooms,
-         masterPlanUse,
-         streetAddress,
-         geoLocation,
-         tank,
-         furnished,
-         internet
-    }))
-      .unwrap()
-      .then((response) => {
-        // window.location.href = "/my-properties";
-      });
-  };
+    const dispatch = useDispatch();
+    const [title, setTitle] = useState("");
+    const [category, setCategory] = useState("");
+    const [section, setSection] = useState("");
+    const [price, setPrice] = useState("");
+    const [size, setSize] = useState("");
+    const [negociable, setNegociable] = useState("");
+    const [upi, setUpi] = useState("");
+    const [description, setDescription] = useState("");
+    const [mainImage, setMainImage] = useState("");
+    const [otherImages, setOtherImages] = useState("");
+    const [bedrooms, setBedrooms] = useState("");
+    const [bathrooms, setBathrooms] = useState("");
+    const [masterPlanUse, setMasterPlanUse] = useState("");
+    const [masterPlanLevel, setMasterPlanLevel] = useState("");
+    const [streetAddress, setStreetAddress] = useState("");
+    const [geoLocation, setGeoLocation] = useState("");
+    const [tank, setTank] = useState("");
+    const [furnished, setFurnished] = useState("");
+    const [internet, setInternet] = useState("");
+    const [parking, setParking] = useState("");
+    const [propertyData, setPropertyData] = useState({});
+    const getProperty = async (id) => {
+        const response = await http.get(`/properties/${id}`);
+        setPropertyData(response.data.data);
+        return response;
+    };
+    useEffect(() => {
+        // 6408dc57cdb31e2a00c18d24 6407395882aa7065a6d20a00
+        getProperty("6408dc57cdb31e2a00c18d24");//property._id
+        setCategory(propertyData.category)
+    }, ["6408dc57cdb31e2a00c18d24"]);
+
+    
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        dispatch(updateProperty({
+            title,
+            category,
+            section,
+            price,
+            size,
+            upi,
+            description,
+            mainImage,
+            otherImages,
+            bedrooms,
+            bathrooms,
+            masterPlanUse,
+            streetAddress,
+            geoLocation,
+            tank,
+            furnished,
+            internet,
+            parking
+        }))
+        .unwrap()
+        .then((response) => {
+            // window.location.href = "/my-properties";
+        });
+    };
+    const handleNegotiable = (event) => {
+        setNegociable(event.target.checked);
+    };
+    const handleTank = (event) => {
+        setTank(event.target.checked);
+    };
+    const handleFurnished = (event) => {
+        setFurnished(event.target.checked);
+    };
+    const handleInternet = (event) => {
+        setInternet(event.target.checked);
+    };
+    const handleParking = (event) => {
+        setParking(event.target.checked);
+    };
   return (
     <Container>
         
@@ -125,8 +139,9 @@ const UpdateProperty = () => {
                         type="checkbox"
                         id="default-checkbox"
                         label="Negociable"
-                        defaultValue={propertyData.negociable}
-                        onChange={(e) => setNegociable(e.target.value)}
+                        // defaultValue={propertyData.negociable}
+                        checked={negociable}
+                        onChange={handleNegotiable}
                     />
                 </Col>
             </Form.Group>
@@ -191,7 +206,8 @@ const UpdateProperty = () => {
                 <Form.Control type="text" defaultValue={propertyData.streetAddress} onChange={(e) => setStreetAddress(e.target.value)} />
                 </Col>
             </Form.Group>
-            {propertyData.category==="House" ? (
+            
+            {category && category==="House" ? (
                 <Row>
                     <Col sm="6">
                         <Form.Group as={Row} className="mb-3" controlId="bedrooms">
@@ -228,18 +244,29 @@ const UpdateProperty = () => {
                                     </Form.Select>
                                 </Col>
                         </Form.Group>
+                        <Form.Group as={Row} className="mb-3" controlId="formCheckBoxParking">  
+                            <Form.Check 
+                                type="checkbox"
+                                id="parking-checkbox"
+                                label="Parking"
+                                value={internet}
+                                checked={parking}
+                                onChange={handleParking}
+                            />
+                        </Form.Group>
             
                     </Col>
                     
                     <Col sm="6">
-                    <Form.Group as={Row} className="mb-3" controlId="formCheckBoxTank" value={tank} onChange={(e) => setTank(e.target.value)}>  
+                    <Form.Group as={Row} className="mb-3" controlId="formCheckBoxTank" >  
                         <Form.Check 
                             type="checkbox"
                             id="tank-checkbox"
                             label="Tank"
-                            
-                            defaultValue={propertyData.tank}
-                            
+                            value={tank}
+                            checked={tank}
+                            // defaultValue={propertyData.tank}
+                            onChange={handleTank}  
                         />
                     </Form.Group>
 
@@ -249,8 +276,9 @@ const UpdateProperty = () => {
                             id="furnished-checkbox"
                             label="Furnished"
                             value={furnished}
-                            defaultValue={propertyData.furnished}
-                            onChange={(e) => setFurnished(e.target.value)}
+                            // defaultValue={propertyData.furnished}
+                            checked={furnished}
+                            onChange={handleFurnished}
                         />
                     </Form.Group>
 
@@ -260,8 +288,9 @@ const UpdateProperty = () => {
                             id="internet-checkbox"
                             label="Internet"
                             value={internet}
-                            defaultValue={propertyData.internet}
-                            onChange={(e) => setInternet(e.target.value)}
+                            // defaultValue={propertyData.internet}
+                            checked={internet}
+                            onChange={handleInternet}
                         />
                     </Form.Group>
                     </Col>
@@ -269,7 +298,10 @@ const UpdateProperty = () => {
                 
 
             ) : (
-                <></>
+                
+                <>
+                
+                </>
             )}
             
             

@@ -24,10 +24,11 @@ export const updateProperty = createAsyncThunk(
     masterPlanLevel, 
     streetAddress, 
     geoLocation, 
-    parking,
     tank, 
     furnished, 
-    internet}, thuknAPI) => {
+    internet,
+    parking
+    }, thuknAPI) => {
     const token = localStorage.getItem("token");
 
     const config = {
@@ -35,10 +36,11 @@ export const updateProperty = createAsyncThunk(
         Authorization: `Bearer ${token}`,
       },
     };
-    console.log("slice", title, category, section, price, size, upi, description, mainImage, otherImages, bedrooms, bathrooms, masterPlanUse,masterPlanLevel, streetAddress, geoLocation, tank, furnished, internet,parking);
+    console.log(title, category, section, price, size, upi, description, mainImage, otherImages, bedrooms, bathrooms, masterPlanUse,masterPlanLevel, streetAddress, geoLocation, tank, furnished, internet,parking);
     try{
+        // 6408dc57cdb31e2a00c18d24 6407395882aa7065a6d20a00
     //   const response = await axios.put(`${baseAPIUrl}/properties/${property._id}`, {title, category, section, price, size, upi, description, mainImage, otherImages, bedrooms, bathrooms, masterPlanUse,masterPlanLevel, streetAddress, geoLocation, tank, furnished, internet},config);
-    const response = await axios.put(`${baseAPIUrl}/properties/6407395882aa7065a6d20a00`, {title, category, section, price, size, upi, description, mainImage, otherImages, bedrooms, bathrooms, masterPlanUse,masterPlanLevel, streetAddress, geoLocation, tank, furnished, internet},config);
+    const response = await axios.put(`${baseAPIUrl}/properties/6408dc57cdb31e2a00c18d24`, {title, category, section, price, size, upi, description, mainImage, otherImages, bedrooms, bathrooms, masterPlanUse,masterPlanLevel, streetAddress, geoLocation, tank, furnished, internet, parking},config);
       return response.data; 
     }catch(err){
       return thuknAPI.rejectWithValue(err.response.data)
