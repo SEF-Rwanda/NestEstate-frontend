@@ -24,6 +24,7 @@ export const updateProperty = createAsyncThunk(
     masterPlanLevel, 
     streetAddress, 
     geoLocation, 
+    parking,
     tank, 
     furnished, 
     internet}, thuknAPI) => {
@@ -34,9 +35,10 @@ export const updateProperty = createAsyncThunk(
         Authorization: `Bearer ${token}`,
       },
     };
-    console.log("slice", title, category, section, price, size, upi, description, mainImage, otherImages, bedrooms, bathrooms, masterPlanUse,masterPlanLevel, streetAddress, geoLocation, tank, furnished, internet);
+    console.log("slice", title, category, section, price, size, upi, description, mainImage, otherImages, bedrooms, bathrooms, masterPlanUse,masterPlanLevel, streetAddress, geoLocation, tank, furnished, internet,parking);
     try{
-      const response = await axios.put(`${baseAPIUrl}/properties/6407395882aa7065a6d20a00`, {title, category, section, price, size, upi, description, mainImage, otherImages, bedrooms, bathrooms, masterPlanUse,masterPlanLevel, streetAddress, geoLocation, tank, furnished, internet},config);
+    //   const response = await axios.put(`${baseAPIUrl}/properties/${property._id}`, {title, category, section, price, size, upi, description, mainImage, otherImages, bedrooms, bathrooms, masterPlanUse,masterPlanLevel, streetAddress, geoLocation, tank, furnished, internet},config);
+    const response = await axios.put(`${baseAPIUrl}/properties/6407395882aa7065a6d20a00`, {title, category, section, price, size, upi, description, mainImage, otherImages, bedrooms, bathrooms, masterPlanUse,masterPlanLevel, streetAddress, geoLocation, tank, furnished, internet},config);
       return response.data; 
     }catch(err){
       return thuknAPI.rejectWithValue(err.response.data)
