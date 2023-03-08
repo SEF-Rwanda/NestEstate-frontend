@@ -2,9 +2,9 @@ import { Col, Row, Card, Container } from "react-bootstrap"
 const ChoosingUsComponent = () => {
 
     const whyChooseUs = [
-        { icon: 'bi bi-send', title: 'Service', description: 'We deliver high quality and exceptional service to our clients.' },
-        { icon: 'bi bi-eject', title: 'Experience', description: 'Over 10 years in providing professional real estate solutions.' },
-        { icon: 'bi bi-house-gear', title: 'Our Staff', description: 'Highly motivated and dedicated to meet your real estate needs.' },
+        { id: 1, icon: 'bi bi-send', title: 'Service', description: 'We deliver high quality and exceptional service to our clients.' },
+        { id: 2, icon: 'bi bi-eject', title: 'Experience', description: 'Over 10 years in providing professional real estate solutions.' },
+        { id: 3, icon: 'bi bi-house-gear', title: 'Our Staff', description: 'Highly motivated and dedicated to meet your real estate needs.' },
 
     ]
 
@@ -14,7 +14,7 @@ const ChoosingUsComponent = () => {
             <Row>
                 {whyChooseUs.map((item) => {
                     return (
-                        <Col md={4} sm={6}>
+                        <Col md={4} sm={6} key={item.id}>
                             <Card className="text-center">
                                 <Card.Body>
                                     <i className={item.icon} style={{ fontSize: "30px" }}></i>
