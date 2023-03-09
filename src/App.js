@@ -13,7 +13,7 @@ import Register from "./pages/user/Register";
 import HeaderComponent from "./component/HeaderComponent";
 import { store } from "./state/store";
 import VerifyAccount from "./pages/user/VerifyAccount";
-import UpdateProperty from "./pages/user/UpdateProperty";
+import UpdateProperty from "./pages/property/UpdateProperty";
 import UserProperties from "./pages/property/UserPropertiesComponent";
 import "./App.css";
 

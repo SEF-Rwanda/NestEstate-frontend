@@ -38,9 +38,8 @@ export const updateProperty = createAsyncThunk(
     };
     console.log(title, category, section, price, size, upi, description, mainImage, otherImages, bedrooms, bathrooms, masterPlanUse,masterPlanLevel, streetAddress, geoLocation, tank, furnished, internet,parking);
     try{
-        // 6408dc57cdb31e2a00c18d24 6407395882aa7065a6d20a00
-    //   const response = await axios.put(`${baseAPIUrl}/properties/${property._id}`, {title, category, section, price, size, upi, description, mainImage, otherImages, bedrooms, bathrooms, masterPlanUse,masterPlanLevel, streetAddress, geoLocation, tank, furnished, internet},config);
-    const response = await axios.put(`${baseAPIUrl}/properties/6408dc57cdb31e2a00c18d24`, {title, category, section, price, size, upi, description, mainImage, otherImages, bedrooms, bathrooms, masterPlanUse,masterPlanLevel, streetAddress, geoLocation, tank, furnished, internet, parking},config);
+      const propid=sessionStorage.getItem("propid");
+      const response = await axios.put(`${baseAPIUrl}/properties/${propid}`, {title, category, section, price, size, upi, description, mainImage, otherImages, bedrooms, bathrooms, masterPlanUse,masterPlanLevel, streetAddress, geoLocation, tank, furnished, internet, parking},config);
       return response.data; 
     }catch(err){
       return thuknAPI.rejectWithValue(err.response.data)

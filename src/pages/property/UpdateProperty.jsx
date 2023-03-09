@@ -5,9 +5,11 @@ import { useDispatch } from "react-redux";
 import jwt_decode from "jwt-decode";
 import "react-toastify/dist/ReactToastify.css";
 import { updateProperty } from "../../state/property/propertySlice";
+import { useParams } from "react-router-dom";
 
 const UpdateProperty = () => {
-
+    const {id} = useParams();
+    sessionStorage.setItem("propid", id);
     const dispatch = useDispatch();
     const [title, setTitle] = useState("");
     const [category, setCategory] = useState("");
@@ -30,17 +32,15 @@ const UpdateProperty = () => {
     const [internet, setInternet] = useState("");
     const [parking, setParking] = useState("");
     const [propertyData, setPropertyData] = useState({});
+
     const getProperty = async (id) => {
         const response = await http.get(`/properties/${id}`);
         setPropertyData(response.data.data);
         return response;
     };
     useEffect(() => {
-        // 6408dc57cdb31e2a00c18d24 6407395882aa7065a6d20a00
-        getProperty("6408dc57cdb31e2a00c18d24");//property._id
-        setCategory(propertyData.category)
-    }, ["6408dc57cdb31e2a00c18d24"]);
-
+        getProperty(id);
+    }, [id]);
     
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -66,7 +66,7 @@ const UpdateProperty = () => {
         }))
         .unwrap()
         .then((response) => {
-            // window.location.href = "/my-properties";
+            window.location.href = "/user/properties";
         });
     };
     const handleNegotiable = (event) => {
@@ -139,19 +139,25 @@ const UpdateProperty = () => {
                         type="checkbox"
                         id="default-checkbox"
                         label="Negociable"
-                        // defaultValue={propertyData.negociable}
                         checked={negociable}
                         onChange={handleNegotiable}
                     />
                 </Col>
             </Form.Group>
 
-            <Form.Group as={Row} className="mb-3" controlId="formPlaintextMasterPlan">  
+            <Form.Group as={Row} className="mb-3" controlId="formPlaintextMasterPlanUse">  
                 <Form.Label column sm="2">
                 Plan
                 </Form.Label>
                 <Col sm="6">
-                <Form.Control type="text" defaultValue={propertyData.masterPlanUse} onChange={(e) => setMasterPlanUse(e.target.value)} />
+                {/* <Form.Control type="text" defaultValue={propertyData.masterPlanUse} value={masterPlanUse} onChange={(e) => setMasterPlanUse(e.target.value)} /> */}
+                <Form.Select name="level" aria-label="level" value={masterPlanUse} onChange={(e) => setMasterPlanUse(e.target.value)}>
+                    <option>{propertyData.masterPlanUse}</option>
+                    <option value="Ubuhinzi">Ubuhinzi</option>
+                    <option value="Imiturire">Imiturire</option> 
+                    <option value="Ubucuruzi">Ubucuruzi</option>  
+                    <option value="Inganda">Inganda</option>                                            
+                </Form.Select>
                 </Col>
                 <Col sm="4">
                     <Form.Group as={Row} className="mb-3" controlId="masterPlanLevel"  >
@@ -178,17 +184,18 @@ const UpdateProperty = () => {
                 <Form.Control type="text" defaultValue={propertyData.upi} onChange={(e) => setUpi(e.target.value)} />
                 </Col>
                 <Col sm="4">
+                    <Form.Group as={Row} className="mb-3" controlId="formPlaintextTitle">  
+                        <Form.Label column sm="2">
+                        Size
+                        </Form.Label>
+                        <Col sm="10">
+                        <Form.Control type="text"defaultValue={propertyData.size} onChange={(e) => setSize(e.target.value)} />
+                        </Col>
+                    </Form.Group>
                     
                 </Col>
             </Form.Group>
-            <Form.Group as={Row} className="mb-3" controlId="formPlaintextTitle">  
-                <Form.Label column sm="2">
-                Size(sqm)
-                </Form.Label>
-                <Col sm="6">
-                <Form.Control type="text"defaultValue={propertyData.size} onChange={(e) => setSize(e.target.value)} />
-                </Col>
-            </Form.Group>
+            
             <Form.Group as={Row} className="mb-3" controlId="formPlaintextDescription">
                 <Col sm="2">
                     <Form.Label >Description</Form.Label>
@@ -209,7 +216,7 @@ const UpdateProperty = () => {
             
             {category && category==="House" ? (
                 <Row>
-                    <Col sm="6">
+                    <Col sm="5">
                         <Form.Group as={Row} className="mb-3" controlId="bedrooms">
                             <Form.Label column sm="6">
                                     Bed Rooms
@@ -243,7 +250,36 @@ const UpdateProperty = () => {
                                                                                     
                                     </Form.Select>
                                 </Col>
+                        </Form.Group>          
+                    </Col>
+                    
+                    <Col sm="4">
+                        <Form.Group as={Row} className="mb-3" controlId="formCheckBoxTank" >  
+                            <Form.Check 
+                                type="checkbox"
+                                id="tank-checkbox"
+                                label="Tank"
+                                value={tank}
+                                checked={tank}
+                                // defaultValue={propertyData.tank}
+                                onChange={handleTank}  
+                            />
                         </Form.Group>
+
+                        <Form.Group as={Row} className="mb-3" controlId="formCheckBoxFurnished">  
+                            <Form.Check 
+                                type="checkbox"
+                                id="furnished-checkbox"
+                                label="Furnished"
+                                value={furnished}
+                                // defaultValue={propertyData.furnished}
+                                checked={furnished}
+                                onChange={handleFurnished}
+                            />
+                        </Form.Group>
+
+                    </Col>
+                    <Col sm="3">
                         <Form.Group as={Row} className="mb-3" controlId="formCheckBoxParking">  
                             <Form.Check 
                                 type="checkbox"
@@ -254,45 +290,17 @@ const UpdateProperty = () => {
                                 onChange={handleParking}
                             />
                         </Form.Group>
-            
-                    </Col>
-                    
-                    <Col sm="6">
-                    <Form.Group as={Row} className="mb-3" controlId="formCheckBoxTank" >  
-                        <Form.Check 
-                            type="checkbox"
-                            id="tank-checkbox"
-                            label="Tank"
-                            value={tank}
-                            checked={tank}
-                            // defaultValue={propertyData.tank}
-                            onChange={handleTank}  
-                        />
-                    </Form.Group>
-
-                    <Form.Group as={Row} className="mb-3" controlId="formCheckBoxFurnished">  
-                        <Form.Check 
-                            type="checkbox"
-                            id="furnished-checkbox"
-                            label="Furnished"
-                            value={furnished}
-                            // defaultValue={propertyData.furnished}
-                            checked={furnished}
-                            onChange={handleFurnished}
-                        />
-                    </Form.Group>
-
-                    <Form.Group as={Row} className="mb-3" controlId="formCheckBoxInternet">  
-                        <Form.Check 
-                            type="checkbox"
-                            id="internet-checkbox"
-                            label="Internet"
-                            value={internet}
-                            // defaultValue={propertyData.internet}
-                            checked={internet}
-                            onChange={handleInternet}
-                        />
-                    </Form.Group>
+                        <Form.Group as={Row} className="mb-3" controlId="formCheckBoxInternet">  
+                            <Form.Check 
+                                type="checkbox"
+                                id="internet-checkbox"
+                                label="Internet"
+                                value={internet}
+                                // defaultValue={propertyData.internet}
+                                checked={internet}
+                                onChange={handleInternet}
+                            />
+                        </Form.Group>
                     </Col>
                 </Row>
                 
