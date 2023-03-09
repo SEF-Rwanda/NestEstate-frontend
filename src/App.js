@@ -30,7 +30,7 @@ function App() {
         <Route path="/profile/update" element={<UpdateProfile />} />
         <Route path="/register" element={<Register />} />
         <Route path="/verify-account" element={<VerifyAccount />} />
-        <Route path="/properties/update" element={<UpdateProperty />} />
+        <Route path="/properties/:id" element={<UpdateProperty />} />
         <Route path="/user/properties" element={<UserProperties />} />
         <Route path="/*" element={<h1>404 Not Found</h1>} />
       </Routes>
