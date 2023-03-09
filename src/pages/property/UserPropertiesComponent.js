@@ -37,7 +37,7 @@ const UserProperties = () => {
                 My Available Properties
             </h5>
             <hr />
-            <Button style={{ backgroundColor: "#6736CF", border: "none"}} as={Link} to="" > <i style={{margin: "5px", fontWeight: "bold"}} class="bi bi-plus-circle"></i>Add Property</Button>
+            <Button style={{ backgroundColor: "#6736CF", border: "none" }} as={Link} to="" > <i style={{ margin: "5px", fontWeight: "bold" }} class="bi bi-plus-circle"></i>Add Property</Button>
             <hr />
             <Table responsive="sm">
                 <thead>
@@ -57,14 +57,14 @@ const UserProperties = () => {
                             <td ><img src={property.mainImage} alt="" height="118px" width="228px" style={{ objectFit: "cover" }} /></td>
                             <td>{property.price}</td>
                             <td>
-                                <span style={{ marginRight: "10px" }} ><i class="bi bi-pencil"></i></span>
+                                <Link to={`/properties/${property.id}`} style={{ marginRight: "10px" }} ><i class="bi bi-pencil"></i></Link>
                                 <span style={{ marginLeft: "10px" }}><i class="bi bi-calendar-x-fill"></i></span>
                             </td>
                         </tr>
                     ))}
                 </tbody>
             </Table>
-        </Container>
+        </Container >
     )
 }
 
