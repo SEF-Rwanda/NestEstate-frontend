@@ -6,6 +6,7 @@ import jwt_decode from "jwt-decode";
 import "react-toastify/dist/ReactToastify.css";
 import { updateProperty } from "../../state/property/propertySlice";
 import { useParams } from "react-router-dom";
+import { MDBRow, MDBCol } from 'mdb-react-ui-kit';
 
 const UpdateProperty = () => {
     const {id} = useParams();
@@ -41,7 +42,25 @@ const UpdateProperty = () => {
     useEffect(() => {
         getProperty(id);
     }, [id]);
+    // const  test = propertyData.mainImage;
     
+    // console.log("================", test)
+    //handle and convert it in base 64
+    const handleMainImage = (e) =>{
+        const file = e.target.files[0];
+        setFileToBase(file);
+        console.log(file);
+    }
+
+    const setFileToBase = (file) =>{
+        const reader = new FileReader();
+        reader.readAsDataURL(file);
+        reader.onloadend = () =>{
+            setMainImage(reader.result);
+        }
+
+    }
+
     const handleSubmit = async (e) => {
         e.preventDefault();
         dispatch(updateProperty({
@@ -311,42 +330,38 @@ const UpdateProperty = () => {
                 
                 </>
             )}
-            
-            
-            {/* <Form.Group className="mb-3" controlId="validationCustom01">
-              <Form.Label
-                style={{
-                  color: "#C1BDBD",
-                  fontFamily: "Poppins",
-                  fonSize: "20em",
-                }}
-              >
-                First name
-              </Form.Label>
-              <Form.Control
-                required
-                type="text"
-                defaultValue={userdata.firstName}
-                onChange={(e) => setFirstName(e.target.value)}
-                name="firstName"
-              />
-              <Form.Control.Feedback type="invalid">
-                Please enter a first name
-              </Form.Control.Feedback>
+
+         
+            <Form.Group as={Row} className="mb-3" controlId="formPlaintextTitle">  
+                <Form.Label column sm="2">
+                Pictures
+                </Form.Label>
+                <Col sm="10">
+                    <Row>
+                        <Col sm="6">
+                            <MDBRow>
+                                <MDBCol lg='4' md='12' className='mb-4'>
+                                    <img src="" className='img-fluid rounded' alt='' />
+                                    
+                                    <img className="img-fluid" src={mainImage} alt="" />
+                                </MDBCol>
+                            </MDBRow>
+                        </Col>
+                        <Col sm="6">
+                            {/* <Form.Group controlId="formFile" className="mb-3">
+                                <Form.Control type="file" />
+                            </Form.Group> */}
+                            <div className="form-outline mb-4">
+                                <input onChange={handleMainImage}  type="file" id="formupload" name="mainImage" className="form-control"  />
+                            </div>
+                            
+                        </Col>
+                    </Row>
+                </Col>
             </Form.Group>
-            <Form.Group className="mb-3" controlId="formBasicLastName">
-              <Form.Label>Last name</Form.Label>
-              <Form.Control
-                required
-                type="text"
-                defaultValue={userdata.lastName}
-                onChange={(e) => setLastName(e.target.value)}
-                name="lastName"
-              />
-              <Form.Control.Feedback type="invalid">
-                Please enter your last name
-              </Form.Control.Feedback>
-            </Form.Group> */}
+            
+            
+            
             <Button variant="primary" type="submit">
               Update
             </Button>
