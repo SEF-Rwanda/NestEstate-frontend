@@ -88,6 +88,9 @@ const HeaderComponent = () => {
                 <NavDropdown.Item as={Link} onClick={handleOnClickLogout}>
                   Logout
                 </NavDropdown.Item>
+                <NavDropdown.Item as={Link} to="/user/properties">
+                  My Properties
+                </NavDropdown.Item>
               </NavDropdown>
             ) : (
               <></>

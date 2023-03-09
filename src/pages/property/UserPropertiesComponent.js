@@ -1,0 +1,71 @@
+import { useEffect, useState } from "react";
+import axios from "axios";
+import { Container, Table, Button } from "react-bootstrap";
+import { Link } from "react-router-dom";
+
+const UserProperties = () => {
+    const [userProperties, setUserPropertiesData] = useState([]);
+
+    useEffect(() => {
+        // Make API request to fetch user data
+        const fetchUserData = async () => {
+            const config = {
+                headers: { Authorization: `Bearer ${authToken}` },
+            }
+
+            try {
+                const { data } = await axios.get('http://localhost:3000/api/v1/properties/my-properties', config);
+                setUserPropertiesData(data.data);
+            } catch (error) {
+                console.error(error);
+            }
+        };
+
+        // Get authentication token
+        const authToken = localStorage.getItem('token');
+
+        // Fetch user data if authentication token exists
+        if (authToken) {
+            fetchUserData();
+        }
+    }, []);
+
+    console.log(userProperties)
+    return (
+        <Container>
+            <h5 style={{ textAlign: "center", margin: "25px", fontWeight: "bold" }}>
+                My Available Properties
+            </h5>
+            <hr />
+            <Button style={{ backgroundColor: "#6736CF", border: "none"}} as={Link} to="" > <i style={{margin: "5px", fontWeight: "bold"}} class="bi bi-plus-circle"></i>Add Property</Button>
+            <hr />
+            <Table responsive="sm">
+                <thead>
+                    <tr>
+                        <th>Title</th>
+                        <th>Description</th>
+                        <th>Photo</th>
+                        <th>Price</th>
+                        <th>Option</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {userProperties.map((property) => (
+                        <tr key={property.id}>
+                            <td>{property.title}</td>
+                            <td>{property.description}</td>
+                            <td ><img src={property.mainImage} alt="" height="118px" width="228px" style={{ objectFit: "cover" }} /></td>
+                            <td>{property.price}</td>
+                            <td>
+                                <span style={{ marginRight: "10px" }} ><i class="bi bi-pencil"></i></span>
+                                <span style={{ marginLeft: "10px" }}><i class="bi bi-calendar-x-fill"></i></span>
+                            </td>
+                        </tr>
+                    ))}
+                </tbody>
+            </Table>
+        </Container>
+    )
+}
+
+export default UserProperties;
