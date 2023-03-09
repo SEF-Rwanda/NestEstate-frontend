@@ -14,6 +14,7 @@ import HeaderComponent from "./component/HeaderComponent";
 import { store } from "./state/store";
 import VerifyAccount from "./pages/user/VerifyAccount";
 import UpdateProperty from "./pages/user/UpdateProperty";
+import UserProperties from "./pages/property/UserPropertiesComponent";
 import "./App.css";
 
 function App() {
@@ -30,6 +31,7 @@ function App() {
         <Route path="/register" element={<Register />} />
         <Route path="/verify-account" element={<VerifyAccount />} />
         <Route path="/properties/update" element={<UpdateProperty />} />
+        <Route path="/user/properties" element={<UserProperties />} />
         <Route path="/*" element={<h1>404 Not Found</h1>} />
       </Routes>
       <ToastContainer />
