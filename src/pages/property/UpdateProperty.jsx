@@ -33,6 +33,7 @@ const UpdateProperty = () => {
     const [internet, setInternet] = useState("");
     const [parking, setParking] = useState("");
     const [propertyData, setPropertyData] = useState({});
+    
 
     const getProperty = async (id) => {
         const response = await http.get(`/properties/${id}`);
@@ -42,9 +43,13 @@ const UpdateProperty = () => {
     useEffect(() => {
         getProperty(id);
     }, [id]);
-    // const  test = propertyData.mainImage;
     
-    // console.log("================", test)
+    
+    let mainImageUrl="";
+    if (propertyData.mainImage && propertyData.mainImage.url) {
+         mainImageUrl = propertyData.mainImage.url;
+    }
+
     //handle and convert it in base 64
     const handleMainImage = (e) =>{
         const file = e.target.files[0];
@@ -58,7 +63,6 @@ const UpdateProperty = () => {
         reader.onloadend = () =>{
             setMainImage(reader.result);
         }
-
     }
 
     const handleSubmit = async (e) => {
@@ -103,9 +107,9 @@ const UpdateProperty = () => {
     const handleParking = (event) => {
         setParking(event.target.checked);
     };
+    
   return (
-    <Container>
-        
+    <Container> 
       <Row className="mt-5 justify-content-md-center">
         <Col md={6}>
         <h1 > Update Property</h1>
@@ -233,7 +237,7 @@ const UpdateProperty = () => {
                 </Col>
             </Form.Group>
             
-            {category && category==="House" ? (
+            {category==="House"? (
                 <Row>
                     <Col sm="5">
                         <Form.Group as={Row} className="mb-3" controlId="bedrooms">
@@ -322,36 +326,26 @@ const UpdateProperty = () => {
                         </Form.Group>
                     </Col>
                 </Row>
-                
-
-            ) : (
-                
-                <>
-                
-                </>
+            ) : (  
+                <> </>
             )}
-
-         
             <Form.Group as={Row} className="mb-3" controlId="formPlaintextTitle">  
                 <Form.Label column sm="2">
                 Pictures
                 </Form.Label>
                 <Col sm="10">
                     <Row>
-                        <Col sm="6">
+                        <Col sm="5">
                             <MDBRow>
-                                <MDBCol lg='4' md='12' className='mb-4'>
-                                    <img src="" className='img-fluid rounded' alt='' />
-                                    
+                                <MDBCol lg='6' md='14' className='mb-6'>
+                                    <img src={mainImageUrl} className='img-fluid rounded' alt='' />
                                     <img className="img-fluid" src={mainImage} alt="" />
                                 </MDBCol>
                             </MDBRow>
                         </Col>
-                        <Col sm="6">
-                            {/* <Form.Group controlId="formFile" className="mb-3">
-                                <Form.Control type="file" />
-                            </Form.Group> */}
-                            <div className="form-outline mb-4">
+                        <Col sm="7">
+
+                            <div className="form-outline mb-2">
                                 <input onChange={handleMainImage}  type="file" id="formupload" name="mainImage" className="form-control"  />
                             </div>
                             
@@ -359,8 +353,6 @@ const UpdateProperty = () => {
                     </Row>
                 </Col>
             </Form.Group>
-            
-            
             
             <Button variant="primary" type="submit">
               Update

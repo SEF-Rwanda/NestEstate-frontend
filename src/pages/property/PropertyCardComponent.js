@@ -25,7 +25,7 @@ const CategoryCardComponent = ({ category, id }) => {
 
                         <Col md={4} sm={6} className="mt-3" key={property.id}>
                             <Card>
-                                <Card.Img variant="top" src={property.mainImage} style={{ height: "200px", objectFit: "cover" }} />
+                                <Card.Img variant="top" src={property.mainImage.url} style={{ height: "200px", objectFit: "cover" }} />
                                 <Card.Body>
                                     <Card.Text>{property.description}</Card.Text>
                                     <p> {property.bedrooms} Bedrooms & {property.bathrooms} bathrooms</p>
