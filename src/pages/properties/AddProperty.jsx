@@ -1,16 +1,26 @@
 import React, { useState, useEffect } from "react";
-import { Container, Form, Button, Row, Col, Spinner } from "react-bootstrap";
+import { Container, Form, Row, Col, Spinner } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
-import { Link } from "react-router-dom";
 import { useDispatch } from "react-redux";
+import axios from "axios";
 import "react-toastify/dist/ReactToastify.css";
 import Input from "../../component/Input";
-import { signup } from "../../state/user/userSlice";
 import { store } from "../../state/store";
 import SelectInput from "./../../component/SelectInput";
+import TextArea from "../../component/TextAreaInput";
+import FileInput from "../../component/FileInput";
+import CheckBoxInput from "../../component/CheckBoxInput";
+import ButtonComponent from "../../component/Button";
+import Label from "../../component/Label";
+import { addProduct } from "../../state/property/propertySlice";
 
-function AddProperty() {
+const categories = ["House", "Plot"];
+const sections = ["For rent", "For sell"];
+const masterPlanUses = ["Farming", "Settlement", "Industry", "Commerce"];
+const levels = ["R1", "R2", "R3", "R4", "R5", "R6"];
+
+const AddProperty = () => {
   const [title, setTitle] = useState("");
   const [category, setCategory] = useState("");
   const [section, setSection] = useState("");
@@ -23,45 +33,110 @@ function AddProperty() {
   const [buildingLevel, setBuildingLevel] = useState("");
   const [upi, setUPI] = useState("");
   const [streetAddress, setStreetAddress] = useState("");
-  const [password, setPassword] = useState("");
   const [isFormLoading, setIsFormLoading] = useState(false);
-
+  const [location, setLocation] = useState({ latitude: 0, longitude: 0 });
+  const [mainImage, setMainImage] = useState({ public_id: "", url: "" });
+  const [otherImages, setOtherImages] = useState([]);
+  const [isParkingAvailable, setIsParkingAvailable] = useState(false);
+  const [isTankAvailable, setIsTankAvailable] = useState(false);
+  const [isInternetAvailable, setIsInternetAvailable] = useState(false);
+  const [isFurnished, setIsFurnished] = useState(false);
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
-  console.log("##########", category);
+  const getCurrentLocation = () => {
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition((position) => {
+        let lat = position.coords.latitude;
+        let long = position.coords.longitude;
+        setLocation({
+          latitude: lat,
+          longitude: long,
+        });
+      });
+    } else {
+      console.log("Geolocation is not supported by this browser.");
+    }
+  };
+
+  const uploadMainImage = async (event) => {
+    const imageData = new FormData();
+    imageData.append("file", event.target.files[0]);
+    imageData.append("upload_preset", "wingi-app");
+    try {
+      const { data } = await axios.post(
+        "https://api.cloudinary.com/v1_1/kuranga/image/upload",
+        imageData
+      );
+      setMainImage({
+        public_id: data.public_id,
+        url: data.secure_url,
+      });
+    } catch (err) {
+      console.log(err);
+    }
+  };
+  const uploadOtherImages = async (event) => {
+    const images = [];
+    for (let i = 0; i < event.target.files.length; i++) {
+      const imageData = new FormData();
+      imageData.append("file", event.target.files[0]);
+      imageData.append("upload_preset", "wingi-app");
+      try {
+        const { data } = await axios.post(
+          "https://api.cloudinary.com/v1_1/kuranga/image/upload",
+          imageData
+        );
+        images.push(data.secure_url);
+      } catch (err) {
+        console.log(err);
+      }
+    }
+    setOtherImages(images);
+  };
 
   const handleSubmit = async (event) => {
     event.preventDefault();
     const property = {
       title: title,
-      // lastName: lname,
-      // email: email,
-      // password: password,
-      // phone: phone,
-      // passwordConfirm: confirmPassword,
+      category: category,
+      section: section,
+      price: price,
+      size: size,
+      upi: upi,
+      description: description,
+      mainImage: mainImage,
+      otherImages: otherImages,
+      bedrooms: bedrooms,
+      bathrooms: bathrooms,
+      masterPlanUse: masterPlanUse,
+      masterPlanLevel: buildingLevel,
+      streetAddress: streetAddress,
+      geoLocation: location,
+      parking: isParkingAvailable,
+      tank: isTankAvailable,
+      internet: isInternetAvailable,
+      furnished: isFurnished,
     };
-    dispatch(signup(property));
+    dispatch(addProduct(property));
+    console.log(property);
   };
+
   useEffect(() => {
     const unsubscribe = store.subscribe(() => {
-      const newIsLoading = store.getState().user.loading;
-      const isSuccess = store.getState().user.success;
-      const error = store.getState().user.error;
-      setIsFormLoading(newIsLoading);
+      const isLoading = store.getState().property.isAddingProductLoading;
+      const isSuccess = store.getState().property.isAddingProductSuccess;
+      const error = store.getState().property.addingProductError;
+      setIsFormLoading(isLoading);
 
       if (isSuccess) {
-        navigate("/verify-account");
+        navigate("/");
       } else if (error) {
         toast.error(error);
       }
     });
     return () => unsubscribe();
   });
-  const categories = ["House", "Plot"];
-  const sections = ["For rent", "For sell"];
-  const masterPlanUses = ["Farming", "Settlement", "Industry", "Commerce"];
-  const levels = ["R1", "R2", "R3", "R4", "R5", "R6"];
 
   return (
     <Container
@@ -78,12 +153,13 @@ function AddProperty() {
           fontWeight: "700",
           fontSize: "30px",
           color: "#000000",
+          textAlign: "center",
         }}
       >
         Upload new property
       </h3>
 
-      <Form onSubmit={handleSubmit} className="mobile-phone_input">
+      <Form className="mobile-phone_input">
         <Row>
           <Col md={6} className="flex">
             <Input
@@ -104,14 +180,18 @@ function AddProperty() {
               value={category}
               onChange={(e) => setCategory(e.target.value)}
             />
-            <SelectInput
-              id="section"
-              label="Section"
-              description="Select section"
-              values={sections}
-              value={section}
-              onChange={(e) => setSection(e.target.value)}
-            />
+            {category === "House" ? (
+              <SelectInput
+                id="section"
+                label="Section"
+                description="Select section"
+                values={sections}
+                value={section}
+                onChange={(e) => setSection(e.target.value)}
+              />
+            ) : (
+              <></>
+            )}
 
             <Input
               controlId="price"
@@ -120,7 +200,7 @@ function AddProperty() {
               name="price"
               placeholder="Enter price in RWF"
               value={price}
-              onChange={(e) => setPrice(e.target.value)}
+              onChange={setPrice}
             />
             <Input
               controlId="size"
@@ -129,57 +209,8 @@ function AddProperty() {
               name="size"
               placeholder="Enter size in m square"
               value={size}
-              onChange={(e) => setSize(e.target.value)}
+              onChange={setSize}
             />
-            <Input
-              controlId="bedrooms"
-              labelText="Bedrooms"
-              type="number"
-              name="number"
-              placeholder="Enter number of bedroom"
-              value={bedrooms}
-              onChange={(e) => setBedrooms(e.target.value)}
-            />
-            <Input
-              controlId="bathrooms"
-              labelText="Bathrooms"
-              type="number"
-              name="bathrooms"
-              placeholder="Enter number of bathrooms"
-              value={bathrooms}
-              onChange={(e) => setBathrooms(e.target.value)}
-            />
-            <Form.Group controlId="description">
-              <Row>
-                <Col sm={12} md={4}>
-                  <Form.Label
-                    style={{
-                      fontFamily: "Poppins",
-                      fontStyle: "normal",
-                      fontWeight: "700",
-                      fontSize: "14px",
-                      lineHeight: "36px",
-                      color: "#000000",
-                    }}
-                  >
-                    {" "}
-                    Description
-                  </Form.Label>
-                </Col>
-                <Col sm={12} md={8}>
-                  <Form.Control
-                    as="textarea"
-                    placeholder="Enter description"
-                    rows="5"
-                    value={description}
-                    onChange={(e) => setDescription(e.target.value)}
-                  />
-                </Col>
-              </Row>
-            </Form.Group>
-          </Col>
-
-          <Col md={6}>
             <SelectInput
               id="Mater_plan_use"
               label="Mater plan use"
@@ -192,22 +223,22 @@ function AddProperty() {
             <SelectInput
               id=""
               building_level
-              label="Mater plan use"
+              label="Building level"
               description="Building level"
               values={levels}
               value={buildingLevel}
               onChange={(e) => setBuildingLevel(e.target.value)}
             />
-
-            <Input
-              controlId="street address"
-              labelText="Street address"
-              type="text"
-              name="street address"
-              placeholder="Enter street address"
-              value={streetAddress}
-              onChange={(e) => setStreetAddress(e.target.value)}
+            <TextArea
+              id="description"
+              description="Description"
+              placeholder="Enter description"
+              value={description}
+              onChange={setDescription}
             />
+          </Col>
+
+          <Col md={6}>
             <Input
               controlId="upi"
               labelText="UPI"
@@ -217,158 +248,152 @@ function AddProperty() {
               value={upi}
               onChange={setUPI}
             />
+            {category === "House" ? (
+              <Input
+                controlId="bedrooms"
+                labelText="Bedrooms"
+                type="number"
+                name="number"
+                placeholder="Enter number of bedroom"
+                value={bedrooms}
+                onChange={setBedrooms}
+              />
+            ) : (
+              <></>
+            )}
+            {category === "House" ? (
+              <Input
+                controlId="bathrooms"
+                labelText="Bathrooms"
+                type="number"
+                name="bathrooms"
+                placeholder="Enter number of bathrooms"
+                value={bathrooms}
+                onChange={setBathrooms}
+              />
+            ) : (
+              <></>
+            )}
             <Input
+              controlId="street address"
+              labelText="Street address"
+              type="text"
+              name="street address"
+              placeholder="Enter street address"
+              value={streetAddress}
+              onChange={setStreetAddress}
+            />
+
+            <FileInput
               controlId="main_image"
               labelText="Main image"
               type="file"
               name="main_image"
-              value={password}
-              onChange={setPassword}
+              value={mainImage}
+              onChange={uploadMainImage}
             />
-            <Input
+            <FileInput
               controlId="other_images"
               labelText="Other images"
               type="file"
               name="other_images"
-              value={password}
-              onChange={setPassword}
+              onChange={uploadOtherImages}
             />
 
             <Form.Group controlId="description">
               <Row>
                 <Col sm={12} md={4}>
-                  <Form.Label
-                    style={{
-                      fontFamily: "Poppins",
-                      fontStyle: "normal",
-                      fontWeight: "700",
-                      fontSize: "14px",
-                      lineHeight: "36px",
-                      color: "#000000",
-                    }}
-                  >
-                    {" "}
-                    construction level
-                  </Form.Label>
+                  <Label text="Location" />
                 </Col>
                 <Col sm={12} md={8}>
                   <Row>
-                    <Button
+                    <ButtonComponent
+                      type="button"
                       variant="primary"
-                      type="submit"
-                      // disabled={!termsAccepted}
-                      style={{
-                        background: "#6736CF",
-                        borderRadius: "25px",
-                        marginTop: "10px",
-                        marginBottom: "10px",
-                        width: "160px",
-                      }}
-                    >
-                      Current location
-                    </Button>
-                    <Button
+                      value="Current Location"
+                      action={getCurrentLocation}
+                    />
+                    <ButtonComponent
+                      type="button"
                       variant="primary"
-                      type="submit"
-                      // disabled={!termsAccepted}
-                      style={{
-                        background: "#6736CF",
-                        borderRadius: "25px",
-                        marginTop: "10px",
-                        marginBottom: "10px",
-                        width: "160px",
-                        marginLeft: "10px",
-                      }}
-                    >
-                      Google map
-                    </Button>
+                      value="Google map"
+                      action={() => {}}
+                    />
                   </Row>
                 </Col>
               </Row>
             </Form.Group>
-            <Form.Group controlId="description">
-              <Row>
-                <Col sm={12} md={4}>
-                  <Form.Label
-                    style={{
-                      fontFamily: "Poppins",
-                      fontStyle: "normal",
-                      fontWeight: "700",
-                      fontSize: "14px",
-                      lineHeight: "36px",
-                      color: "#000000",
-                    }}
-                  >
-                    {" "}
-                    Others
-                  </Form.Label>
-                </Col>
-                <Col sm={12} md={8}>
-                  <Row>
-                    <Form.Group controlId="formBasicCheckbox">
-                      <Form.Check
-                        type="checkbox"
-                        label="Tank"
-                        // checked={isChecked}
-                        // onChange={handleCheckboxChange}
-                      />
-                    </Form.Group>
-                    <Form.Group controlId="formBasicCheckbox">
-                      <Form.Check
-                        type="checkbox"
-                        label="Internet"
-                        // checked={isChecked}
-                        // onChange={handleCheckboxChange}
-                      />
-                    </Form.Group>
-                    <Form.Group controlId="formBasicCheckbox">
-                      <Form.Check
-                        type="checkbox"
-                        label="Furnished"
-                        // checked={isChecked}
-                        // onChange={handleCheckboxChange}
-                      />
-                    </Form.Group>
-                  </Row>
-                </Col>
-              </Row>
-            </Form.Group>
+            {category === "House" ? (
+              <Form.Group controlId="others">
+                <Row>
+                  <Col sm={12} md={4}>
+                    <Label text="Others" />
+                  </Col>
+                  <Col sm={12} md={8}>
+                    <Row>
+                      <Col>
+                        <CheckBoxInput
+                          id="tank"
+                          label="Tank"
+                          checked={isTankAvailable}
+                          onChange={setIsTankAvailable}
+                        />
+                        <CheckBoxInput
+                          id="internet"
+                          label="Internet"
+                          checked={isInternetAvailable}
+                          onChange={setIsInternetAvailable}
+                        />
+                      </Col>
+                      <Col>
+                        <CheckBoxInput
+                          id="parking"
+                          label="Parking"
+                          checked={isParkingAvailable}
+                          onChange={setIsParkingAvailable}
+                        />
+                        <CheckBoxInput
+                          id="furnished"
+                          label="Furnished"
+                          checked={isFurnished}
+                          onChange={setIsFurnished}
+                        />
+                      </Col>
+                    </Row>
+                  </Col>
+                </Row>
+              </Form.Group>
+            ) : (
+              <></>
+            )}
 
             <Container
               className="justify-content-center align-items-center"
               style={{ width: "188px" }}
             >
-              <Button
-                variant="primary"
-                type="submit"
-                // disabled={!termsAccepted}
-                style={{
-                  background: "#6736CF",
-                  borderRadius: "25px",
-                  marginTop: "10px",
-                  marginBottom: "10px",
-                  width: "188px",
-                }}
-              >
-                {!isFormLoading ? (
-                  "Submit"
-                ) : (
-                  <Spinner
-                    as="span"
-                    animation="border"
-                    size="sm"
-                    role="status"
-                    aria-hidden="true"
-                    style={{ marginRight: "5px" }}
-                  />
-                )}
-              </Button>
+              <ButtonComponent
+                value={
+                  !isFormLoading ? (
+                    "Submit"
+                  ) : (
+                    <Spinner
+                      as="span"
+                      animation="border"
+                      size="sm"
+                      role="status"
+                      aria-hidden="true"
+                      style={{ marginRight: "5px" }}
+                    />
+                  )
+                }
+                action={handleSubmit}
+              />
             </Container>
           </Col>
         </Row>
       </Form>
     </Container>
   );
-}
+};
 
 export default AddProperty;

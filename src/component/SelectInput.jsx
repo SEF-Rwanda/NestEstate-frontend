@@ -1,23 +1,13 @@
 import React from "react";
 import { Form, Col, Row } from "react-bootstrap";
+import Label from "./Label";
 
 const SelectInput = ({ id, label, description, value, onChange, values }) => {
   return (
     <Form.Group>
       <Row>
         <Col sm={12} md={4}>
-          <Form.Label
-            style={{
-              fontFamily: "Poppins",
-              fontStyle: "normal",
-              fontWeight: "700",
-              fontSize: "14px",
-              lineHeight: "36px",
-              color: "#000000",
-            }}
-          >
-            {label}
-          </Form.Label>
+          <Label text={label} />
         </Col>
         <Col sm={12} md={8}>
           <Form.Select value={value} onChange={onChange}>
