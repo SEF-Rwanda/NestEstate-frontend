@@ -20,6 +20,7 @@ const UserProperties = () => {
                 console.error(error);
             }
         };
+        console.log("USER PROPERTIES", userProperties)
 
         // Get authentication token
         const authToken = localStorage.getItem('token');
@@ -54,7 +55,7 @@ const UserProperties = () => {
                         <tr key={property.id}>
                             <td>{property.title}</td>
                             <td>{property.description}</td>
-                            <td ><img src={property.mainImage} alt="" height="118px" width="228px" style={{ objectFit: "cover" }} /></td>
+                            <td ><img src={property.mainImage.url} alt="" height="118px" width="228px" style={{ objectFit: "cover" }} /></td>
                             <td>{property.price}</td>
                             <td>
                                 <Link to={`/properties/${property.id}`} style={{ marginRight: "10px" }} ><i class="bi bi-pencil"></i></Link>

@@ -5,9 +5,12 @@ import { useDispatch } from "react-redux";
 import jwt_decode from "jwt-decode";
 import "react-toastify/dist/ReactToastify.css";
 import { updateProperty } from "../../state/property/propertySlice";
+import { useParams } from "react-router-dom";
+import { MDBRow, MDBCol } from 'mdb-react-ui-kit';
 
 const UpdateProperty = () => {
-
+    const {id} = useParams();
+    sessionStorage.setItem("propid", id);
     const dispatch = useDispatch();
     const [title, setTitle] = useState("");
     const [category, setCategory] = useState("");
@@ -25,25 +28,58 @@ const UpdateProperty = () => {
     const [masterPlanLevel, setMasterPlanLevel] = useState("");
     const [streetAddress, setStreetAddress] = useState("");
     const [geoLocation, setGeoLocation] = useState("");
-    const [tank, setTank] = useState("");
-    const [furnished, setFurnished] = useState("");
-    const [internet, setInternet] = useState("");
-    const [parking, setParking] = useState("");
+    const [tank, setTank] = useState(false);
+    const [furnished, setFurnished] = useState(false);
+    const [internet, setInternet] = useState(false);
+    const [parking, setParking] = useState(false);
     const [propertyData, setPropertyData] = useState({});
+    
+
     const getProperty = async (id) => {
         const response = await http.get(`/properties/${id}`);
         setPropertyData(response.data.data);
+        setTank(response.data.data.tank)
+        setParking(response.data.data.parking)
+        setFurnished(response.data.data.furnished)
+        setInternet(response.data.data.internet)
+        setTank(response.data.data.tank)
         return response;
     };
     useEffect(() => {
-        // 6408dc57cdb31e2a00c18d24 6407395882aa7065a6d20a00
-        getProperty("6408dc57cdb31e2a00c18d24");//property._id
-        setCategory(propertyData.category)
-    }, ["6408dc57cdb31e2a00c18d24"]);
+        getProperty(id);
 
+    }, [id]);
     
+    // useEffect(() => {
+    //     getProperty(id);
+
+    // }, [furnished]);
+
+    // console.log("value of tank: ", propertyData.tank)
+    
+    let mainImageUrl="";
+    if (propertyData.mainImage && propertyData.mainImage.url) {
+         mainImageUrl = propertyData.mainImage.url;
+    }
+
+    //handle and convert it in base 64
+    const handleMainImage = (e) =>{
+        const file = e.target.files[0];
+        setFileToBase(file);
+        console.log(file);
+    }
+
+    const setFileToBase = (file) =>{
+        const reader = new FileReader();
+        reader.readAsDataURL(file);
+        reader.onloadend = () =>{
+            setMainImage(reader.result);
+        }
+    }
+
     const handleSubmit = async (e) => {
         e.preventDefault();
+
         dispatch(updateProperty({
             title,
             category,
@@ -66,16 +102,19 @@ const UpdateProperty = () => {
         }))
         .unwrap()
         .then((response) => {
-            // window.location.href = "/my-properties";
+            // window.location.href = "/user/properties";
         });
     };
     const handleNegotiable = (event) => {
         setNegociable(event.target.checked);
     };
     const handleTank = (event) => {
+        
         setTank(event.target.checked);
+        
     };
     const handleFurnished = (event) => {
+        
         setFurnished(event.target.checked);
     };
     const handleInternet = (event) => {
@@ -84,12 +123,17 @@ const UpdateProperty = () => {
     const handleParking = (event) => {
         setParking(event.target.checked);
     };
+    console.log("--------------------------------------")
+    console.log(furnished)
+    console.log("----------------------------------------")
+
   return (
-    <Container>
-        
+    <Container  className="justify-content-center align-items-center"> 
       <Row className="mt-5 justify-content-md-center">
         <Col md={6}>
-        <h1 > Update Property</h1>
+        <h1  style={{
+                  textAlign:"center"
+                }}> Update Property</h1>
           <Form noValidate onSubmit={handleSubmit}>
             <Form.Group as={Row} className="mb-3" controlId="formPlaintextTitle">  
                 <Form.Label column sm="2">
@@ -106,9 +150,9 @@ const UpdateProperty = () => {
                     </Form.Label>
                     <Col sm="10">
                         <Form.Select name="category" aria-label="category" value={category} onChange={(e) => setCategory(e.target.value)}>
-                            <option>{propertyData.category}</option>
+                            <option>--category--</option>
                             <option value="House">House</option>
-                            <option value="Land">Land</option> 
+                            <option value="Plot">Plot</option> 
                                                                           
                         </Form.Select>
                     </Col>
@@ -121,8 +165,8 @@ const UpdateProperty = () => {
                     <Col sm="10">
                         <Form.Select name="section" aria-label="section" value={section} onChange={(e) => setSection(e.target.value)}>
                             <option>{propertyData.section}</option>
-                            <option value="Rent">Rent</option>
-                            <option value="Sale">Sale</option>                                            
+                            <option value="For rent">For rent</option>
+                            <option value="For sale">For sale</option>                                            
                         </Form.Select>
                     </Col>
             </Form.Group>
@@ -139,19 +183,25 @@ const UpdateProperty = () => {
                         type="checkbox"
                         id="default-checkbox"
                         label="Negociable"
-                        // defaultValue={propertyData.negociable}
                         checked={negociable}
                         onChange={handleNegotiable}
                     />
                 </Col>
             </Form.Group>
 
-            <Form.Group as={Row} className="mb-3" controlId="formPlaintextMasterPlan">  
+            <Form.Group as={Row} className="mb-3" controlId="formPlaintextMasterPlanUse">  
                 <Form.Label column sm="2">
                 Plan
                 </Form.Label>
                 <Col sm="6">
-                <Form.Control type="text" defaultValue={propertyData.masterPlanUse} onChange={(e) => setMasterPlanUse(e.target.value)} />
+                {/* <Form.Control type="text" defaultValue={propertyData.masterPlanUse} value={masterPlanUse} onChange={(e) => setMasterPlanUse(e.target.value)} /> */}
+                <Form.Select name="level" aria-label="level" value={masterPlanUse} onChange={(e) => setMasterPlanUse(e.target.value)}>
+                    <option>{propertyData.masterPlanUse}</option>
+                    <option value="Farming">Farming</option>
+                    <option value="Settlement">Settlement</option> 
+                    <option value="Industry">Industry</option>  
+                    <option value="Commerce">Commerce</option>                                            
+                </Form.Select>
                 </Col>
                 <Col sm="4">
                     <Form.Group as={Row} className="mb-3" controlId="masterPlanLevel"  >
@@ -163,7 +213,10 @@ const UpdateProperty = () => {
                                     <option>{propertyData.masterPlanLevel}</option>
                                     <option value="R1">R1</option>
                                     <option value="R2">R2</option> 
-                                    <option value="R3">R3</option>                                            
+                                    <option value="R3">R3</option>   
+                                    <option value="R4">R4</option>
+                                    <option value="R5">R5</option> 
+                                    <option value="R6">R6</option>                                            
                                 </Form.Select>
                             </Col>
                     </Form.Group>
@@ -178,17 +231,18 @@ const UpdateProperty = () => {
                 <Form.Control type="text" defaultValue={propertyData.upi} onChange={(e) => setUpi(e.target.value)} />
                 </Col>
                 <Col sm="4">
+                    <Form.Group as={Row} className="mb-3" controlId="formPlaintextTitle">  
+                        <Form.Label column sm="2">
+                        Size
+                        </Form.Label>
+                        <Col sm="10">
+                        <Form.Control type="text"defaultValue={propertyData.size} onChange={(e) => setSize(e.target.value)} />
+                        </Col>
+                    </Form.Group>
                     
                 </Col>
             </Form.Group>
-            <Form.Group as={Row} className="mb-3" controlId="formPlaintextTitle">  
-                <Form.Label column sm="2">
-                Size(sqm)
-                </Form.Label>
-                <Col sm="6">
-                <Form.Control type="text"defaultValue={propertyData.size} onChange={(e) => setSize(e.target.value)} />
-                </Col>
-            </Form.Group>
+            
             <Form.Group as={Row} className="mb-3" controlId="formPlaintextDescription">
                 <Col sm="2">
                     <Form.Label >Description</Form.Label>
@@ -206,10 +260,43 @@ const UpdateProperty = () => {
                 <Form.Control type="text" defaultValue={propertyData.streetAddress} onChange={(e) => setStreetAddress(e.target.value)} />
                 </Col>
             </Form.Group>
+            <Row className="justify-content-center align-items-center">
+                <Button
+                    variant="primary"
+                    // type="submit"
+                    style={{
+                    background: "#d9d9d9",
+                    borderRadius: "30px",
+                    borderColor: "white",
+                    color:"black",
+                    marginTop: "10px",
+                    marginBottom: "10px",
+                    width: "160px",
+                    }}
+                >
+                    Current location
+                </Button>
+                <Button
+                    variant="primary"
+                    // type="submit"
+                    style={{
+                    background: "#d9d9d9",
+                    borderRadius: "30px",
+                    borderColor: "white",
+                    color:"black",
+                    marginTop: "10px",
+                    marginBottom: "10px",
+                    width: "160px",
+                    marginLeft: "10px",
+                    }}
+                >
+                    Google map
+                </Button>
+            </Row>
             
-            {category && category==="House" ? (
+            {category==="House"? (
                 <Row>
-                    <Col sm="6">
+                    <Col sm="5">
                         <Form.Group as={Row} className="mb-3" controlId="bedrooms">
                             <Form.Label column sm="6">
                                     Bed Rooms
@@ -243,7 +330,36 @@ const UpdateProperty = () => {
                                                                                     
                                     </Form.Select>
                                 </Col>
+                        </Form.Group>          
+                    </Col>
+                    
+                    <Col sm="4">
+                        <Form.Group as={Row} className="mb-3" controlId="formCheckBoxTank" >  
+                            <Form.Check 
+                                type="checkbox"
+                                id="tank-checkbox"
+                                label="Tank"
+                                value={tank}
+                                checked={tank}
+                                // defaultValue={propertyData.tank}
+                                onChange={handleTank}  
+                            />
                         </Form.Group>
+
+                        <Form.Group as={Row} className="mb-3" controlId="formCheckBoxFurnished">  
+                            <Form.Check 
+                                type="checkbox"
+                                id="furnished-checkbox"
+                                label="Furnished"
+                                // value={furnished}
+                                // defaultValue={propertyData.furnished}
+                                checked={furnished}
+                                onChange={handleFurnished}
+                            />
+                        </Form.Group>
+
+                    </Col>
+                    <Col sm="3">
                         <Form.Group as={Row} className="mb-3" controlId="formCheckBoxParking">  
                             <Form.Check 
                                 type="checkbox"
@@ -254,94 +370,60 @@ const UpdateProperty = () => {
                                 onChange={handleParking}
                             />
                         </Form.Group>
-            
-                    </Col>
-                    
-                    <Col sm="6">
-                    <Form.Group as={Row} className="mb-3" controlId="formCheckBoxTank" >  
-                        <Form.Check 
-                            type="checkbox"
-                            id="tank-checkbox"
-                            label="Tank"
-                            value={tank}
-                            checked={tank}
-                            // defaultValue={propertyData.tank}
-                            onChange={handleTank}  
-                        />
-                    </Form.Group>
-
-                    <Form.Group as={Row} className="mb-3" controlId="formCheckBoxFurnished">  
-                        <Form.Check 
-                            type="checkbox"
-                            id="furnished-checkbox"
-                            label="Furnished"
-                            value={furnished}
-                            // defaultValue={propertyData.furnished}
-                            checked={furnished}
-                            onChange={handleFurnished}
-                        />
-                    </Form.Group>
-
-                    <Form.Group as={Row} className="mb-3" controlId="formCheckBoxInternet">  
-                        <Form.Check 
-                            type="checkbox"
-                            id="internet-checkbox"
-                            label="Internet"
-                            value={internet}
-                            // defaultValue={propertyData.internet}
-                            checked={internet}
-                            onChange={handleInternet}
-                        />
-                    </Form.Group>
+                        <Form.Group as={Row} className="mb-3" controlId="formCheckBoxInternet">  
+                            <Form.Check 
+                                type="checkbox"
+                                id="internet-checkbox"
+                                label="Internet"
+                                value={internet}
+                                // defaultValue={propertyData.internet}
+                                checked={internet}
+                                onChange={handleInternet}
+                            />
+                        </Form.Group>
                     </Col>
                 </Row>
-                
-
-            ) : (
-                
-                <>
-                
-                </>
+            ) : (  
+                <> </>
             )}
-            
-            
-            {/* <Form.Group className="mb-3" controlId="validationCustom01">
-              <Form.Label
-                style={{
-                  color: "#C1BDBD",
-                  fontFamily: "Poppins",
-                  fonSize: "20em",
-                }}
-              >
-                First name
-              </Form.Label>
-              <Form.Control
-                required
-                type="text"
-                defaultValue={userdata.firstName}
-                onChange={(e) => setFirstName(e.target.value)}
-                name="firstName"
-              />
-              <Form.Control.Feedback type="invalid">
-                Please enter a first name
-              </Form.Control.Feedback>
+            <Form.Group as={Row} className="mb-3" controlId="formPlaintextTitle">  
+                <Form.Label column sm="2">
+                Pictures
+                </Form.Label>
+                <Col sm="10">
+                    <Row>
+                        <Col sm="5">
+                            <MDBRow>
+                                <MDBCol lg='6' md='14' className='mb-6'>
+                                    <img src={mainImageUrl} className='img-fluid rounded' alt='' />
+                                    <img className="img-fluid" src={mainImage} alt="" />
+                                </MDBCol>
+                            </MDBRow>
+                        </Col>
+                        <Col sm="7">
+
+                            <div className="form-outline mb-2">
+                                <input onChange={handleMainImage}  type="file" id="formupload" name="mainImage" className="form-control"  />
+                            </div>
+                            
+                        </Col>
+                    </Row>
+                </Col>
             </Form.Group>
-            <Form.Group className="mb-3" controlId="formBasicLastName">
-              <Form.Label>Last name</Form.Label>
-              <Form.Control
-                required
-                type="text"
-                defaultValue={userdata.lastName}
-                onChange={(e) => setLastName(e.target.value)}
-                name="lastName"
-              />
-              <Form.Control.Feedback type="invalid">
-                Please enter your last name
-              </Form.Control.Feedback>
-            </Form.Group> */}
-            <Button variant="primary" type="submit">
-              Update
-            </Button>
+            <Row className="justify-content-center align-items-center">
+                <Button variant="primary" type="submit" style={{
+                        background: "#6736CF",
+                        borderRadius: "25px",
+                        marginTop: "10px",
+                        marginBottom: "10px",
+                        borderColor: "white",
+                        width: "160px",
+                        marginLeft: "10px",
+                        }}>
+                Update
+                </Button>
+            </Row>
+
           </Form>
         </Col>
       </Row>
