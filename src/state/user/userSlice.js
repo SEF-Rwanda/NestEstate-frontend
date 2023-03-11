@@ -37,17 +37,21 @@ if (token) {
   usr = jwt_decode(token);
 }
 export const updateUserProfile = createAsyncThunk(
-  'user/updateUserProfile',
-  
-  async ({firstName, lastName}, thuknAPI) => {
+  "user/updateUserProfile",
+
+  async ({ firstName, lastName }, thuknAPI) => {
     console.log("slice", firstName, lastName);
-    try{
-      const response = await axios.put(`${baseAPIUrl}/users/profile/${usr._id}`, {firstName, lastName});
-      return response.data; 
-    }catch(err){
-      return thuknAPI.rejectWithValue(err.response.data)
+    try {
+      const response = await axios.put(
+        `${baseAPIUrl}/users/profile/${usr._id}`,
+        { firstName, lastName }
+      );
+      return response.data;
+    } catch (err) {
+      return thuknAPI.rejectWithValue(err.response.data);
     }
-  })
+  }
+);
 
 export const userSlice = createSlice({
   name: "user",
@@ -58,7 +62,8 @@ export const userSlice = createSlice({
     isVerifyLoading: false,
     isVerifySuccess: false,
     verifyError: null,
-    userUpdated: {}
+    verifyResult: null,
+    userUpdated: {},
   },
   reducers: {},
   extraReducers: (builder) => {
@@ -83,9 +88,10 @@ export const userSlice = createSlice({
         state.isVerifySuccess = false;
         state.verifyError = null;
       })
-      .addCase(verifyAccount.fulfilled, (state) => {
+      .addCase(verifyAccount.fulfilled, (state, action) => {
         state.isVerifyLoading = false;
         state.isVerifySuccess = true;
+        state.verifyResult = action.payload;
         state.verifyError = null;
       })
       .addCase(verifyAccount.rejected, (state, action) => {
@@ -97,21 +103,20 @@ export const userSlice = createSlice({
         state.loading = true;
         state.success = false;
         state.error = null;
-        state.userUpdated={};
+        state.userUpdated = {};
       })
-      .addCase(updateUserProfile.fulfilled, (state,action) => {
+      .addCase(updateUserProfile.fulfilled, (state, action) => {
         state.loading = false;
         state.success = true;
         state.error = null;
-        state.userUpdated=action.payload;
+        state.userUpdated = action.payload;
       })
-      .addCase(updateUserProfile.rejected, (state,action) => {
+      .addCase(updateUserProfile.rejected, (state, action) => {
         state.loading = false;
         state.success = false;
-        state.userUpdated={};
+        state.userUpdated = {};
         state.error = action.error.message;
-      })
-     
+      });
   },
 });
 
