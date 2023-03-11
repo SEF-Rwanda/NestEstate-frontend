@@ -27,7 +27,7 @@ export const updateProperty = createAsyncThunk(
     tank, 
     furnished, 
     internet,
-    parking
+    parking,
     }, thuknAPI) => {
     const token = localStorage.getItem("token");
 
@@ -36,7 +36,7 @@ export const updateProperty = createAsyncThunk(
         Authorization: `Bearer ${token}`,
       },
     };
-    console.log(title, category, section, price, size, upi, description, mainImage, otherImages, bedrooms, bathrooms, masterPlanUse,masterPlanLevel, streetAddress, geoLocation, tank, furnished, internet,parking);
+    // console.log(title, category, section, price, size, upi, description, mainImage, otherImages, bedrooms, bathrooms, masterPlanUse,masterPlanLevel, streetAddress, geoLocation, tank, furnished, internet,parking);
     try{
       const propid=sessionStorage.getItem("propid");
       const response = await axios.put(`${baseAPIUrl}/properties/${propid}`, {title, category, section, price, size, upi, description, mainImage, otherImages, bedrooms, bathrooms, masterPlanUse,masterPlanLevel, streetAddress, geoLocation, tank, furnished, internet, parking},config);

@@ -28,22 +28,34 @@ const UpdateProperty = () => {
     const [masterPlanLevel, setMasterPlanLevel] = useState("");
     const [streetAddress, setStreetAddress] = useState("");
     const [geoLocation, setGeoLocation] = useState("");
-    const [tank, setTank] = useState("");
-    const [furnished, setFurnished] = useState("");
-    const [internet, setInternet] = useState("");
-    const [parking, setParking] = useState("");
+    const [tank, setTank] = useState(false);
+    const [furnished, setFurnished] = useState(false);
+    const [internet, setInternet] = useState(false);
+    const [parking, setParking] = useState(false);
     const [propertyData, setPropertyData] = useState({});
     
 
     const getProperty = async (id) => {
         const response = await http.get(`/properties/${id}`);
         setPropertyData(response.data.data);
+        setTank(response.data.data.tank)
+        setParking(response.data.data.parking)
+        setFurnished(response.data.data.furnished)
+        setInternet(response.data.data.internet)
+        setTank(response.data.data.tank)
         return response;
     };
     useEffect(() => {
         getProperty(id);
+
     }, [id]);
     
+    // useEffect(() => {
+    //     getProperty(id);
+
+    // }, [furnished]);
+
+    // console.log("value of tank: ", propertyData.tank)
     
     let mainImageUrl="";
     if (propertyData.mainImage && propertyData.mainImage.url) {
@@ -67,6 +79,7 @@ const UpdateProperty = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+
         dispatch(updateProperty({
             title,
             category,
@@ -89,16 +102,19 @@ const UpdateProperty = () => {
         }))
         .unwrap()
         .then((response) => {
-            window.location.href = "/user/properties";
+            // window.location.href = "/user/properties";
         });
     };
     const handleNegotiable = (event) => {
         setNegociable(event.target.checked);
     };
     const handleTank = (event) => {
+        
         setTank(event.target.checked);
+        
     };
     const handleFurnished = (event) => {
+        
         setFurnished(event.target.checked);
     };
     const handleInternet = (event) => {
@@ -107,12 +123,17 @@ const UpdateProperty = () => {
     const handleParking = (event) => {
         setParking(event.target.checked);
     };
-    
+    console.log("--------------------------------------")
+    console.log(furnished)
+    console.log("----------------------------------------")
+
   return (
-    <Container> 
+    <Container  className="justify-content-center align-items-center"> 
       <Row className="mt-5 justify-content-md-center">
         <Col md={6}>
-        <h1 > Update Property</h1>
+        <h1  style={{
+                  textAlign:"center"
+                }}> Update Property</h1>
           <Form noValidate onSubmit={handleSubmit}>
             <Form.Group as={Row} className="mb-3" controlId="formPlaintextTitle">  
                 <Form.Label column sm="2">
@@ -129,9 +150,9 @@ const UpdateProperty = () => {
                     </Form.Label>
                     <Col sm="10">
                         <Form.Select name="category" aria-label="category" value={category} onChange={(e) => setCategory(e.target.value)}>
-                            <option>{propertyData.category}</option>
+                            <option>--category--</option>
                             <option value="House">House</option>
-                            <option value="Land">Land</option> 
+                            <option value="Plot">Plot</option> 
                                                                           
                         </Form.Select>
                     </Col>
@@ -144,8 +165,8 @@ const UpdateProperty = () => {
                     <Col sm="10">
                         <Form.Select name="section" aria-label="section" value={section} onChange={(e) => setSection(e.target.value)}>
                             <option>{propertyData.section}</option>
-                            <option value="Rent">Rent</option>
-                            <option value="Sale">Sale</option>                                            
+                            <option value="For rent">For rent</option>
+                            <option value="For sale">For sale</option>                                            
                         </Form.Select>
                     </Col>
             </Form.Group>
@@ -176,10 +197,10 @@ const UpdateProperty = () => {
                 {/* <Form.Control type="text" defaultValue={propertyData.masterPlanUse} value={masterPlanUse} onChange={(e) => setMasterPlanUse(e.target.value)} /> */}
                 <Form.Select name="level" aria-label="level" value={masterPlanUse} onChange={(e) => setMasterPlanUse(e.target.value)}>
                     <option>{propertyData.masterPlanUse}</option>
-                    <option value="Ubuhinzi">Ubuhinzi</option>
-                    <option value="Imiturire">Imiturire</option> 
-                    <option value="Ubucuruzi">Ubucuruzi</option>  
-                    <option value="Inganda">Inganda</option>                                            
+                    <option value="Farming">Farming</option>
+                    <option value="Settlement">Settlement</option> 
+                    <option value="Industry">Industry</option>  
+                    <option value="Commerce">Commerce</option>                                            
                 </Form.Select>
                 </Col>
                 <Col sm="4">
@@ -192,7 +213,10 @@ const UpdateProperty = () => {
                                     <option>{propertyData.masterPlanLevel}</option>
                                     <option value="R1">R1</option>
                                     <option value="R2">R2</option> 
-                                    <option value="R3">R3</option>                                            
+                                    <option value="R3">R3</option>   
+                                    <option value="R4">R4</option>
+                                    <option value="R5">R5</option> 
+                                    <option value="R6">R6</option>                                            
                                 </Form.Select>
                             </Col>
                     </Form.Group>
@@ -236,6 +260,39 @@ const UpdateProperty = () => {
                 <Form.Control type="text" defaultValue={propertyData.streetAddress} onChange={(e) => setStreetAddress(e.target.value)} />
                 </Col>
             </Form.Group>
+            <Row className="justify-content-center align-items-center">
+                <Button
+                    variant="primary"
+                    // type="submit"
+                    style={{
+                    background: "#d9d9d9",
+                    borderRadius: "30px",
+                    borderColor: "white",
+                    color:"black",
+                    marginTop: "10px",
+                    marginBottom: "10px",
+                    width: "160px",
+                    }}
+                >
+                    Current location
+                </Button>
+                <Button
+                    variant="primary"
+                    // type="submit"
+                    style={{
+                    background: "#d9d9d9",
+                    borderRadius: "30px",
+                    borderColor: "white",
+                    color:"black",
+                    marginTop: "10px",
+                    marginBottom: "10px",
+                    width: "160px",
+                    marginLeft: "10px",
+                    }}
+                >
+                    Google map
+                </Button>
+            </Row>
             
             {category==="House"? (
                 <Row>
@@ -294,7 +351,7 @@ const UpdateProperty = () => {
                                 type="checkbox"
                                 id="furnished-checkbox"
                                 label="Furnished"
-                                value={furnished}
+                                // value={furnished}
                                 // defaultValue={propertyData.furnished}
                                 checked={furnished}
                                 onChange={handleFurnished}
@@ -353,10 +410,20 @@ const UpdateProperty = () => {
                     </Row>
                 </Col>
             </Form.Group>
-            
-            <Button variant="primary" type="submit">
-              Update
-            </Button>
+            <Row className="justify-content-center align-items-center">
+                <Button variant="primary" type="submit" style={{
+                        background: "#6736CF",
+                        borderRadius: "25px",
+                        marginTop: "10px",
+                        marginBottom: "10px",
+                        borderColor: "white",
+                        width: "160px",
+                        marginLeft: "10px",
+                        }}>
+                Update
+                </Button>
+            </Row>
+
           </Form>
         </Col>
       </Row>
