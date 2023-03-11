@@ -87,7 +87,10 @@ const AddProperty = () => {
           "https://api.cloudinary.com/v1_1/kuranga/image/upload",
           imageData
         );
-        images.push(data.secure_url);
+        images.push({
+          public_id: data.public_id,
+          url: data.secure_url,
+        });
       } catch (err) {
         console.log(err);
       }
