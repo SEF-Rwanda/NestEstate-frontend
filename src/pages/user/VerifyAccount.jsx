@@ -31,9 +31,15 @@ const VerifyOTP = () => {
       const newIsLoading = store.getState().user.isVerifyLoading;
       const isSuccess = store.getState().user.isVerifySuccess;
       const error = store.getState().user.verifyError;
+      const result = store.getState().user.verifyResult;
+      if (result) {
+        localStorage.setItem("token", result.data);
+      }
+
       setIsLoading(newIsLoading);
       if (isSuccess) {
         navigate("/");
+        window.location.reload();
       } else if (error) {
         toast.error(error);
       }
