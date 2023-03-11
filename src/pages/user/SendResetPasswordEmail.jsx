@@ -1,10 +1,8 @@
 import React, { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { Form, Button, Container, Row, Col } from "react-bootstrap";
 
 const SendingEmail = () => {
-  const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [error, setError] = useState("");
 
@@ -28,8 +26,6 @@ const SendingEmail = () => {
       console.log(data);
       console.log(data.resetToken);
       localStorage.setItem("resetToken", data.resetToken);
-      // navigate("/");
-      // window.location.reload();
     } catch (error) {
       console.log(error.message);
       setError(error.response.data);

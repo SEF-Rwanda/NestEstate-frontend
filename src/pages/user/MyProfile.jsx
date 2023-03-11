@@ -3,9 +3,6 @@ import { useState, useEffect } from "react";
 import Modal from "react-bootstrap/Modal";
 import UpdateUserProfile from "./UpdateProfile";
 import http from "../../utils/http";
-
-// import axios from "axios";
-// import { useNavigate } from 'react-router-dom';
 import jwt_decode from "jwt-decode";
 
 const MyProfile = () => {
@@ -40,7 +37,7 @@ const MyProfile = () => {
             >
               <h1>My profile</h1>
               <div>
-                <img src="/images/profile.png" />
+                <img src="/images/profile.png" alt={userdata.firstName} />
               </div>
               <br />
               <Button
