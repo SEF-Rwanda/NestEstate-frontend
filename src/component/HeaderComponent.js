@@ -60,21 +60,29 @@ const HeaderComponent = () => {
             </Nav>
           </Nav>
           <Nav>
-            <LinkContainer to="/about">
-              <Nav.Link>About</Nav.Link>
-            </LinkContainer>
             <LinkContainer to="/">
               <Nav.Link>Home</Nav.Link>
             </LinkContainer>
-            <LinkContainer to="/contact">
-              <Nav.Link>Contact</Nav.Link>
-            </LinkContainer>
-            <LinkContainer to="/login">
-              <Nav.Link>Login</Nav.Link>
-            </LinkContainer>
-            <LinkContainer to="/register">
-              <Nav.Link>Register</Nav.Link>
-            </LinkContainer>
+            {user && user?._id?.length ? (
+              <LinkContainer to="/add-property">
+                <Nav.Link>Add Property</Nav.Link>
+              </LinkContainer>
+            ) : (
+              <>
+                <LinkContainer to="/about">
+                  <Nav.Link>About</Nav.Link>
+                </LinkContainer>
+                <LinkContainer to="/contact">
+                  <Nav.Link>Contact</Nav.Link>
+                </LinkContainer>
+                <LinkContainer to="/login">
+                  <Nav.Link>Login</Nav.Link>
+                </LinkContainer>
+                <LinkContainer to="/register">
+                  <Nav.Link>Register</Nav.Link>
+                </LinkContainer>
+              </>
+            )}
 
             {user && user?._id?.length ? (
               <NavDropdown

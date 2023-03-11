@@ -1,10 +1,10 @@
 import React from "react";
 import FooterComponent from "../component/FooterComponent";
 
-import PropertyCarouselComponent from "./property/PropertyCarouselComponent";
+import PropertyCarouselComponent from "../component/property/PropertyCarouselComponent";
 
 import ChoosingUsComponent from "../component/ChoosingUsComponent";
-import HouseCardComponent from "./property/PropertyCardComponent";
+import HouseCardComponent from "../component/property/PropertyCardComponent";
 
 const Home = () => {
   return (
