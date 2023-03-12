@@ -68,7 +68,11 @@ const UserProperties = () => {
           {userProperties.map((property) => (
             <tr key={property.id}>
               <td>{property.title}</td>
-              <td>{property.description}</td>
+              <td>
+                {property.description.length > 80
+                  ? `${property.description.substring(0, 80)}...`
+                  : property.description}
+              </td>
               <td>
                 <img
                   src={property.mainImage.url}
@@ -82,13 +86,13 @@ const UserProperties = () => {
               <td>
                 <Link
                   to={`/properties/${property.id}`}
-                  style={{ marginRight: "10px" }}
+                  style={{ marginRight: "10px", color: 'black' }}
                 >
                   <i class="bi bi-pencil"></i>
                 </Link>
-                <span style={{ marginLeft: "10px" }}>
+                <Link to="" style={{ marginLeft: "10px", color: 'red' }}>
                   <i class="bi bi-calendar-x-fill"></i>
-                </span>
+                </Link>
               </td>
             </tr>
           ))}
