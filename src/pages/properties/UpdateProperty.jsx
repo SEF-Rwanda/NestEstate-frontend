@@ -47,13 +47,6 @@ const UpdateProperty = () => {
     getProperty(id);
   }, [id]);
 
-  // useEffect(() => {
-  //     getProperty(id);
-
-  // }, [furnished]);
-
-  // console.log("value of tank: ", propertyData.tank)
-
   let mainImageUrl = "";
   if (propertyData.mainImage && propertyData.mainImage.url) {
     mainImageUrl = propertyData.mainImage.url;
@@ -101,7 +94,7 @@ const UpdateProperty = () => {
     )
       .unwrap()
       .then((response) => {
-        // window.location.href = "/user/properties";
+        window.location.href = "/user/properties";
       });
   };
   const handleNegotiable = (event) => {
@@ -119,10 +112,6 @@ const UpdateProperty = () => {
   const handleParking = (event) => {
     setParking(event.target.checked);
   };
-  console.log("--------------------------------------");
-  console.log(furnished);
-  console.log("----------------------------------------");
-
   return (
     <Container className="justify-content-center align-items-center">
       <Row className="mt-5 justify-content-md-center">
@@ -224,7 +213,6 @@ const UpdateProperty = () => {
                 Plan
               </Form.Label>
               <Col sm="6">
-                {/* <Form.Control type="text" defaultValue={propertyData.masterPlanUse} value={masterPlanUse} onChange={(e) => setMasterPlanUse(e.target.value)} /> */}
                 <Form.Select
                   name="level"
                   aria-label="level"
@@ -429,7 +417,6 @@ const UpdateProperty = () => {
                       label="Tank"
                       value={tank}
                       checked={tank}
-                      // defaultValue={propertyData.tank}
                       onChange={handleTank}
                     />
                   </Form.Group>
@@ -443,8 +430,6 @@ const UpdateProperty = () => {
                       type="checkbox"
                       id="furnished-checkbox"
                       label="Furnished"
-                      // value={furnished}
-                      // defaultValue={propertyData.furnished}
                       checked={furnished}
                       onChange={handleFurnished}
                     />
@@ -475,7 +460,6 @@ const UpdateProperty = () => {
                       id="internet-checkbox"
                       label="Internet"
                       value={internet}
-                      // defaultValue={propertyData.internet}
                       checked={internet}
                       onChange={handleInternet}
                     />
