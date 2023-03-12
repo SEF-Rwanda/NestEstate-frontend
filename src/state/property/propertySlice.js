@@ -99,19 +99,34 @@ export const propertySlice = createSlice({
     isAddingProductSuccess: false,
     isAddingProductFailed: false,
     addingProductError: "",
+    isUpdatingPropertyLoading: false,
+    isUpdatingPropertySuccess: false,
+    isUpdatingPropertyFailed: false,
+    updatingPropertyError: "",
   },
   reducers: {},
   extraReducers: (builder) => {
     builder
       .addCase(updateProperty.pending, (state) => {
         state.updateProperty = {};
+        state.isUpdatingPropertyLoading = true;
+        state.isUpdatingPropertySuccess = false;
+        state.isUpdatingPropertyFailed = false;
+        state.updatingPropertyError = "";
       })
       .addCase(updateProperty.fulfilled, (state, action) => {
         state.updateProperty = action.payload;
+        state.isUpdatingPropertyLoading = false;
+        state.isUpdatingPropertySuccess = true;
+        state.isUpdatingPropertyFailed = false;
+        state.updatingPropertyError = "";
       })
       .addCase(updateProperty.rejected, (state, action) => {
         state.updateProperty = {};
-        state.error = action.error.message;
+        state.isUpdatingPropertyLoading = false;
+        state.isUpdatingPropertySuccess = false;
+        state.isUpdatingPropertyFailed = true;
+        state.updatingPropertyError = action.error.message;
       })
       .addCase(addProduct.pending, (state) => {
         state.isAddingProductLoading = true;

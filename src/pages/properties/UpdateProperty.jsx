@@ -1,11 +1,15 @@
-import { Container, Row, Col, Form, Button } from "react-bootstrap";
+import { Container, Row, Col, Form, Button , Spinner} from "react-bootstrap";
 import { useState, useEffect } from "react";
 import http from "../../utils/http";
 import { useDispatch } from "react-redux";
+import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { updateProperty } from "../../state/property/propertySlice";
 import { useParams } from "react-router-dom";
 import { MDBRow, MDBCol } from "mdb-react-ui-kit";
+import ButtonComponent from "../../component/utils/Button";
+import { store } from "../../state/store";
+import { useNavigate } from "react-router-dom";
 
 const UpdateProperty = () => {
   const { id } = useParams();
@@ -32,6 +36,8 @@ const UpdateProperty = () => {
   const [internet, setInternet] = useState(false);
   const [parking, setParking] = useState(false);
   const [propertyData, setPropertyData] = useState({});
+  const [isFormLoading, setIsFormLoading] = useState(false);
+  const navigate = useNavigate();
 
   const getProperty = async (id) => {
     const response = await http.get(`/properties/${id}`);
@@ -45,13 +51,38 @@ const UpdateProperty = () => {
   };
   useEffect(() => {
     getProperty(id);
-  }, [id]);
+    const unsubscribe = store.subscribe(() => {
+      const isLoading = store.getState().property.isUpdatingPropertyLoading;
+      const isSuccess = store.getState().property.isUpdatingPropertySuccess;
+      const error = store.getState().property.addingProductError;
+      setIsFormLoading(isLoading);
+
+      if (isSuccess) {
+        navigate("/user/properties");
+        toast.success("property updated successfully!");
+      } else if(error==!"") {
+        toast.error("Something went wrong!");
+      }
+    });
+    return () => unsubscribe();
+  }, []);
 
   let mainImageUrl = "";
   if (propertyData.mainImage && propertyData.mainImage.url) {
     mainImageUrl = propertyData.mainImage.url;
   }
 
+  let otherImagesUrl = [];
+  if(propertyData.otherImages){
+    for (let i = 0; i < propertyData.otherImages.length; i++) {
+      otherImagesUrl.push({ 
+        public_id : propertyData.otherImages[i].public_id,
+        
+        url : propertyData.otherImages[i].url
+    });
+    }
+  }
+  // console.log("OTHER IMAGES------", otherImagesUrl)
   //handle and convert it in base 64
   const handleMainImage = (e) => {
     const file = e.target.files[0];
@@ -92,10 +123,7 @@ const UpdateProperty = () => {
         parking,
       })
     )
-      .unwrap()
-      .then((response) => {
-        window.location.href = "/user/properties";
-      });
+      .unwrap();
   };
   const handleNegotiable = (event) => {
     setNegociable(event.target.checked);
@@ -475,7 +503,7 @@ const UpdateProperty = () => {
               controlId="formPlaintextTitle"
             >
               <Form.Label column sm="2">
-                Pictures
+                Main Image
               </Form.Label>
               <Col sm="10">
                 <Row>
@@ -505,22 +533,66 @@ const UpdateProperty = () => {
                 </Row>
               </Col>
             </Form.Group>
+            <Row>
+            {otherImagesUrl.map((d) => (
+             
+                <Form.Group
+                key={d.public_id}
+                  as={Row}
+                  className="mb-3"
+                  controlId="formPlaintextTitle"
+                >
+                  <Form.Label column sm="2">
+                    
+                  </Form.Label>
+                  <Col sm="10">
+                    <Row>
+                      <Col sm="5">
+                        <MDBRow>
+                          <MDBCol lg="6" md="14" className="mb-6">
+                            <img
+                              src={d.url}
+                              className="img-fluid rounded"
+                              alt=""
+                            />
+                            <img className="img-fluid" src={mainImage} alt="" />
+                          </MDBCol>
+                        </MDBRow>
+                      </Col>
+                      <Col sm="7">
+                        <div className="form-outline mb-2">
+                          <input
+                            // onChange=""
+                            type="file"
+                            id="formupload"
+                            name="mainImage"
+                            className="form-control"
+                          />
+                        </div>
+                      </Col>
+                    </Row>
+                  </Col>
+                </Form.Group>
+            ))}
+            </Row>
             <Row className="justify-content-center align-items-center">
-              <Button
-                variant="primary"
-                type="submit"
-                style={{
-                  background: "#6736CF",
-                  borderRadius: "25px",
-                  marginTop: "10px",
-                  marginBottom: "10px",
-                  borderColor: "white",
-                  width: "160px",
-                  marginLeft: "10px",
-                }}
-              >
-                Update
-              </Button>
+              <ButtonComponent
+                value={
+                  !isFormLoading ? (
+                    "Update"
+                  ) : (
+                    <Spinner
+                      as="span"
+                      animation="border"
+                      size="sm"
+                      role="status"
+                      aria-hidden="true"
+                      style={{ marginRight: "5px" }}
+                    />
+                  )
+                }
+                action={handleSubmit}
+              />
             </Row>
           </Form>
         </Col>
