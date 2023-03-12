@@ -4,12 +4,18 @@ import axios from "axios";
 import Input from "../../component/utils/Input";
 import { Form, Button, Container, Row, Col } from "react-bootstrap";
 import { Link } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { login } from "../../state/user/userSlice";
+import { store } from "../../state/store";
+import { toast } from "react-toastify";
 
 const Login = () => {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
   const [email, setEmail] = useState("");
   const [error, setError] = useState("");
   const [password, setPassword] = useState("");
+  const [isFormLoading, setIsFormLoading] = useState(false);
 
   useEffect(() => {
     const timeout = setTimeout(() => {
@@ -18,21 +24,27 @@ const Login = () => {
     return () => clearTimeout(timeout);
   }, [error]);
 
+
+  useEffect(()=>{
+    const unsubscribe = store.subscribe(() => {
+      const newIsLoading = store.getState().user.loading;
+      const isSuccess = store.getState().user.success;
+      const error = store.getState().user.error;
+      setIsFormLoading(newIsLoading);
+
+      if (isSuccess) {
+        navigate("/");
+        window.location.reload()
+      } else if (error) {
+        toast.error(error);
+      }
+    });
+    return () => unsubscribe();
+  })
   const handleSubmit = async (e) => {
     e.preventDefault();
     const loginInfo = { email, password };
-    console.log(loginInfo);
-    try {
-      const { data } = await axios.post(
-        "http://localhost:5000/api/v1/users/login",
-        loginInfo
-      );
-      localStorage.setItem("token", data.token);
-      navigate("/");
-      window.location.reload();
-    } catch (error) {
-      setError(error.response.data);
-    }
+    dispatch(login(loginInfo))
   };
   return (
     <>

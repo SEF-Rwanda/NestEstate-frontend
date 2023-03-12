@@ -11,6 +11,16 @@ export const signup = createAsyncThunk("user/signup", async (newUserData) => {
   return response.data;
 });
 
+export const login = createAsyncThunk("user/login", async (userCredentials) => {
+  const response = await axios.post(
+    `${baseAPIUrl}/users/login`,
+    userCredentials
+  );
+  const token = response.data.token;
+  localStorage.setItem("token", token);
+  return response.data;
+});
+
 export const verifyAccount = createAsyncThunk(
   "user/verifyAccount",
   async (verificationData) => {
@@ -115,6 +125,21 @@ export const userSlice = createSlice({
         state.loading = false;
         state.success = false;
         state.userUpdated = {};
+        state.error = action.error.message;
+      })
+      .addCase(login.pending, (state, action) => {
+        state.loading = true;
+        state.success = false;
+        state.error = null;
+      })
+      .addCase(login.fulfilled, (state, action) => {
+        state.loading = false;
+        state.success = true;
+        state.error = null;
+      })
+      .addCase(login.rejected, (state, action) => {
+        state.loading = false;
+        state.success = false;
         state.error = action.error.message;
       });
   },
