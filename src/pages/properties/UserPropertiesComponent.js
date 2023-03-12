@@ -44,7 +44,7 @@ const UserProperties = () => {
       <Button
         style={{ backgroundColor: "#6736CF", border: "none" }}
         as={Link}
-        to=""
+        to="/add-property"
       >
         {" "}
         <i

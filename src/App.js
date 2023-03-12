@@ -14,7 +14,7 @@ import HeaderComponent from "./component/HeaderComponent";
 import { store } from "./state/store";
 import VerifyAccount from "./pages/user/VerifyAccount";
 import UpdateProperty from "./pages/properties/UpdateProperty";
-import UserProperties from "./component/property/UserPropertiesComponent";
+import UserProperties from "./pages/properties/UserPropertiesComponent";
 // import UpdateProperty from "./pages/properties/UpdateProperty";
 import AddProperty from "./pages/properties/AddProperty";
 import "./App.css";
