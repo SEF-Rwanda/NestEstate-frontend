@@ -4,13 +4,13 @@ import FooterComponent from "../component/FooterComponent";
 import PropertyCarouselComponent from "../component/property/PropertyCarouselComponent";
 
 import ChoosingUsComponent from "../component/ChoosingUsComponent";
-import HouseCardComponent from "../component/property/PropertyCardComponent";
+import Properties from "./properties/Properties";
 
 const Home = () => {
   return (
     <div>
       <PropertyCarouselComponent />
-      <HouseCardComponent />
+      <Properties />
       <ChoosingUsComponent />
       <FooterComponent />
     </div>
