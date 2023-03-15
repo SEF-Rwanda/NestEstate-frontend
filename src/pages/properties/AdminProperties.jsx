@@ -104,9 +104,14 @@ const UserProperties = () => {
                       >
                         <i class="bi bi-pencil"></i>
                       </Link>
-                      <Link to="" style={{ marginLeft: "10px", color: 'gray' }}>
+                      
+                      
+                      {property.isApproved ? <Link to="" style={{ marginLeft: "10px", color: 'green' }}>
                       <i class="bi bi-check-circle-fill"></i>
-                      </Link>
+                      </Link> : <Link to="" style={{ marginLeft: "10px", color: 'gray' }}>
+                      <i class="bi bi-check-circle-fill"></i>
+                      </Link>}
+                      
                     </td>
                   </tr>
                 ))}
