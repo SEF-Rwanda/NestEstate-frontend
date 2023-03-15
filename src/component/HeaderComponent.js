@@ -60,9 +60,16 @@ const HeaderComponent = () => {
             </Nav>
           </Nav>
           <Nav>
-            <LinkContainer to="/">
-              <Nav.Link>Home</Nav.Link>
-            </LinkContainer>
+            {user && user.isAdmin ? (
+              <LinkContainer to="/admin/properties">
+                <Nav.Link>Dashboard</Nav.Link>
+              </LinkContainer>
+            ):(
+              <LinkContainer to="/">
+                <Nav.Link>Home</Nav.Link>
+              </LinkContainer>
+            )}
+            
             {user && user?._id?.length ? (
               <LinkContainer to="/add-property">
                 <Nav.Link>Add Property</Nav.Link>
