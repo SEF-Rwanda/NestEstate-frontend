@@ -80,7 +80,7 @@ const AddProperty = () => {
     const images = [];
     for (let i = 0; i < event.target.files.length; i++) {
       const imageData = new FormData();
-      imageData.append("file", event.target.files[0]);
+      imageData.append("file", event.target.files[i]);
       imageData.append("upload_preset", "wingi-app");
       try {
         const { data } = await axios.post(
@@ -121,6 +121,7 @@ const AddProperty = () => {
       internet: isInternetAvailable,
       furnished: isFurnished,
     };
+    console.log("to be added================>",property)
     dispatch(addProduct(property));
     console.log(property);
   };

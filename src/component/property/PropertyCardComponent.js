@@ -9,7 +9,7 @@ const CategoryCardComponent = ({ category, id }) => {
   }, []);
 
   const propertiesData1 = async () => {
-    const { data } = await axios.get("http://localhost:3000/api/v1/properties");
+    const { data } = await axios.get("http://localhost:5000/api/v1/properties");
     setProperties(data.data);
   };
 

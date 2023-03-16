@@ -15,8 +15,9 @@ import { store } from "./state/store";
 import VerifyAccount from "./pages/user/VerifyAccount";
 import UpdateProperty from "./pages/properties/UpdateProperty";
 import UserProperties from "./pages/properties/UserPropertiesComponent";
-// import UpdateProperty from "./pages/properties/UpdateProperty";
+import AdminProperties from "./pages/properties/AdminProperties";
 import AddProperty from "./pages/properties/AddProperty";
+import AdminUsers from "./pages/user/AdminUsers";
 import "./App.css";
 
 function App() {
@@ -36,6 +37,8 @@ function App() {
         <Route path="/user/properties" element={<UserProperties />} />
         <Route path="/properties/update" element={<UpdateProperty />} />
         <Route path="/add-property" element={<AddProperty />} />
+        <Route path="/admin/properties" element={<AdminProperties />} />
+        <Route path="/admin/users" element={<AdminUsers />} />
         <Route path="/*" element={<h1>404 Not Found</h1>} />
       </Routes>
       <ToastContainer />

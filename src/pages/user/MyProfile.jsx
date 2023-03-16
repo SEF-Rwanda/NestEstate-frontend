@@ -58,7 +58,7 @@ const MyProfile = () => {
             <p>Email</p>
             <h4>{userdata.email}</h4>
             <p>Joined on</p>
-            <h4>2023-01-01</h4>
+            <h4>{userdata.createdAt}</h4>
             <Row>
               <Col>
                 <Button
