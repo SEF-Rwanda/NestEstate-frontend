@@ -2,7 +2,6 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import { Container, Table, Button, Row, Col } from "react-bootstrap";
 import { Link } from "react-router-dom";
-import AdminLinksComponent from "../../component/AdminLinksComponent";
 
 const UserProperties = () => {
   const [userProperties, setUserPropertiesData] = useState([]);
@@ -46,14 +45,10 @@ const UserProperties = () => {
   return (
     <Container>
       <h5 style={{ textAlign: "center", margin: "25px", fontWeight: "bold" }}>
-        All Posted Properties
+      <i class="bi bi-houses"></i>{"  "}All Posts
       </h5>
       <hr />
-      <Row>
-        <Col md="2">
-          <AdminLinksComponent/>
-        </Col>
-        <Col md="10" style={{ textAlign: "center"}}>
+      <Row>        
         {userProperties.length===0 ? (
               <>
               <p>Slow internet. We are unable to fetch data now.</p>
@@ -75,6 +70,8 @@ const UserProperties = () => {
                 <th>Date</th>
                 <th>Photo</th>
                 <th>Price (Rwf)</th>
+                <th>Available</th>
+                <th>Hidden</th>
                 <th>Edit/Approve</th>
               </tr>
             </thead>
@@ -97,6 +94,8 @@ const UserProperties = () => {
                       />
                     </td>
                     <td>{property.price}</td>
+                    <td>{property.isAvailable ? <i className="bi bi-check-lg text-success"></i> : <i className="bi bi-x-lg text-danger"></i>}</td>
+                    <td>{property.isHidden ? <i className="bi bi-check-lg text-success"></i> : <i className="bi bi-x-lg text-danger"></i>}</td>
                     <td>
                       <Link
                         to={`/properties/${property.id}`}
@@ -118,7 +117,7 @@ const UserProperties = () => {
               </tbody>
           </Table>
         )}
-        </Col>
+        
       </Row>
       
     </Container>

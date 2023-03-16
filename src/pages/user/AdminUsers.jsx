@@ -1,22 +1,12 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
-import { Container, Table, Button, Row, Col } from "react-bootstrap";
+import { Container, Table, Row} from "react-bootstrap";
 import { Link } from "react-router-dom";
-import AdminLinksComponent from "../../component/AdminLinksComponent";
 
 const UserProperties = () => {
   const [users, setUsers] = useState([]);
-  let formatter = new Intl.DateTimeFormat("en-GB", {
-    year: "numeric",
-    month: "long",
-    day: "2-digit",
-    hour:"numeric",
-    minute:"numeric",
-    seconds:"numeric",
-  });
-
+  
   useEffect(() => {
-    // Make API request to fetch user data
     const fetchUserData = async () => {
       const config = {
         headers: { Authorization: `Bearer ${authToken}` },
@@ -42,18 +32,13 @@ const UserProperties = () => {
     }
   }, [users]);
 
-//   console.log(userProperties);
   return (
     <Container>
       <h5 style={{ textAlign: "center", margin: "25px", fontWeight: "bold" }}>
-        All Registered Users
+      <i class="bi bi-people"></i> All  Users
       </h5>
       <hr />
       <Row>
-        <Col md="2">
-          <AdminLinksComponent/>
-        </Col>
-        <Col md="10" style={{ textAlign: "center"}}>
         {users.length===0 ? (
               <>
               <p>Slow internet. We are unable to fetch data now.</p>
@@ -71,9 +56,11 @@ const UserProperties = () => {
             <thead>
               <tr>
               <th>#</th>
-                <th>Full Name</th>
+                <th>First Name</th>
+                <th>Last Name</th>
                 <th>email</th>
                 <th>telephone</th>
+                <th>Verified</th>
                 <th>Admin</th>
                 <th>Edit/MakeAdmin</th>
               </tr>
@@ -82,9 +69,11 @@ const UserProperties = () => {
               {users.map((user,idx) => (
                 <tr key={idx}>
                   <td>{idx + 1}</td>
-                  <td>{user.firstName} {user.lastName}</td>
+                  <td>{user.firstName}</td>
+                  <td>{user.lastName}</td>
                   <td>{user.email}</td>
                   <td>{user.phone}</td>
+                  <td>{user.isVerified ? <i className="bi bi-check-lg text-success"></i> : <i className="bi bi-x-lg text-danger"></i>}</td>
                   <td>{user.isAdmin ? <i className="bi bi-check-lg text-success"></i> : <i className="bi bi-x-lg text-danger"></i>}</td>
                   <td>
                     <Link
@@ -102,7 +91,6 @@ const UserProperties = () => {
             </tbody>
           </Table>
           )}
-        </Col>
       </Row>
       
     </Container>

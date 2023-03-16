@@ -15,7 +15,7 @@ const UserProperties = () => {
 
       try {
         const { data } = await axios.get(
-          "http://localhost:3000/api/v1/properties/my-properties",
+          "http://localhost:5000/api/v1/properties/my-properties",
           config
         );
         setUserPropertiesData(data.data);
@@ -23,8 +23,6 @@ const UserProperties = () => {
         console.error(error);
       }
     };
-    console.log("USER PROPERTIES", userProperties);
-
     // Get authentication token
     const authToken = localStorage.getItem("token");
 
