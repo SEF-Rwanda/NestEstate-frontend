@@ -1,4 +1,4 @@
-import { Container, Row, Col, Form, Button , Spinner} from "react-bootstrap";
+import { Container, Row, Col, Form, Button, Spinner } from "react-bootstrap";
 import { useState, useEffect } from "react";
 import http from "../../utils/http";
 import { useDispatch } from "react-redux";
@@ -60,7 +60,7 @@ const UpdateProperty = () => {
       if (isSuccess) {
         navigate("/user/properties");
         toast.success("property updated successfully!");
-      } else if(error==!"") {
+      } else if (error == !"") {
         toast.error("Something went wrong!");
       }
     });
@@ -73,13 +73,13 @@ const UpdateProperty = () => {
   }
 
   let otherImagesUrl = [];
-  if(propertyData.otherImages){
+  if (propertyData.otherImages) {
     for (let i = 0; i < propertyData.otherImages.length; i++) {
-      otherImagesUrl.push({ 
-        public_id : propertyData.otherImages[i].public_id,
-        
-        url : propertyData.otherImages[i].url
-    });
+      otherImagesUrl.push({
+        public_id: propertyData.otherImages[i].public_id,
+
+        url: propertyData.otherImages[i].url,
+      });
     }
   }
   // console.log("OTHER IMAGES------", otherImagesUrl)
@@ -122,8 +122,7 @@ const UpdateProperty = () => {
         internet,
         parking,
       })
-    )
-      .unwrap();
+    ).unwrap();
   };
   const handleNegotiable = (event) => {
     setNegociable(event.target.checked);
@@ -534,17 +533,14 @@ const UpdateProperty = () => {
               </Col>
             </Form.Group>
             <Row>
-            {otherImagesUrl.map((d) => (
-             
+              {otherImagesUrl.map((d) => (
                 <Form.Group
-                key={d.public_id}
+                  key={d.public_id}
                   as={Row}
                   className="mb-3"
                   controlId="formPlaintextTitle"
                 >
-                  <Form.Label column sm="2">
-                    
-                  </Form.Label>
+                  <Form.Label column sm="2"></Form.Label>
                   <Col sm="10">
                     <Row>
                       <Col sm="5">
@@ -573,7 +569,7 @@ const UpdateProperty = () => {
                     </Row>
                   </Col>
                 </Form.Group>
-            ))}
+              ))}
             </Row>
             <Row className="justify-content-center align-items-center">
               <ButtonComponent
