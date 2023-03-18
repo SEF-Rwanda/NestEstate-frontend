@@ -7,22 +7,22 @@ const Properties = () => {
   const [properties, setProperties] = useState([]);
   const [loading, setLoading] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
-  const [propertiesPerPage] = useState(2);
+  const [propertiesPerPage] = useState(6);
+  const [totalProperties, setTotalProperties] = useState(0);
 
   useEffect(() => {
-    const fetchProperties = async () => {
+    const fetchProperties = async (propPerPage, pageNumber) => {
       setLoading(true);
       const { data } = await axios.get(
-        `http://localhost:5000/api/v1/properties?perPage=${propertiesPerPage}&page=${currentPage}`
+        `http://localhost:5000/api/v1/properties?perPage=${propPerPage}&page=${pageNumber}`
       );
       setProperties(data.data);
+      setTotalProperties(data.totalProperties);
+      console.log(data.totalProperties)
       setLoading(false);
     };
-    fetchProperties();
+    fetchProperties(propertiesPerPage, currentPage);
   }, [currentPage, propertiesPerPage]);
-
-  console.log("current page", currentPage);
-  console.log("properties per page", propertiesPerPage);
 
   return (
     <Container>
@@ -38,7 +38,7 @@ const Properties = () => {
           nextLabel={"Next"}
           breakLabel={"..."}
           breakClassName={"break-me"}
-          pageCount={3} /*{Math.ceil(properties.length / propertiesPerPage)}*/
+          pageCount={Math.ceil(totalProperties / propertiesPerPage)}
           marginPagesDisplayed={2}
           pageRangeDisplayed={5}
           onPageChange={(data) => setCurrentPage(data.selected + 1)}
