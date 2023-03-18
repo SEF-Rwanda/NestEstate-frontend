@@ -34,7 +34,7 @@ const UserProperties = () => {
     }
   }, []);
 
-  // console.log(userProperties);
+  console.log(userProperties);
 
   const handleHideProperty = async (id) => {
     const config = {
@@ -43,15 +43,15 @@ const UserProperties = () => {
       },
     };
 
-    try {
-      const { data } = await axios.put(
-        `http://localhost:5000/api/v1/properties/hideProperty/${id}`,
-        config
-      );
+    // refresh page
+    window.location.reload();
 
-      console.log("*******************************");
-      console.log(data);
-      console.log("*******************************");
+    try {
+      const { data } = await axios({
+        method: "PUT",
+        url: `http://localhost:5000/api/v1/properties/hideProperty/${id}`,
+        headers: config.headers,
+      });
     } catch (error) {
       console.error(error);
     }
@@ -112,11 +112,11 @@ const UserProperties = () => {
                 >
                   <i class="bi bi-pencil"></i>
                 </Link>
-                <Link
-                  onClick={() => handleHideProperty(property.id)}
-                  style={{ marginLeft: "10px", color: "red" }}
-                >
-                  <i class="bi bi-calendar-x-fill"></i>
+                <Link to="" style={{ marginLeft: "10px", color: "red" }}>
+                  <i
+                    class="bi bi-calendar-x-fill"
+                    onClick={() => handleHideProperty(property.id)}
+                  ></i>
                 </Link>
               </td>
             </tr>
