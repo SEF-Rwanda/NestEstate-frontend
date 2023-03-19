@@ -45,15 +45,15 @@ const UserProperties = () => {
       },
     };
 
-    // refresh page
-    window.location.reload();
-
     try {
       const { data } = await axios({
         method: "PUT",
         url: `http://localhost:5000/api/v1/properties/hideProperty/${id}`,
         headers: config.headers,
       });
+
+      // refresh page
+      window.location.reload();
     } catch (error) {
       console.error(error);
     }
