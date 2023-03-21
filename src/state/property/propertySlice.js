@@ -11,7 +11,7 @@ const config = {
 };
 
 export const updateProperty = createAsyncThunk(
-  "user/updatProperty",
+  "properties/updateProperty",
 
   async (
     {
@@ -91,8 +91,8 @@ export const addProduct = createAsyncThunk(
 export const fetchSingleProduct = createAsyncThunk(
   "properties/fetchSingleProduct",
   async (id) => {
-    const response = await axios.post(`${baseAPIUrl}/properties/${id}`, config);
-    return response.data;
+    const response = await axios.get(`${baseAPIUrl}/properties/${id}`);
+    return response.data.data;
   }
 );
 

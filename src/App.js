@@ -40,7 +40,7 @@ function App() {
         <Route path="/add-property" element={<AddProperty />} />
         <Route path="/admin/properties" element={<AdminProperties />} />
         <Route path="/admin/users" element={<AdminUsers />} />
-        <Route path="/all-properties" element={<SingleProperty />} />
+        <Route path="/all-properties/:id" element={<SingleProperty />} />
         <Route path="/*" element={<h1>404 Not Found</h1>} />
       </Routes>
       <ToastContainer />
