@@ -25,8 +25,6 @@ const UserProperties = () => {
         console.error(error);
       }
     };
-    console.log("USER PROPERTIES", userProperties);
-
     // Get authentication token
     const authToken = localStorage.getItem("token");
 

@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import axios from "axios";
 import Input from "../../component/utils/Input";
 import { Form, Button, Container, Row, Col } from "react-bootstrap";
 import { Link } from "react-router-dom";
@@ -8,6 +7,7 @@ import { useDispatch } from "react-redux";
 import { login } from "../../state/user/userSlice";
 import { store } from "../../state/store";
 import { toast } from "react-toastify";
+import jwt_decode from "jwt-decode";
 
 const Login = () => {
   const navigate = useNavigate();
@@ -30,9 +30,22 @@ const Login = () => {
       const newIsLoading = store.getState().user.loading;
       const isSuccess = store.getState().user.success;
       const error = store.getState().user.error;
+
       setIsFormLoading(newIsLoading);
 
-      if (isSuccess) {
+      const token = localStorage.getItem("token");
+      let user = null;
+      if (token) {
+        user = jwt_decode(token);
+      }
+
+      console.log("logged in user: ", user)
+      
+      if (isSuccess && user.isAdmin){
+        navigate("/admin/properties");
+        window.location.reload()
+      }
+      else if (isSuccess && user.isAdmin===false) {
         navigate("/");
         window.location.reload()
       } else if (error) {
@@ -41,6 +54,8 @@ const Login = () => {
     });
     return () => unsubscribe();
   })
+
+  
   const handleSubmit = async (e) => {
     e.preventDefault();
     const loginInfo = { email, password };

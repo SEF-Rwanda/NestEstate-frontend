@@ -1,5 +1,6 @@
 import { Container, Row, Col, Form, Button, Spinner } from "react-bootstrap";
 import { useState, useEffect } from "react";
+import axios from "axios";
 import http from "../../utils/http";
 import { useDispatch } from "react-redux";
 import { toast } from "react-toastify";
@@ -24,13 +25,13 @@ const UpdateProperty = () => {
   const [upi, setUpi] = useState("");
   const [description, setDescription] = useState("");
   const [mainImage, setMainImage] = useState("");
-  const [otherImages, setOtherImages] = useState("");
+  // const [otherImages, setOtherImages] = useState("");
   const [bedrooms, setBedrooms] = useState("");
   const [bathrooms, setBathrooms] = useState("");
   const [masterPlanUse, setMasterPlanUse] = useState("");
   const [masterPlanLevel, setMasterPlanLevel] = useState("");
   const [streetAddress, setStreetAddress] = useState("");
-  const [geoLocation, setGeoLocation] = useState("");
+  const [geoLocation, setGeoLocation] = useState({ latitude: 0, longitude: 0 });
   const [tank, setTank] = useState(false);
   const [furnished, setFurnished] = useState(false);
   const [internet, setInternet] = useState(false);
@@ -38,6 +39,21 @@ const UpdateProperty = () => {
   const [propertyData, setPropertyData] = useState({});
   const [isFormLoading, setIsFormLoading] = useState(false);
   const navigate = useNavigate();
+
+  const getCurrentLocation = () => {
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition((position) => {
+        let lat = position.coords.latitude;
+        let long = position.coords.longitude;
+        setGeoLocation({
+          latitude: lat,
+          longitude: long,
+        });
+      });
+    } else {
+      console.log("Geolocation is not supported by this browser.");
+    }
+  };
 
   const getProperty = async (id) => {
     const response = await http.get(`/properties/${id}`);
@@ -48,6 +64,26 @@ const UpdateProperty = () => {
     setInternet(response.data.data.internet);
     setTank(response.data.data.tank);
     return response;
+  };
+
+  let otherImages = [];
+  const uploadImage = async (event) => {
+    const imageData = new FormData();
+    imageData.append("file", event.target.files[0]);
+    imageData.append("upload_preset", "wingi-app");
+    try {
+      const { data } = await axios.post(
+        "https://api.cloudinary.com/v1_1/kuranga/image/upload",
+        imageData
+      );
+
+      otherImages.push({
+        public_id: data.public_id,
+        url: data.secure_url,
+      });
+    } catch (err) {
+      console.log(err);
+    }
   };
   useEffect(() => {
     getProperty(id);
@@ -60,7 +96,7 @@ const UpdateProperty = () => {
       if (isSuccess) {
         navigate("/user/properties");
         toast.success("property updated successfully!");
-      } else if (error == !"") {
+      } else if (error) {
         toast.error("Something went wrong!");
       }
     });
@@ -75,14 +111,10 @@ const UpdateProperty = () => {
   let otherImagesUrl = [];
   if (propertyData.otherImages) {
     for (let i = 0; i < propertyData.otherImages.length; i++) {
-      otherImagesUrl.push({
-        public_id: propertyData.otherImages[i].public_id,
-
-        url: propertyData.otherImages[i].url,
-      });
+      otherImagesUrl.push(propertyData.otherImages[i].url);
     }
   }
-  // console.log("OTHER IMAGES------", otherImagesUrl)
+  console.log("OTHER IMAGES------", otherImagesUrl);
   //handle and convert it in base 64
   const handleMainImage = (e) => {
     const file = e.target.files[0];
@@ -353,8 +385,8 @@ const UpdateProperty = () => {
             </Form.Group>
             <Row className="justify-content-center align-items-center">
               <Button
+                type="button"
                 variant="primary"
-                // type="submit"
                 style={{
                   background: "#d9d9d9",
                   borderRadius: "30px",
@@ -364,6 +396,7 @@ const UpdateProperty = () => {
                   marginBottom: "10px",
                   width: "160px",
                 }}
+                action={getCurrentLocation}
               >
                 Current location
               </Button>
@@ -533,35 +566,34 @@ const UpdateProperty = () => {
               </Col>
             </Form.Group>
             <Row>
-              {otherImagesUrl.map((d) => (
+              {otherImagesUrl.map((image, idx) => (
                 <Form.Group
-                  key={d.public_id}
                   as={Row}
                   className="mb-3"
                   controlId="formPlaintextTitle"
                 >
                   <Form.Label column sm="2"></Form.Label>
-                  <Col sm="10">
+
+                  <Col sm="10" key={idx}>
                     <Row>
                       <Col sm="5">
                         <MDBRow>
                           <MDBCol lg="6" md="14" className="mb-6">
                             <img
-                              src={d.url}
+                              src={otherImagesUrl[idx]}
                               className="img-fluid rounded"
                               alt=""
                             />
-                            <img className="img-fluid" src={mainImage} alt="" />
                           </MDBCol>
                         </MDBRow>
                       </Col>
                       <Col sm="7">
                         <div className="form-outline mb-2">
                           <input
-                            // onChange=""
+                            onChange={(event) => uploadImage(event)}
                             type="file"
                             id="formupload"
-                            name="mainImage"
+                            name="otherImage"
                             className="form-control"
                           />
                         </div>
