@@ -7,7 +7,10 @@ const PropertiesComponent = ({ properties, loading }) => {
       {properties.map((property) => {
         return (
           <Col md={4} sm={6} className="mt-3" key={property.id}>
-            <Link to={`/all-properties/${property.id}`}>
+            <Link
+              to={`/all-properties/${property.id}`}
+              style={{ textDecoration: "none", color: "" }}
+            >
               <Card>
                 <Card.Img
                   variant="top"
@@ -15,18 +18,34 @@ const PropertiesComponent = ({ properties, loading }) => {
                   style={{ height: "200px", objectFit: "cover" }}
                 />
                 <Card.Body>
-                  <Card.Text>
+                  <Card.Text
+                    style={{
+                      color: "#000000",
+                      fontWeight: 600,
+                    }}
+                  >
                     {property.description.length > 80
                       ? `${property.description.substring(0, 80)}...`
                       : property.description}
                   </Card.Text>
-                  <p>
+                  <p
+                    style={{
+                      color: "#000000",
+                      fontWeight: 400,
+                    }}
+                  >
                     {" "}
                     {property.bedrooms} Bedrooms & {property.bathrooms}{" "}
                     bathrooms
                   </p>
                   <Card.Text className="d-flex justify-content-between align-items-center">
-                    <span style={{ fontWeight: "bold", fontSize: "18px" }}>
+                    <span
+                      style={{
+                        fontSize: "18px",
+                        color: "#000000",
+                        fontWeight: 600,
+                      }}
+                    >
                       ${property.price}
                     </span>
                     <Button
