@@ -11,7 +11,7 @@ const config = {
 };
 
 export const updateProperty = createAsyncThunk(
-  "user/updatProperty",
+  "properties/updateProperty",
 
   async (
     {
@@ -85,9 +85,14 @@ export const addProduct = createAsyncThunk(
       newProductData,
       config
     );
-    const token = response.data.data.token;
-    localStorage.setItem("verificationToken", token);
     return response.data;
+  }
+);
+export const fetchSingleProduct = createAsyncThunk(
+  "properties/fetchSingleProduct",
+  async (id) => {
+    const response = await axios.get(`${baseAPIUrl}/properties/${id}`);
+    return response.data.data;
   }
 );
 
@@ -103,6 +108,11 @@ export const propertySlice = createSlice({
     isUpdatingPropertySuccess: false,
     isUpdatingPropertyFailed: false,
     updatingPropertyError: "",
+    isFetchingPropertyLoading: false,
+    isFetchingPropertySuccess: false,
+    isFetchingPropertyFailed: false,
+    fetchingPropertyError: "",
+    fetchedProperty: null,
   },
   reducers: {},
   extraReducers: (builder) => {
@@ -145,11 +155,32 @@ export const propertySlice = createSlice({
         state.isAddingProductSuccess = false;
         state.addingProductError = action.error.message;
         state.isAddingProductFailed = true;
+      })
+      .addCase(fetchSingleProduct.pending, (state) => {
+        state.isFetchingPropertyLoading = true;
+        state.isFetchingPropertySuccess = false;
+        state.isFetchingPropertyFailed = false;
+        state.fetchingPropertyError = "";
+        state.fetchedProperty = null;
+      })
+      .addCase(fetchSingleProduct.fulfilled, (state, action) => {
+        state.isFetchingPropertyLoading = false;
+        state.isFetchingPropertySuccess = true;
+        state.isFetchingPropertyFailed = false;
+        state.fetchingPropertyError = "";
+        state.fetchedProperty = action.payload;
+      })
+      .addCase(fetchSingleProduct.rejected, (state, action) => {
+        state.isFetchingPropertyLoading = false;
+        state.isFetchingPropertySuccess = false;
+        state.isFetchingPropertyFailed = true;
+        state.fetchingPropertyError = "";
+        state.fetchedProperty = action.error.message;
       });
   },
 });
 
 export const selectUpdated = (state) => state.property.updateProperty;
-export const selectError = (state) => state.propert.error;
+export const selectError = (state) => state.property.error;
 
 export default propertySlice.reducer;
