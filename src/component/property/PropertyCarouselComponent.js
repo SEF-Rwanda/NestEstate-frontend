@@ -1,83 +1,10 @@
-import axios from "axios";
 import { Carousel, Form, Row, Col, Button } from "react-bootstrap";
-import { useState } from "react";
 import { LinkContainer } from "react-router-bootstrap";
 
-const ProductCarouselComponent = () => {
-  const [currentPage] = useState(1);
-  const [properties, setProperties] = useState([]);
-  const [propertiesPerPage] = useState(6);
-  const [filter, setFilter] = useState({
-    priceMin: 0,
-    priceMax: 0,
-    title: "",
-    description: "",
-    section: "",
-    category: "",
-    size: 0,
-    bedrooms: 0,
-    bathrooms: 0,
-    parking: false,
-    furnished: false,
-    internet: false,
-  });
+const ProductCarouselComponent = ({ handleInputChange, handleSearch }) => {
   const cursorP = {
     cursor: "pointer",
   };
-
-  const handleSearch = async (e) => {
-    e.preventDefault();
-    let url = `http://localhost:5000/api/v1/properties?perPage=${propertiesPerPage}&page=${currentPage}&`;
-    if (filter.title) {
-      url += `title=${filter.title}&`;
-    }
-    if (filter.size) {
-      url += `size=${filter.size}&`;
-    }
-    if (filter.category) {
-      url += `category=${filter.category}&`;
-    }
-    if (filter.section) {
-      url += `section=${filter.section}&`;
-    }
-    if (filter.priceMin && filter.priceMax) {
-      url += `priceMin=${filter.priceMin}&priceMax=${filter.priceMax}&`;
-    }
-    if (filter.bedrooms) {
-      url += `bedrooms=${filter.bedrooms}&`;
-    }
-    if (filter.bathrooms) {
-      url += `bathrooms=${filter.bathrooms}&`;
-    }
-    if (filter.parking) {
-      url += `parking=${filter.parking}&`;
-    }
-    if (filter.furnished) {
-      url += `furnished=${filter.furnished}&`;
-    }
-    if (filter.internet) {
-      url += `internet=${filter.internet}&`;
-    }
-    if (filter.description) {
-      url += `description=${filter.description}&`;
-    }
-    if (url.endsWith("&")) {
-      url = url.slice(0, -1);
-    }
-    console.log("URL: ", url);
-    const { data } = await axios.get(url);
-    setProperties(data);
-  };
-  console.log("Properties: ", properties);
-
-  const handleInputChange = (event) => {
-    const { name, value } = event.target;
-    setFilter((prevState) => ({
-      ...prevState,
-      [name]: value,
-    }));
-  };
-  console.log(filter);
   return (
     <Carousel>
       <Carousel.Item>

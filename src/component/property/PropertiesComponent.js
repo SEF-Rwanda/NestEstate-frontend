@@ -1,7 +1,7 @@
 import { Col, Row, Card, Button } from "react-bootstrap";
 import { Link } from "react-router-dom";
 
-const PropertiesComponent = ({ properties, loading }) => {
+const PropertiesComponent = ({ properties }) => {
   return (
     <Row>
       {properties.map((property) => {
