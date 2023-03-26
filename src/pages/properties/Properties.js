@@ -1,29 +1,13 @@
 import { Container } from "react-bootstrap";
-import { useState, useEffect } from "react";
 import ReactPaginate from "react-paginate";
-import axios from "axios";
 import PropertiesComponent from "../../component/property/PropertiesComponent";
-const Properties = () => {
-  const [properties, setProperties] = useState([]);
-  const [loading, setLoading] = useState(false);
-  const [currentPage, setCurrentPage] = useState(1);
-  const [propertiesPerPage] = useState(6);
-  const [totalProperties, setTotalProperties] = useState(0);
-
-  useEffect(() => {
-    const fetchProperties = async (propPerPage, pageNumber) => {
-      setLoading(true);
-      const { data } = await axios.get(
-        `http://localhost:5000/api/v1/properties?perPage=${propPerPage}&page=${pageNumber}`
-      );
-      setProperties(data.data);
-      setTotalProperties(data.totalProperties);
-      console.log(data.totalProperties)
-      setLoading(false);
-    };
-    fetchProperties(propertiesPerPage, currentPage);
-  }, [currentPage, propertiesPerPage]);
-
+const Properties = ({
+  properties,
+  totalProperties,
+  propertiesPerPage,
+  setCurrentPage,
+  loading,
+}) => {
   return (
     <Container>
       <h4
