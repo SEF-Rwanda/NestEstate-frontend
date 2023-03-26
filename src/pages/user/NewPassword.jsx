@@ -26,7 +26,7 @@ const ResetPassword = () => {
     console.log(resetPassword);
     try {
       const { data } = await axios.patch(
-        `http://localhost:5000/api/v1/users/resetPassword/${token}`,
+        `users/resetPassword/${token}`,
         resetPassword
       );
       console.log(data);

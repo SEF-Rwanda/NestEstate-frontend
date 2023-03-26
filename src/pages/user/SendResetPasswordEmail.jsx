@@ -19,7 +19,7 @@ const SendingEmail = () => {
     console.log(sendEmail);
     try {
       const { data } = await axios.post(
-        "http://localhost:5000/api/v1/users/forgotPassword",
+        "users/forgotPassword",
         sendEmail
       );
       console.log("Hello world");

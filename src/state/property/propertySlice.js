@@ -1,7 +1,6 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
 
-const baseAPIUrl = "http://localhost:5000/api/v1";
 const token = localStorage.getItem("token");
 
 const config = {
@@ -47,7 +46,7 @@ export const updateProperty = createAsyncThunk(
     try {
       const propid = sessionStorage.getItem("propid");
       const response = await axios.put(
-        `${baseAPIUrl}/properties/${propid}`,
+        `properties/${propid}`,
         {
           title,
           category,
@@ -80,18 +79,14 @@ export const updateProperty = createAsyncThunk(
 export const addProduct = createAsyncThunk(
   "properties/addProperties",
   async (newProductData) => {
-    const response = await axios.post(
-      `${baseAPIUrl}/properties`,
-      newProductData,
-      config
-    );
+    const response = await axios.post(`properties`, newProductData, config);
     return response.data;
   }
 );
 export const fetchSingleProduct = createAsyncThunk(
   "properties/fetchSingleProduct",
   async (id) => {
-    const response = await axios.get(`${baseAPIUrl}/properties/${id}`);
+    const response = await axios.get(`properties/${id}`);
     return response.data.data;
   }
 );

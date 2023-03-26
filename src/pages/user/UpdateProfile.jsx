@@ -17,7 +17,7 @@ const UpdateUserProfile = () => {
   // console.log(user.id)
   const [userdata, setUserData] = useState({});
   const getProfile = async (id) => {
-    const response = await http.get(`/users/profile/${id}`);
+    const response = await http.get(`users/profile/${id}`);
     // console.log(response.data.data);
     setUserData(response.data.data);
     return response;
