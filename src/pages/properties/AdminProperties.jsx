@@ -9,9 +9,9 @@ const UserProperties = () => {
     year: "numeric",
     month: "long",
     day: "2-digit",
-    hour:"numeric",
-    minute:"numeric",
-    seconds:"numeric",
+    hour: "numeric",
+    minute: "numeric",
+    seconds: "numeric",
   });
 
   useEffect(() => {
@@ -23,7 +23,7 @@ const UserProperties = () => {
 
       try {
         const { data } = await axios.get(
-          "http://localhost:5000/api/v1/properties",
+          "http://localhost:5000/api/v1/properties/all",
           config
         );
         setUserPropertiesData(data.data);
@@ -31,7 +31,7 @@ const UserProperties = () => {
         console.error(error);
       }
     };
-    
+
     // Get authentication token
     const authToken = localStorage.getItem("token");
 
@@ -42,26 +42,51 @@ const UserProperties = () => {
   }, [userProperties]);
 
   console.log(userProperties);
+
+  const authToken = localStorage.getItem("token");
+
+  const approveProperty = async (id) => {
+    const config = {
+      headers: {
+        Authorization: `Bearer ${authToken}`,
+      },
+    };
+
+    try {
+      const { data } = await axios({
+        method: "PUT",
+        url: `http://localhost:5000/api/v1/properties/approveProperty/${id}`,
+        headers: config.headers,
+      });
+
+      // refresh page
+      window.location.reload();
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
   return (
     <Container>
       <h5 style={{ textAlign: "center", margin: "25px", fontWeight: "bold" }}>
-      <i class="bi bi-houses"></i>{"  "}All Posts
+        <i class="bi bi-houses"></i>
+        {"  "}All Posts
       </h5>
       <hr />
-      <Row>        
-        {userProperties.length===0 ? (
-              <>
-              <p>Slow internet. We are unable to fetch data now.</p>
-              
-              <img
-                src="/images/preview.gif"
-                alt=""
-                height="148px"
-                width="428px"
-                style={{ objectFit: "cover", align:"center" }}
-              />
-              </>
-            ):(
+      <Row>
+        {userProperties.length === 0 ? (
+          <>
+            <p>Slow internet. We are unable to fetch data now.</p>
+
+            <img
+              src="/images/preview.gif"
+              alt=""
+              height="148px"
+              width="428px"
+              style={{ objectFit: "cover", align: "center" }}
+            />
+          </>
+        ) : (
           <Table responsive="sm">
             <thead>
               <tr>
@@ -75,51 +100,70 @@ const UserProperties = () => {
                 <th>Edit/Approve</th>
               </tr>
             </thead>
-            
-                <tbody>
-                {userProperties.map((property, idx) => (
-                  <tr key={idx}>
-                    <td>{idx + 1}</td>
-                    <td>{property.title}</td>
-                    <td>
-                      {formatter.format(new Date(property.createdAt))}
-                    </td>
-                    <td>
-                      <img
-                        src={property.mainImage.url}
-                        alt=""
-                        height="118px"
-                        width="228px"
-                        style={{ objectFit: "cover" }}
-                      />
-                    </td>
-                    <td>{property.price}</td>
-                    <td>{property.isAvailable ? <i className="bi bi-check-lg text-success"></i> : <i className="bi bi-x-lg text-danger"></i>}</td>
-                    <td>{property.isHidden ? <i className="bi bi-check-lg text-success"></i> : <i className="bi bi-x-lg text-danger"></i>}</td>
-                    <td>
+
+            <tbody>
+              {userProperties.map((property, idx) => (
+                <tr key={idx}>
+                  <td>{idx + 1}</td>
+                  <td>{property.title}</td>
+                  <td>{formatter.format(new Date(property.createdAt))}</td>
+                  <td>
+                    <img
+                      src={property.mainImage.url}
+                      alt=""
+                      height="118px"
+                      width="228px"
+                      style={{ objectFit: "cover" }}
+                    />
+                  </td>
+                  <td>{property.price}</td>
+                  <td>
+                    {property.isAvailable ? (
+                      <i className="bi bi-check-lg text-success"></i>
+                    ) : (
+                      <i className="bi bi-x-lg text-danger"></i>
+                    )}
+                  </td>
+                  <td>
+                    {property.isHidden ? (
+                      <i className="bi bi-check-lg text-success"></i>
+                    ) : (
+                      <i className="bi bi-x-lg text-danger"></i>
+                    )}
+                  </td>
+                  <td>
+                    <Link
+                      to={`/properties/${property.id}`}
+                      style={{ marginRight: "10px", color: "black" }}
+                    >
+                      <i class="bi bi-pencil"></i>
+                    </Link>
+
+                    {property.isApproved ? (
                       <Link
-                        to={`/properties/${property.id}`}
-                        style={{ marginRight: "10px", color: 'black' }}
+                        to=""
+                        style={{ marginLeft: "10px", color: "green" }}
                       >
-                        <i class="bi bi-pencil"></i>
+                        <i
+                          class="bi bi-check-circle-fill"
+                          onClick={() => approveProperty(property.id)}
+                        ></i>
                       </Link>
-                      
-                      
-                      {property.isApproved ? <Link to="" style={{ marginLeft: "10px", color: 'green' }}>
-                      <i class="bi bi-check-circle-fill"></i>
-                      </Link> : <Link to="" style={{ marginLeft: "10px", color: 'gray' }}>
-                      <i class="bi bi-check-circle-fill"></i>
-                      </Link>}
-                      
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
+                    ) : (
+                      <Link to="" style={{ marginLeft: "10px", color: "gray" }}>
+                        <i
+                          class="bi bi-check-circle-fill"
+                          onClick={() => approveProperty(property.id)}
+                        ></i>
+                      </Link>
+                    )}
+                  </td>
+                </tr>
+              ))}
+            </tbody>
           </Table>
         )}
-        
       </Row>
-      
     </Container>
   );
 };

@@ -5,6 +5,8 @@ import { Link } from "react-router-dom";
 
 const UserProperties = () => {
   const [userProperties, setUserPropertiesData] = useState([]);
+  // Get authentication token
+  const authToken = localStorage.getItem("token");
 
   useEffect(() => {
     // Make API request to fetch user data
@@ -30,9 +32,31 @@ const UserProperties = () => {
     if (authToken) {
       fetchUserData();
     }
-  }, [userProperties]);
+  }, []);
 
   console.log(userProperties);
+
+  const handleHideProperty = async (id) => {
+    const config = {
+      headers: {
+        Authorization: `Bearer ${authToken}`,
+      },
+    };
+
+    try {
+      const { data } = await axios({
+        method: "PUT",
+        url: `http://localhost:5000/api/v1/properties/hideProperty/${id}`,
+        headers: config.headers,
+      });
+
+      // refresh page
+      window.location.reload();
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
   return (
     <Container>
       <h5 style={{ textAlign: "center", margin: "25px", fontWeight: "bold" }}>
@@ -84,12 +108,15 @@ const UserProperties = () => {
               <td>
                 <Link
                   to={`/properties/${property.id}`}
-                  style={{ marginRight: "10px", color: 'black' }}
+                  style={{ marginRight: "10px", color: "black" }}
                 >
                   <i class="bi bi-pencil"></i>
                 </Link>
-                <Link to="" style={{ marginLeft: "10px", color: 'red' }}>
-                  <i class="bi bi-calendar-x-fill"></i>
+                <Link to="" style={{ marginLeft: "10px", color: "red" }}>
+                  <i
+                    class="bi bi-calendar-x-fill"
+                    onClick={() => handleHideProperty(property.id)}
+                  ></i>
                 </Link>
               </td>
             </tr>

@@ -1,4 +1,4 @@
-import { Container, Row, Col, Form, Button , Spinner} from "react-bootstrap";
+import { Container, Row, Col, Form, Button, Spinner } from "react-bootstrap";
 import { useState, useEffect } from "react";
 import axios from "axios";
 import http from "../../utils/http";
@@ -11,7 +11,6 @@ import { MDBRow, MDBCol } from "mdb-react-ui-kit";
 import ButtonComponent from "../../component/utils/Button";
 import { store } from "../../state/store";
 import { useNavigate } from "react-router-dom";
-
 
 const UpdateProperty = () => {
   const { id } = useParams();
@@ -77,12 +76,11 @@ const UpdateProperty = () => {
         "https://api.cloudinary.com/v1_1/kuranga/image/upload",
         imageData
       );
-      
+
       otherImages.push({
         public_id: data.public_id,
         url: data.secure_url,
       });
-
     } catch (err) {
       console.log(err);
     }
@@ -98,7 +96,7 @@ const UpdateProperty = () => {
       if (isSuccess) {
         navigate("/user/properties");
         toast.success("property updated successfully!");
-      } else if(error) {
+      } else if (error) {
         toast.error("Something went wrong!");
       }
     });
@@ -111,12 +109,11 @@ const UpdateProperty = () => {
   }
 
   let otherImagesUrl = [];
-  if(propertyData.otherImages){
+  if (propertyData.otherImages) {
     for (let i = 0; i < propertyData.otherImages.length; i++) {
       otherImagesUrl.push(propertyData.otherImages[i].url);
     }
   }
-  console.log("OTHER IMAGES------", otherImagesUrl)
   //handle and convert it in base 64
   const handleMainImage = (e) => {
     const file = e.target.files[0];
@@ -156,8 +153,7 @@ const UpdateProperty = () => {
         internet,
         parking,
       })
-    )
-      .unwrap();
+    ).unwrap();
   };
   const handleNegotiable = (event) => {
     setNegociable(event.target.checked);
@@ -569,17 +565,13 @@ const UpdateProperty = () => {
               </Col>
             </Form.Group>
             <Row>
-            {otherImagesUrl.map((image, idx) => (
-             
+              {otherImagesUrl.map((image, idx) => (
                 <Form.Group
-                
                   as={Row}
                   className="mb-3"
                   controlId="formPlaintextTitle"
                 >
-                  <Form.Label column sm="2">
-                    
-                  </Form.Label>
+                  <Form.Label column sm="2"></Form.Label>
                   <Col sm="10" key={idx}>
                     <Row>
                       <Col sm="5">
@@ -596,19 +588,18 @@ const UpdateProperty = () => {
                       <Col sm="7">
                         <div className="form-outline mb-2">
                           <input
-                            onChange={(event)=>uploadImage(event)}
+                            onChange={(event) => uploadImage(event)}
                             type="file"
                             id="formupload"
                             name="otherImage"
                             className="form-control"
-
                           />
                         </div>
                       </Col>
                     </Row>
                   </Col>
                 </Form.Group>
-            ))}
+              ))}
             </Row>
             <Row className="justify-content-center align-items-center">
               <ButtonComponent
