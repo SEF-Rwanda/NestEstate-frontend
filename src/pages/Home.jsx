@@ -33,7 +33,7 @@ const Home = () => {
     const fetchProperties = async (propPerPage, pageNumber) => {
       setLoading(true);
       const { data } = await axios.get(
-        `http://localhost:5000/api/v1/properties?perPage=${propPerPage}&page=${pageNumber}`
+        `properties?perPage=${propPerPage}&page=${pageNumber}`
       );
       setProperties(data.data);
       setTotalProperties(data.totalProperties);
@@ -46,7 +46,7 @@ const Home = () => {
 
   const handleSearch = async (e) => {
     e.preventDefault();
-    let url = `http://localhost:5000/api/v1/properties?perPage=${propertiesPerPage}&page=${currentPage}&`;
+    let url = `properties?perPage=${propertiesPerPage}&page=${currentPage}&`;
     if (filter.title) {
       url += `title=${filter.title}&`;
     }

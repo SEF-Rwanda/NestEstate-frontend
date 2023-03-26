@@ -23,7 +23,7 @@ const UserProperties = () => {
 
       try {
         const { data } = await axios.get(
-          "http://localhost:5000/api/v1/properties/all",
+          "api/v1/properties/all",
           config
         );
         setUserPropertiesData(data.data);
@@ -55,7 +55,7 @@ const UserProperties = () => {
     try {
       const { data } = await axios({
         method: "PUT",
-        url: `http://localhost:5000/api/v1/properties/approveProperty/${id}`,
+        url: `properties/approveProperty/${id}`,
         headers: config.headers,
       });
 

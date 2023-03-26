@@ -15,7 +15,6 @@ const Login = () => {
   const [email, setEmail] = useState("");
   const [error, setError] = useState("");
   const [password, setPassword] = useState("");
-  const [isFormLoading, setIsFormLoading] = useState(false);
 
   useEffect(() => {
     const timeout = setTimeout(() => {
@@ -30,16 +29,11 @@ const Login = () => {
       const newIsLoading = store.getState().user.loading;
       const isSuccess = store.getState().user.success;
       const error = store.getState().user.error;
-
-      setIsFormLoading(newIsLoading);
-
       const token = localStorage.getItem("token");
       let user = null;
       if (token) {
         user = jwt_decode(token);
       }
-
-      console.log("logged in user: ", user)
       
       if (isSuccess && user.isAdmin){
         navigate("/admin/properties");

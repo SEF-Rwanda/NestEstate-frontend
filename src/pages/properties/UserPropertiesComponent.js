@@ -17,7 +17,7 @@ const UserProperties = () => {
 
       try {
         const { data } = await axios.get(
-          "http://localhost:5000/api/v1/properties/my-properties",
+          "properties/my-properties",
           config
         );
         setUserPropertiesData(data.data);
@@ -34,7 +34,6 @@ const UserProperties = () => {
     }
   }, []);
 
-  console.log(userProperties);
 
   const handleHideProperty = async (id) => {
     const config = {
@@ -46,7 +45,7 @@ const UserProperties = () => {
     try {
       const { data } = await axios({
         method: "PUT",
-        url: `http://localhost:5000/api/v1/properties/hideProperty/${id}`,
+        url: `properties/hideProperty/${id}`,
         headers: config.headers,
       });
 

@@ -14,7 +14,7 @@ const UserProperties = () => {
 
       try {
         const { data } = await axios.get(
-          "http://localhost:5000/api/v1/users",
+          "users",
           config
         );
         setUsers(data.data);

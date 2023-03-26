@@ -56,7 +56,7 @@ const UpdateProperty = () => {
   };
 
   const getProperty = async (id) => {
-    const response = await http.get(`/properties/${id}`);
+    const response = await http.get(`properties/${id}`);
     setPropertyData(response.data.data);
     setTank(response.data.data.tank);
     setParking(response.data.data.parking);
