@@ -49,6 +49,5 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
-  }, 
-  "proxy": "http://172.29.98.230:5000/api/v1/"
+  }
 }

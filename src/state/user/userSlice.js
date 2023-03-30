@@ -2,8 +2,10 @@ import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
 import jwt_decode from "jwt-decode";
 
+const baseAPIUrl = "http://172.29.98.230:5000/api/v1";
+
 export const signup = createAsyncThunk("user/signup", async (newUserData) => {
-  const response = await axios.post(`users/signup`, newUserData);
+  const response = await axios.post(`${baseAPIUrl}/users/signup`, newUserData);
   const token = response.data.data.token;
   localStorage.setItem("verificationToken", token);
   return response.data;
@@ -11,7 +13,7 @@ export const signup = createAsyncThunk("user/signup", async (newUserData) => {
 
 export const login = createAsyncThunk("user/login", async (userCredentials) => {
   const response = await axios.post(
-    `users/login`,
+    `${baseAPIUrl}/users/login`,
     userCredentials
   );
   const token = response.data.token;
@@ -31,7 +33,7 @@ export const verifyAccount = createAsyncThunk(
     };
 
     const response = await axios.post(
-      `users/verifyEmail`,
+      `${baseAPIUrl}/users/verifyEmail`,
       verificationData,
       config
     );
@@ -51,8 +53,11 @@ export const updateUserProfile = createAsyncThunk(
     console.log("slice", firstName, lastName);
     try {
       const response = await axios.put(
-        `users/profile/${usr._id}`,
-        { firstName, lastName }
+        `${baseAPIUrl}/users/profile/${usr._id}`,
+        {
+          firstName,
+          lastName,
+        }
       );
       return response.data;
     } catch (err) {

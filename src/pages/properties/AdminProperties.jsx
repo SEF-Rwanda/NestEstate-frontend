@@ -3,6 +3,8 @@ import axios from "axios";
 import { Container, Table, Button, Row, Col } from "react-bootstrap";
 import { Link } from "react-router-dom";
 
+const baseAPIUrl = "http://172.29.98.230:5000/api/v1";
+
 const UserProperties = () => {
   const [userProperties, setUserPropertiesData] = useState([]);
   let formatter = new Intl.DateTimeFormat("en-GB", {
@@ -23,7 +25,7 @@ const UserProperties = () => {
 
       try {
         const { data } = await axios.get(
-          "api/v1/properties/all",
+          `${baseAPIUrl}/properties/all`,
           config
         );
         setUserPropertiesData(data.data);
@@ -55,7 +57,7 @@ const UserProperties = () => {
     try {
       const { data } = await axios({
         method: "PUT",
-        url: `properties/approveProperty/${id}`,
+        url: `${baseAPIUrl}/properties/approveProperty/${id}`,
         headers: config.headers,
       });
 

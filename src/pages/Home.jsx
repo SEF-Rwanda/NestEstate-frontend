@@ -6,13 +6,14 @@ import { useState, useEffect } from "react";
 import ChoosingUsComponent from "../component/ChoosingUsComponent";
 import Properties from "./properties/Properties";
 
+const baseAPIUrl = "http://172.29.98.230:5000/api/v1";
+
 const Home = () => {
   const [properties, setProperties] = useState([]);
   const [loading, setLoading] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const [propertiesPerPage] = useState(6);
   const [totalProperties, setTotalProperties] = useState(0);
-  
 
   const [filter, setFilter] = useState({
     priceMin: 0,
@@ -33,20 +34,18 @@ const Home = () => {
     const fetchProperties = async (propPerPage, pageNumber) => {
       setLoading(true);
       const { data } = await axios.get(
-        `properties?perPage=${propPerPage}&page=${pageNumber}`
+        `${baseAPIUrl}/properties?perPage=${propPerPage}&page=${pageNumber}`
       );
       setProperties(data.data);
       setTotalProperties(data.totalProperties);
       setLoading(false);
     };
     fetchProperties(propertiesPerPage, currentPage);
-
   }, [currentPage, propertiesPerPage]);
- 
 
   const handleSearch = async (e) => {
     e.preventDefault();
-    let url = `properties?perPage=${propertiesPerPage}&page=${currentPage}&`;
+    let url = `${baseAPIUrl}/properties?perPage=${propertiesPerPage}&page=${currentPage}&`;
     if (filter.title) {
       url += `title=${filter.title}&`;
     }
@@ -84,7 +83,7 @@ const Home = () => {
       url = url.slice(0, -1);
     }
     const { data } = await axios.get(url);
-    
+
     setProperties(data.data);
     setTotalProperties(data.totalProperties);
     setLoading(false);
@@ -97,11 +96,20 @@ const Home = () => {
       [name]: value,
     }));
   };
-  
+
   return (
     <div>
-      <PropertyCarouselComponent handleInputChange = {handleInputChange} handleSearch = {handleSearch} />
-      <Properties properties = {properties} totalProperties = {totalProperties} propertiesPerPage = {propertiesPerPage} setCurrentPage = {setCurrentPage} loading={loading} />
+      <PropertyCarouselComponent
+        handleInputChange={handleInputChange}
+        handleSearch={handleSearch}
+      />
+      <Properties
+        properties={properties}
+        totalProperties={totalProperties}
+        propertiesPerPage={propertiesPerPage}
+        setCurrentPage={setCurrentPage}
+        loading={loading}
+      />
       <ChoosingUsComponent />
       <FooterComponent />
     </div>

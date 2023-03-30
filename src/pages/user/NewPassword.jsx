@@ -4,6 +4,7 @@ import axios from "axios";
 import { Form, Button, Container, Row, Col } from "react-bootstrap";
 import { useParams } from "react-router-dom";
 
+const baseAPIUrl = "http://172.29.98.230:5000/api/v1";
 const ResetPassword = () => {
   const navigate = useNavigate();
   //   const [email, setEmail] = useState("");
@@ -26,7 +27,7 @@ const ResetPassword = () => {
     console.log(resetPassword);
     try {
       const { data } = await axios.patch(
-        `users/resetPassword/${token}`,
+        `${baseAPIUrl}/users/resetPassword/${token}`,
         resetPassword
       );
       console.log(data);

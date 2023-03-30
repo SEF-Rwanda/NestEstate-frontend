@@ -12,6 +12,7 @@ import ButtonComponent from "../../component/utils/Button";
 import { store } from "../../state/store";
 import { useNavigate } from "react-router-dom";
 
+const baseAPIUrl = "http://172.29.98.230:5000/api/v1";
 const UpdateProperty = () => {
   const { id } = useParams();
   sessionStorage.setItem("propid", id);
@@ -56,7 +57,7 @@ const UpdateProperty = () => {
   };
 
   const getProperty = async (id) => {
-    const response = await http.get(`properties/${id}`);
+    const response = await http.get(`${baseAPIUrl}/properties/${id}`);
     setPropertyData(response.data.data);
     setTank(response.data.data.tank);
     setParking(response.data.data.parking);

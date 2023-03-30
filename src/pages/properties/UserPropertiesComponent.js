@@ -3,6 +3,8 @@ import axios from "axios";
 import { Container, Table, Button } from "react-bootstrap";
 import { Link } from "react-router-dom";
 
+const baseAPIUrl = "http://172.29.98.230:5000/api/v1";
+
 const UserProperties = () => {
   const [userProperties, setUserPropertiesData] = useState([]);
   // Get authentication token
@@ -17,7 +19,7 @@ const UserProperties = () => {
 
       try {
         const { data } = await axios.get(
-          "properties/my-properties",
+          `${baseAPIUrl}/properties/my-properties`,
           config
         );
         setUserPropertiesData(data.data);
@@ -34,7 +36,6 @@ const UserProperties = () => {
     }
   }, []);
 
-
   const handleHideProperty = async (id) => {
     const config = {
       headers: {
@@ -45,7 +46,7 @@ const UserProperties = () => {
     try {
       const { data } = await axios({
         method: "PUT",
-        url: `properties/hideProperty/${id}`,
+        url: `${baseAPIUrl}/properties/hideProperty/${id}`,
         headers: config.headers,
       });
 
