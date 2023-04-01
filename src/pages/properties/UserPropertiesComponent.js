@@ -71,7 +71,7 @@ const UserProperties = () => {
         {" "}
         <i
           style={{ margin: "5px", fontWeight: "bold" }}
-          class="bi bi-plus-circle"
+          className="bi bi-plus-circle"
         ></i>
         Add Property
       </Button>
@@ -110,11 +110,11 @@ const UserProperties = () => {
                   to={`/properties/${property.id}`}
                   style={{ marginRight: "10px", color: "black" }}
                 >
-                  <i class="bi bi-pencil"></i>
+                  <i className="bi bi-pencil"></i>
                 </Link>
                 <Link to="" style={{ marginLeft: "10px", color: "red" }}>
                   <i
-                    class="bi bi-calendar-x-fill"
+                    className="bi bi-calendar-x-fill"
                     onClick={() => handleHideProperty(property.id)}
                   ></i>
                 </Link>

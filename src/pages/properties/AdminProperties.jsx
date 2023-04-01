@@ -71,7 +71,7 @@ const UserProperties = () => {
   return (
     <Container>
       <h5 style={{ textAlign: "center", margin: "25px", fontWeight: "bold" }}>
-        <i class="bi bi-houses"></i>
+        <i className="bi bi-houses"></i>
         {"  "}All Posts
       </h5>
       <hr />
@@ -138,7 +138,7 @@ const UserProperties = () => {
                       to={`/properties/${property.id}`}
                       style={{ marginRight: "10px", color: "black" }}
                     >
-                      <i class="bi bi-pencil"></i>
+                      <i className="bi bi-pencil"></i>
                     </Link>
 
                     {property.isApproved ? (
@@ -147,14 +147,14 @@ const UserProperties = () => {
                         style={{ marginLeft: "10px", color: "green" }}
                       >
                         <i
-                          class="bi bi-check-circle-fill"
+                          className="bi bi-check-circle-fill"
                           onClick={() => approveProperty(property.id)}
                         ></i>
                       </Link>
                     ) : (
                       <Link to="" style={{ marginLeft: "10px", color: "gray" }}>
                         <i
-                          class="bi bi-check-circle-fill"
+                          className="bi bi-check-circle-fill"
                           onClick={() => approveProperty(property.id)}
                         ></i>
                       </Link>

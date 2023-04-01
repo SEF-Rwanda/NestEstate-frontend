@@ -8,6 +8,7 @@ const Properties = ({
   setCurrentPage,
   loading,
 }) => {
+  
   return (
     <Container>
       <h4
@@ -16,6 +17,13 @@ const Properties = ({
         Find Recent Properties
       </h4>
       <PropertiesComponent properties={properties} loading={loading} />
+      {/* Check if the length of the properties is not zero otherwise print no properties found */}
+      {properties.length === 0 && (
+        <p style={{ textAlign: "center", color: "red", fontWeight: "bold" }}>
+          No Properties Found
+        </p>
+      )}
+      {/* Pagination */}
       <div className="mt-5 d-flex justify-content-center">
         <ReactPaginate
           previousLabel={"Previous"}

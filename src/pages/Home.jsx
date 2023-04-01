@@ -6,7 +6,7 @@ import { useState, useEffect } from "react";
 import ChoosingUsComponent from "../component/ChoosingUsComponent";
 import Properties from "./properties/Properties";
 
-const baseAPIUrl = "http://172.29.98.230:5000/api/v1";
+const baseAPIUrl = "http:172.29.98.230:5000/api/v1";
 
 const Home = () => {
   const [properties, setProperties] = useState([]);
@@ -30,22 +30,7 @@ const Home = () => {
     internet: false,
   });
 
-  useEffect(() => {
-    const fetchProperties = async (propPerPage, pageNumber) => {
-      setLoading(true);
-      const { data } = await axios.get(
-        `${baseAPIUrl}/properties?perPage=${propPerPage}&page=${pageNumber}`
-      );
-      setProperties(data.data);
-      setTotalProperties(data.totalProperties);
-      setLoading(false);
-    };
-    fetchProperties(propertiesPerPage, currentPage);
-  }, [currentPage, propertiesPerPage]);
-
-  const handleSearch = async (e) => {
-    e.preventDefault();
-    let url = `${baseAPIUrl}/properties?perPage=${propertiesPerPage}&page=${currentPage}&`;
+  let url = `${baseAPIUrl}/properties?perPage=${propertiesPerPage}&page=${currentPage}&`;
     if (filter.title) {
       url += `title=${filter.title}&`;
     }
@@ -82,6 +67,23 @@ const Home = () => {
     if (url.endsWith("&")) {
       url = url.slice(0, -1);
     }
+
+  useEffect(() => {
+    const fetchProperties = async () => {
+      setLoading(true);
+      const { data } = await axios.get(
+        url
+      );
+      setProperties(data.data);
+      setTotalProperties(data.totalProperties);
+      setLoading(false);
+    };
+    fetchProperties();
+  }, [currentPage, propertiesPerPage]);
+
+  const handleSearch = async (e) => {
+    e.preventDefault();
+    
     const { data } = await axios.get(url);
 
     setProperties(data.data);
