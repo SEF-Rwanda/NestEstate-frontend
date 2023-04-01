@@ -63,10 +63,10 @@ const HeaderComponent = () => {
             {user && user.isAdmin ? (
               <>
                 <LinkContainer to="/admin/properties">
-                  <Nav.Link><i class="bi bi-houses"></i>{"  "}Posts</Nav.Link>
+                  <Nav.Link><i className="bi bi-houses"></i>{"  "}Posts</Nav.Link>
                 </LinkContainer>
                 <LinkContainer to="/admin/users">
-                  <Nav.Link><i class="bi bi-people"></i> users</Nav.Link>
+                  <Nav.Link><i className="bi bi-people"></i> users</Nav.Link>
                 </LinkContainer>
               </>
             ):(

@@ -33,7 +33,7 @@ const UserProperties = () => {
   return (
     <Container>
       <h5 style={{ textAlign: "center", margin: "25px", fontWeight: "bold" }}>
-        <i class="bi bi-people"></i> All Users
+        <i className="bi bi-people"></i> All Users
       </h5>
       <hr />
       <Row>
@@ -90,10 +90,10 @@ const UserProperties = () => {
                       to={`/users/${user.id}`}
                       style={{ marginRight: "10px", color: "black" }}
                     >
-                      <i class="bi bi-pencil"></i>
+                      <i className="bi bi-pencil"></i>
                     </Link>
                     <Link to="" style={{ marginLeft: "10px", color: "green" }}>
-                      <i class="bi bi-person-up"></i>
+                      <i className="bi bi-person-up"></i>
                     </Link>
                   </td>
                 </tr>

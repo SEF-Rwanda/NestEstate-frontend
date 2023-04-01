@@ -1,10 +1,13 @@
 import { Carousel, Form, Row, Col, Button } from "react-bootstrap";
 import { LinkContainer } from "react-router-bootstrap";
+import { useState } from "react";
 
 const ProductCarouselComponent = ({ handleInputChange, handleSearch }) => {
+  const [category, setCategory] = useState("");
   const cursorP = {
     cursor: "pointer",
   };
+
   return (
     <Carousel>
       <Carousel.Item>
@@ -29,12 +32,20 @@ const ProductCarouselComponent = ({ handleInputChange, handleSearch }) => {
           <Form onSubmit={handleSearch} style={{ marginBottom: "100px" }}>
             <Row className="mb-3">
               <Form.Group as={Col} controlId="formGridCategory">
-                <Form.Select name="category" onChange={handleInputChange}>
+                <Form.Select
+                  name="category"
+                  value={category}
+                  onChange={(e) => {
+                    setCategory(e.target.value);
+                    handleInputChange(e);
+                  }}
+                >
                   <option>Choose Category...</option>
-                  <option>House</option>
-                  <option>Plot</option>
+                  <option value="House">House</option>
+                  <option value="Plot">Plot</option>
                 </Form.Select>
               </Form.Group>
+              {category !== "Plot" ? ( 
               <Form.Group as={Col} controlId="formGridSection">
                 <Form.Select name="section" onChange={handleInputChange}>
                   <option>Choose Section...</option>
@@ -42,6 +53,7 @@ const ProductCarouselComponent = ({ handleInputChange, handleSearch }) => {
                   <option>For rent</option>
                 </Form.Select>
               </Form.Group>
+              ): null}
               <Form.Group as={Col} controlId="formGridZip">
                 <Form.Control
                   placeholder="Title"
