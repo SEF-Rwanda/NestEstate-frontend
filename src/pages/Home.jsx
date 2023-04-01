@@ -6,7 +6,7 @@ import { useState, useEffect } from "react";
 import ChoosingUsComponent from "../component/ChoosingUsComponent";
 import Properties from "./properties/Properties";
 
-const baseAPIUrl = "http:172.29.98.230:5000/api/v1";
+const baseAPIUrl = "http://172.29.98.230:5000/api/v1";
 
 const Home = () => {
   const [properties, setProperties] = useState([]);
