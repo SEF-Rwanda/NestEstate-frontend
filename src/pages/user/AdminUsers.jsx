@@ -106,7 +106,7 @@ const UserProperties = () => {
                   </td>
                   <td>
                     <Link
-                      to={`/users/${user.id}`}
+                      to=""//{`/users/${user.id}`}
                       style={{ marginRight: "10px", color: "black" }}
                     >
                       <i className="bi bi-pencil"></i>
