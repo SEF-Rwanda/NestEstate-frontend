@@ -3,7 +3,7 @@ import axios from "axios";
 import { Container, Table, Button } from "react-bootstrap";
 import { Link } from "react-router-dom";
 
-const baseAPIUrl = "http://172.29.98.230:5000/api/v1";
+const baseAPIUrl = "/api/v1";
 
 const UserProperties = () => {
   const [userProperties, setUserPropertiesData] = useState([]);

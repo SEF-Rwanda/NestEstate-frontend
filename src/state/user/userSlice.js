@@ -2,7 +2,7 @@ import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
 import jwt_decode from "jwt-decode";
 
-const baseAPIUrl = "http://172.29.98.230:5000/api/v1";
+const baseAPIUrl = "/api/v1";
 
 export const signup = createAsyncThunk("user/signup", async (newUserData) => {
   const response = await axios.post(`${baseAPIUrl}/users/signup`, newUserData);
