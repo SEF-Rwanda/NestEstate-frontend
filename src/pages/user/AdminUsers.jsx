@@ -5,6 +5,7 @@ import { Link } from "react-router-dom";
 
 const baseAPIUrl = "/api/v1";
 const UserProperties = () => {
+  const authToken = localStorage.getItem("token");
   const [users, setUsers] = useState([]);
 
   useEffect(() => {
@@ -29,6 +30,24 @@ const UserProperties = () => {
       fetchUserData();
     }
   }, []);
+  
+  const makeUserAdmin = async (id) => {
+    const config = {
+      headers: {
+        Authorization: `Bearer ${authToken}`,
+      },
+    };
+    try {
+      const { data } = await axios({
+        method: "PUT",
+        url: `${baseAPIUrl}/users/makeAdmin/${id}`,
+        headers: config.headers,
+      });
+      window.location.reload();
+    } catch (error) {
+      console.error(error);
+    }
+  };
 
   return (
     <Container>
@@ -92,9 +111,21 @@ const UserProperties = () => {
                     >
                       <i className="bi bi-pencil"></i>
                     </Link>
-                    <Link to="" style={{ marginLeft: "10px", color: "green" }}>
-                      <i className="bi bi-person-up"></i>
-                    </Link>
+    
+                    {user.isAdmin ? (
+                      <Link to="" style={{ marginLeft: "10px", color: "green" }}>
+                        <i className="bi bi-person-up"
+                          onClick={() => makeUserAdmin(user.id)}
+                        ></i>
+                      </Link>
+                    ) : (
+                      <Link to="" style={{ marginLeft: "10px", color: "gray" }}>
+                        <i
+                          className="bi bi-person-up"
+                          onClick={() => makeUserAdmin(user.id)}
+                        ></i>
+                      </Link>
+                    )}
                   </td>
                 </tr>
               ))}
