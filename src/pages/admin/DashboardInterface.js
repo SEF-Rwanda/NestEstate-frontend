@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
-import { Container } from "react-bootstrap";
+import { Container, Row, Col, Card } from "react-bootstrap";
 import axios from "axios";
+import { Pie } from "react-chartjs-2";
 
 const baseAPIUrl = "/api/v1";
 
@@ -42,9 +43,11 @@ const DashboardInterface = () => {
       setAvailablePlotCount(data.data.totalAvailablePlots);
       setUnavailablePlotCount(data.data.totalUnavailablePlots);
     } catch (e) {
-        throw new Error(e);
+      throw new Error(e);
     }
   };
+
+  //       Admin Dashboard {userCount} {propertyCount} {houseCount} {plotCount} {availablePropertyCount} {unavailablePropertyCount} {approvedPropertyCount} {unapprovedPropertyCount} {hiddenPropertyCount} {unhiddenPropertyCount} {houseForSaleCount} {houseForRentCount} {availablePlotCount} {unavailablePlotCount}
 
   return (
     <Container>
@@ -59,9 +62,44 @@ const DashboardInterface = () => {
           textAlign: "center",
         }}
       >
-        Admin Dashboard {userCount} {propertyCount} {houseCount} {plotCount} {availablePropertyCount} {unavailablePropertyCount} {approvedPropertyCount} {unapprovedPropertyCount} {hiddenPropertyCount} {unhiddenPropertyCount} {houseForSaleCount} {houseForRentCount} {availablePlotCount} {unavailablePlotCount}
-
+        Admin Dashboard
       </h3>
+      <hr />
+
+      <Row>
+        <Col xs={6} md={3}>
+          <Card style={{ backgroundColor: "#ABA0C1" }}>
+            <Card.Body>
+              <Card.Title>{propertyCount}</Card.Title>
+              <Card.Text>Total Properties</Card.Text>
+            </Card.Body>
+          </Card>
+        </Col>
+        <Col xs={6} md={3}>
+          <Card style={{ backgroundColor: "#B1B2DF" }}>
+            <Card.Body>
+              <Card.Title>{userCount}</Card.Title>
+              <Card.Text>Total Users</Card.Text>
+            </Card.Body>
+          </Card>
+        </Col>
+        <Col xs={6} md={3}>
+          <Card style={{ backgroundColor: "#6CB26A" }}>
+            <Card.Body>
+              <Card.Title>{houseCount}</Card.Title>
+              <Card.Text>Total Houses</Card.Text>
+            </Card.Body>
+          </Card>
+        </Col>
+        <Col xs={6} md={3}>
+          <Card style={{ backgroundColor: "#FAEB63" }}>
+            <Card.Body>
+              <Card.Title>{plotCount}</Card.Title>
+              <Card.Text>Total Plots</Card.Text>
+            </Card.Body>
+          </Card>
+        </Col>
+      </Row>
     </Container>
   );
 };
