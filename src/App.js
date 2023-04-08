@@ -20,6 +20,7 @@ import AddProperty from "./pages/properties/AddProperty";
 import AdminUsers from "./pages/user/AdminUsers";
 import "./App.css";
 import SingleProperty from "./pages/properties/SingleProperty";
+import DashboardInterface from "./pages/admin/DashboardInterface";
 
 function App() {
   return (
@@ -41,6 +42,7 @@ function App() {
         <Route path="/admin/properties" element={<AdminProperties />} />
         <Route path="/admin/users" element={<AdminUsers />} />
         <Route path="/all-properties/:id" element={<SingleProperty />} />
+        <Route path="/admin/analytics" element={<DashboardInterface/>} />
         <Route path="/*" element={<h1>404 Not Found</h1>} />
       </Routes>
       <ToastContainer />

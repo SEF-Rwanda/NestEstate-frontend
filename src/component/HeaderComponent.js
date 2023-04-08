@@ -62,19 +62,30 @@ const HeaderComponent = () => {
           <Nav>
             {user && user.isAdmin ? (
               <>
+                <LinkContainer to="/admin/analytics">
+                  <Nav.Link>
+                    <i className=""></i>
+                    {"  "}Analytics
+                  </Nav.Link>
+                </LinkContainer>
                 <LinkContainer to="/admin/properties">
-                  <Nav.Link><i className="bi bi-houses"></i>{"  "}Properties</Nav.Link>
+                  <Nav.Link>
+                    <i className="bi bi-houses"></i>
+                    {"  "}Properties
+                  </Nav.Link>
                 </LinkContainer>
                 <LinkContainer to="/admin/users">
-                  <Nav.Link><i className="bi bi-people"></i> users</Nav.Link>
+                  <Nav.Link>
+                    <i className="bi bi-people"></i> users
+                  </Nav.Link>
                 </LinkContainer>
               </>
-            ):(
+            ) : (
               <LinkContainer to="/">
                 <Nav.Link>Home</Nav.Link>
               </LinkContainer>
             )}
-            
+
             {user && user?._id?.length ? (
               <LinkContainer to="/add-property">
                 <Nav.Link>Add Property</Nav.Link>

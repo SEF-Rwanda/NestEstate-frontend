@@ -1,12 +1,35 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
-import { Container, Table, Button, Row, Col } from "react-bootstrap";
+import {
+  Container,
+  Table,
+  Button,
+  Row,
+  Col,
+  Form,
+  InputGroup,
+} from "react-bootstrap";
 import { Link } from "react-router-dom";
 
 const baseAPIUrl = "/api/v1";
 
 const UserProperties = () => {
   const [userProperties, setUserPropertiesData] = useState([]);
+  const [currentPage] = useState(1);
+  const [propertiesPerPage] = useState(60);
+  const [startDate, setStartDate] = useState(new Date());
+  const [endDate, setEndDate] = useState(new Date());
+
+  let url = `${baseAPIUrl}/properties/all?perPage=${propertiesPerPage}&page=${currentPage}&`;
+
+  if (startDate && endDate) {
+    url += `startDate=${startDate}&endDate=${endDate}&`;
+  }
+
+  if (url.endsWith("&")) {
+    url = url.slice(0, -1);
+  }
+
   let formatter = new Intl.DateTimeFormat("en-GB", {
     year: "numeric",
     month: "long",
@@ -42,8 +65,12 @@ const UserProperties = () => {
       fetchUserData();
     }
   }, []);
-
-  console.log(userProperties);
+  
+  const handleSearch = async (e) => {
+    e.preventDefault();
+    const { data } = await axios.get(url);
+    setUserPropertiesData(data.data);
+  };
 
   const authToken = localStorage.getItem("token");
 
@@ -75,10 +102,45 @@ const UserProperties = () => {
         {"  "}All Posts
       </h5>
       <hr />
+      <Form onSubmit={handleSearch}>
+        <Row className="align-items-center">
+          <Col sm={3} className="my-1">
+            <Form.Label htmlFor="inlineFormInputName" visuallyHidden>
+              Start Date
+            </Form.Label>
+            <Form.Control
+              type="date"
+              id="inlineFormInputName"
+              value={startDate}
+              onChange={(e) => setStartDate(e.target.value)}
+            />
+          </Col>
+          <Col sm={3} className="my-1">
+            <Form.Label htmlFor="inlineFormInputGroupUsername" visuallyHidden>
+              End Date
+            </Form.Label>
+            <InputGroup>
+              <Form.Control
+                type="date"
+                id="inlineFormInputGroupUsername"
+                value={endDate}
+                onChange={(e) => setEndDate(e.target.value)}
+              />
+            </InputGroup>
+          </Col>
+          <Col xs="auto" className="my-1">
+            <Button type="submit">Search</Button>
+          </Col>
+        </Row>
+      </Form>
       <Row>
         {userProperties.length === 0 ? (
           <>
-            <p>Slow internet. We are unable to fetch data now.</p>
+            <p
+              style={{ textAlign: "center", color: "red", fontWeight: "bold" }}
+            >
+              No Properties Found
+            </p>
 
             <img
               src="/images/preview.gif"
