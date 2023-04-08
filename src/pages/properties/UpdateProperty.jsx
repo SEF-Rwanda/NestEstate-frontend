@@ -12,7 +12,7 @@ import ButtonComponent from "../../component/utils/Button";
 import { store } from "../../state/store";
 import { useNavigate } from "react-router-dom";
 
-const baseAPIUrl = "http://172.29.98.230:5000/api/v1";
+const baseAPIUrl = "/api/v1";
 const UpdateProperty = () => {
   const { id } = useParams();
   sessionStorage.setItem("propid", id);

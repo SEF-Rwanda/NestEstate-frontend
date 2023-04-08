@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { Form, Button, Container, Row, Col } from "react-bootstrap";
 
-const baseAPIUrl = "http://172.29.98.230:5000/api/v1";
+const baseAPIUrl = "/api/v1";
 const SendingEmail = () => {
   const [email, setEmail] = useState("");
   const [error, setError] = useState("");

@@ -16,11 +16,11 @@ import Label from "../../component/utils/Label";
 import { addProduct } from "../../state/property/propertySlice";
 
 const categories = ["House", "Plot"];
-const sections = ["For rent", "For sell"];
+const sections = ["For Rent", "For Sale"];
 const masterPlanUses = ["Farming", "Settlement", "Industry", "Commerce"];
 const levels = ["R1", "R2", "R3", "R4", "R5", "R6"];
 
-const baseAPIUrl = "http://172.29.98.230:5000/api/v1";
+const baseAPIUrl = "/api/v1";
 
 const AddProperty = () => {
   const [title, setTitle] = useState("");
