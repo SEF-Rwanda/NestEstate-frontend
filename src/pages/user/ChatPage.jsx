@@ -1,8 +1,14 @@
 import React, { useEffect, useState } from "react";
 import { Container, Row, Col, ListGroup, Form } from "react-bootstrap";
 import io from "socket.io-client";
+import { useDispatch } from "react-redux";
+import { toast } from "react-toastify";
+import { store } from "../../state/store";
+import { getAllChats } from "./../../state/chat/chatSlice";
+import { getUserProfile } from "./../../state/user/userSlice";
+import { getAllMessage } from "../../state/message/MessageSlice";
 
-const ENDPOINT = "http://localhost:4000/";
+const ENDPOINT = "http://localhost:5000/";
 let socket, selectedChatCompare;
 
 const messageStyle = {
@@ -16,22 +22,71 @@ const messageStyle = {
 };
 
 const ChatPage = () => {
+  const [chats, setChats] = useState([]);
+  const [selectedChat, setSelectedChat] = useState(null);
   const [messages, setMessages] = useState([]);
   const [loading, setLoading] = useState(false);
   const [newMessage, setNewMessage] = useState("");
   const [socketConnected, setSocketConnected] = useState(false);
   const [typing, setTyping] = useState(false);
-  const [istyping, setIsTyping] = useState(false);
+  const [isTyping, setIsTyping] = useState(false);
+  const [loggedInUser, setLoggedInUser] = useState(null);
+  const dispatch = useDispatch();
+
+  const handleGetMessage = () => {
+    if (selectedChat !== null) dispatch(getAllMessage(selectedChat._id));
+  };
+
+  useEffect(() => {
+    dispatch(getAllChats());
+    dispatch(getUserProfile());
+  }, [dispatch]);
 
   useEffect(() => {
     socket = io(ENDPOINT);
-    socket.emit("setup", user);
+    socket.emit("setup", "user");
     socket.on("connected", () => setSocketConnected(true));
     socket.on("typing", () => setIsTyping(true));
     socket.on("stop typing", () => setIsTyping(false));
 
     // eslint-disable-next-line
   }, []);
+
+  useEffect(() => {
+    handleGetMessage();
+
+    selectedChatCompare = selectedChat;
+    // eslint-disable-next-line
+  }, [selectedChat]);
+
+  useEffect(() => {
+    const unsubscribe = store.subscribe(() => {
+      const newIsLoading = store.getState().chat.isFetchingChatsLoading;
+      const isSuccess = store.getState().chat.isFetchingChatsSuccess;
+      const isFailed = store.getState().chat.isFetchingChatsFailed;
+      const error = store.getState().chat.fetchingChatsError;
+      const fetchedChats = store.getState().chat.chats;
+      const loggedInProfile = store.getState().user.userProfile;
+      const fetchedMessages = store.getState().message.messages;
+      setMessages(fetchedMessages);
+
+      if (isSuccess) {
+        setChats(fetchedChats);
+        setLoggedInUser(loggedInProfile);
+      } else if (error) {
+        toast.error(error);
+      }
+    });
+    return () => unsubscribe();
+  });
+  const getSender = (loggedUser, users) => {
+    return users[0]._id === loggedUser._id
+      ? users[1].firstName
+      : users[0].firstName;
+  };
+  
+  console.log("@@@@@@@@@@@@@@@@@@@@@@@@@", messages);
+
   return (
     <Container
       fluid
@@ -54,116 +109,37 @@ const ChatPage = () => {
               borderRadius: "10px 10px 10px 10px",
             }}
           >
-            <ListGroup.Item
-              className="mt-3 mb-3 "
-              style={{
-                backgroundColor: "#cccccc",
-                color: "white",
-                cursor: "pointer",
-                width: "90%",
-                margin: "0px auto",
-                borderRadius: "10px 10px 10px 10px",
-              }}
-            >
-              John
-            </ListGroup.Item>
-            <ListGroup.Item
-              className="mb-3"
-              style={{
-                backgroundColor: "#7F7F7F",
-                width: "90%",
-                cursor: "pointer",
-                color: "white",
-                margin: "0px auto",
-                borderRadius: "10px 10px 10px 10px",
-              }}
-            >
-              Jane
-            </ListGroup.Item>
-            <ListGroup.Item
-              className="mb-3"
-              style={{
-                backgroundColor: "#7F7F7F",
-                width: "90%",
-                color: "white",
-                margin: "0px auto",
-                borderRadius: "10px 10px 10px 10px",
-              }}
-            >
-              Mike
-            </ListGroup.Item>
-            <ListGroup.Item
-              className="mb-3"
-              style={{
-                backgroundColor: "#7F7F7F",
-                width: "90%",
-                color: "white",
-                margin: "0px auto",
-                borderRadius: "10px 10px 10px 10px",
-              }}
-            >
-              Alice
-            </ListGroup.Item>
-            <ListGroup.Item
-              className="mb-3"
-              style={{
-                backgroundColor: "#7F7F7F",
-                width: "90%",
-                color: "white",
-                margin: "0px auto",
-                borderRadius: "10px 10px 10px 10px",
-              }}
-            >
-              Bob
-            </ListGroup.Item>
-            <ListGroup.Item
-              className="mb-3"
-              style={{
-                backgroundColor: "#7F7F7F",
-                width: "90%",
-                color: "white",
-                margin: "0px auto",
-                borderRadius: "10px 10px 10px 10px",
-              }}
-            >
-              Bob
-            </ListGroup.Item>
-            <ListGroup.Item
-              className="mb-3"
-              style={{
-                backgroundColor: "#7F7F7F",
-                width: "90%",
-                color: "white",
-                margin: "0px auto",
-                borderRadius: "10px 10px 10px 10px",
-              }}
-            >
-              Bob
-            </ListGroup.Item>
-            <ListGroup.Item
-              className="mb-3"
-              style={{
-                backgroundColor: "#7F7F7F",
-                width: "90%",
-                color: "white",
-                margin: "0px auto",
-                borderRadius: "10px 10px 10px 10px",
-              }}
-            >
-              Bob
-            </ListGroup.Item>
-            <ListGroup.Item
-              className="mb-3"
-              style={{
-                backgroundColor: "#7F7F7F",
-                width: "90%",
-                color: "white",
-                margin: "0px auto",
-                borderRadius: "10px 10px 10px 10px",
-              }}
-            >
-              Bob
-            </ListGroup.Item>
+            {chats.length > 0 ? (
+              chats.map((chat) => (
+                <ListGroup.Item
+                  className="mt-3 mb-3 "
+                  onClick={() => setSelectedChat(chat)}
+                  style={{
+                    backgroundColor:
+                      selectedChat === chat ? "#7F7F7F" : "#cccccc",
+
+                    color: "white",
+                    cursor: "pointer",
+                    width: "90%",
+                    margin: "0px auto",
+
+                    borderRadius: "10px 10px 10px 10px",
+                  }}
+                >
+                  {getSender(loggedInUser, chat.users)}
+                  {chat.latestMessage && (
+                    <p>
+                      <b>{chat.latestMessage.sender.firstName} : </b>
+                      {chat.latestMessage.content.length > 50
+                        ? chat.latestMessage.content.substring(0, 51) + "..."
+                        : chat.latestMessage.content}
+                    </p>
+                  )}
+                </ListGroup.Item>
+              ))
+            ) : (
+              <></>
+            )}
           </ListGroup>
         </Col>
         <Col xs={12} md={9}>
