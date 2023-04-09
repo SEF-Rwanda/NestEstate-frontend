@@ -56,7 +56,7 @@ const DashboardInterface = () => {
     datasets: [
       {
         data: [availablePropertyCount, unavailablePropertyCount],
-        backgroundColor: ["#36A2EB", "#FF6384"],
+        backgroundColor: ["#6CB26A", "#FAEB63"],
         hoverBackgroundColor: ["#36A2EB", "#FF6384"],
       },
     ],
@@ -67,7 +67,7 @@ const DashboardInterface = () => {
     datasets: [
       {
         data: [approvedPropertyCount, unapprovedPropertyCount],
-        backgroundColor: ["#36A2EB", "#FF6384"],
+        backgroundColor: ["#FAEB63", "#B1B2DF"],
         hoverBackgroundColor: ["#36A2EB", "#FF6384"],
       },
     ],
@@ -78,7 +78,7 @@ const DashboardInterface = () => {
     datasets: [
       {
         data: [hiddenPropertyCount, unhiddenPropertyCount],
-        backgroundColor: ["#36A2EB", "#FF6384"],
+        backgroundColor: ["#6CB26A", "#ABA0C1"],
         hoverBackgroundColor: ["#36A2EB", "#FF6384"],
       },
     ],
@@ -90,7 +90,7 @@ const DashboardInterface = () => {
       {
         label: "House Category",
         data: [houseForRentCount, houseForSaleCount],
-        backgroundColor: ["#36A2EB", "#FF6384"],
+        backgroundColor: ["#6CB26A", "#FAEB63"],
         hoverBackgroundColor: ["#36A2EB", "#FF6384"],
       },
     ],
@@ -102,7 +102,7 @@ const DashboardInterface = () => {
       {
         label: "Plot Availability",
         data: [availablePlotCount, unavailablePlotCount],
-        backgroundColor: ["#36A2EB", "#FF6384"],
+        backgroundColor: ["#6CB26A", "#FAEB63"],
         hoverBackgroundColor: ["#36A2EB", "#FF6384"],
       },
     ],
