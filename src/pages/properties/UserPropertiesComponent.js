@@ -1,12 +1,34 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
-import { Container, Table, Button } from "react-bootstrap";
+import {
+  Container,
+  Table,
+  Row,
+  Col,
+  Form,
+  Button,
+  InputGroup,
+} from "react-bootstrap";
 import { Link } from "react-router-dom";
 
 const baseAPIUrl = "/api/v1";
 
 const UserProperties = () => {
   const [userProperties, setUserPropertiesData] = useState([]);
+  const [currentPage] = useState(1);
+  const [propertiesPerPage] = useState(10);
+  const [startDate, setStartDate] = useState(new Date());
+  const [endDate, setEndDate] = useState(new Date());
+
+  let url = `${baseAPIUrl}/users?perPage=${propertiesPerPage}&page=${currentPage}&`;
+
+  if (startDate && endDate) {
+    url += `startDate=${startDate}&endDate=${endDate}&`;
+  }
+
+  if (url.endsWith("&")) {
+    url = url.slice(0, -1);
+  }
   // Get authentication token
   const authToken = localStorage.getItem("token");
 
@@ -36,6 +58,12 @@ const UserProperties = () => {
     }
   }, []);
 
+  const handleSearch = async (e) => {
+    e.preventDefault();
+    const { data } = await axios.get(url);
+    setUserPropertiesData(data.data);
+  };
+
   const handleHideProperty = async (id) => {
     const config = {
       headers: {
@@ -63,19 +91,60 @@ const UserProperties = () => {
         My Available Properties
       </h5>
       <hr />
-      <Button
-        style={{ backgroundColor: "#6736CF", border: "none" }}
-        as={Link}
-        to="/add-property"
-      >
-        {" "}
-        <i
-          style={{ margin: "5px", fontWeight: "bold" }}
-          className="bi bi-plus-circle"
-        ></i>
-        Add Property
-      </Button>
+      <Row className="align-items-center">
+        <Col sm={3} className="my-1">
+          <Button
+            style={{ backgroundColor: "#6736CF", border: "none" }}
+            as={Link}
+            to="/add-property"
+          >
+            {" "}
+            <i
+              style={{ margin: "5px", fontWeight: "bold" }}
+              className="bi bi-plus-circle"
+            ></i>
+            Add Property
+          </Button>
+        </Col>
+        <Col sm={9} className="my-1">
+          <Form onSubmit={handleSearch}>
+            <Row className="align-items-center">
+              <Col sm={3} className="my-1">
+                <Form.Label htmlFor="inlineFormInputName" visuallyHidden>
+                  Start Date
+                </Form.Label>
+                <Form.Control
+                  type="date"
+                  id="inlineFormInputName"
+                  value={startDate}
+                  onChange={(e) => setStartDate(e.target.value)}
+                />
+              </Col>
+              <Col sm={3} className="my-1">
+                <Form.Label
+                  htmlFor="inlineFormInputGroupUsername"
+                  visuallyHidden
+                >
+                  End Date
+                </Form.Label>
+                <InputGroup>
+                  <Form.Control
+                    type="date"
+                    id="inlineFormInputGroupUsername"
+                    value={endDate}
+                    onChange={(e) => setEndDate(e.target.value)}
+                  />
+                </InputGroup>
+              </Col>
+              <Col xs="auto" className="my-1">
+                <Button type="submit">Search</Button>
+              </Col>
+            </Row>
+          </Form>{" "}
+        </Col>
+      </Row>
       <hr />
+
       <Table responsive="sm">
         <thead>
           <tr>

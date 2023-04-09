@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from "react";
 import { Container, Row, Col, Card } from "react-bootstrap";
 import axios from "axios";
-import { Pie } from "react-chartjs-2";
+import { Chart as ChartJS, registerables } from "chart.js";
+import { Pie, Bar } from "react-chartjs-2";
+ChartJS.register(...registerables);
 
 const baseAPIUrl = "/api/v1";
 
@@ -48,6 +50,63 @@ const DashboardInterface = () => {
   };
 
   //       Admin Dashboard {userCount} {propertyCount} {houseCount} {plotCount} {availablePropertyCount} {unavailablePropertyCount} {approvedPropertyCount} {unapprovedPropertyCount} {hiddenPropertyCount} {unhiddenPropertyCount} {houseForSaleCount} {houseForRentCount} {availablePlotCount} {unavailablePlotCount}
+
+  const checkAvailability = {
+    labels: ["Available", "Unavailable"],
+    datasets: [
+      {
+        data: [availablePropertyCount, unavailablePropertyCount],
+        backgroundColor: ["#36A2EB", "#FF6384"],
+        hoverBackgroundColor: ["#36A2EB", "#FF6384"],
+      },
+    ],
+  };
+
+  const checkPropertyApproval = {
+    labels: ["Approved", "UnApproved"],
+    datasets: [
+      {
+        data: [approvedPropertyCount, unapprovedPropertyCount],
+        backgroundColor: ["#36A2EB", "#FF6384"],
+        hoverBackgroundColor: ["#36A2EB", "#FF6384"],
+      },
+    ],
+  };
+
+  const checkPropertyVisibility = {
+    labels: ["Hidden", "UnHidden"],
+    datasets: [
+      {
+        data: [hiddenPropertyCount, unhiddenPropertyCount],
+        backgroundColor: ["#36A2EB", "#FF6384"],
+        hoverBackgroundColor: ["#36A2EB", "#FF6384"],
+      },
+    ],
+  };
+
+  const checkHouseCategory = {
+    labels: ["House for Rent", "Available for Sale"],
+    datasets: [
+      {
+        label: "House Category",
+        data: [houseForRentCount, houseForSaleCount],
+        backgroundColor: ["#36A2EB", "#FF6384"],
+        hoverBackgroundColor: ["#36A2EB", "#FF6384"],
+      },
+    ],
+  };
+
+  const checkPlotAvailability = {
+    labels: ["Available Plots", "Unavailable Plots"],
+    datasets: [
+      {
+        label: "Plot Availability",
+        data: [availablePlotCount, unavailablePlotCount],
+        backgroundColor: ["#36A2EB", "#FF6384"],
+        hoverBackgroundColor: ["#36A2EB", "#FF6384"],
+      },
+    ],
+  };
 
   return (
     <Container>
@@ -98,6 +157,80 @@ const DashboardInterface = () => {
               <Card.Text>Total Plots</Card.Text>
             </Card.Body>
           </Card>
+        </Col>
+      </Row>
+      <Row className="mt-3">
+        <Col xs={6} md={4}>
+          <Pie
+            data={checkAvailability}
+            options={{
+              responsive: true,
+              plugins: {
+                legend: {
+                  display: true,
+                  position: "top",
+                },
+              },
+            }}
+          />
+        </Col>
+        <Col xs={6} md={4}>
+          <Pie
+            data={checkPropertyApproval}
+            options={{
+              responsive: true,
+              plugins: {
+                legend: {
+                  display: true,
+                  position: "top",
+                },
+              },
+            }}
+          />
+        </Col>
+        <Col xs={6} md={4}>
+          <Pie
+            data={checkPropertyVisibility}
+            options={{
+              responsive: true,
+              plugins: {
+                legend: {
+                  display: true,
+                  position: "top",
+                },
+              },
+            }}
+          />
+        </Col>
+      </Row>
+      <Row className="mt-3">
+        <Col xs={6} md={6}>
+          <Bar
+            data={checkHouseCategory}
+            options={{
+              responsive: true,
+              plugins: {
+                legend: {
+                  display: true,
+                  position: "top",
+                },
+              },
+            }}
+          />
+        </Col>
+        <Col xs={6} md={3}>
+          <Bar
+            data={checkPlotAvailability}
+            options={{
+              responsive: true,
+              plugins: {
+                legend: {
+                  display: true,
+                  position: "top",
+                },
+              },
+            }}
+          />
         </Col>
       </Row>
     </Container>
