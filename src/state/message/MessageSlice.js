@@ -18,6 +18,18 @@ export const getAllMessage = createAsyncThunk(
   }
 );
 
+export const sendMessage = createAsyncThunk(
+  "chat/sendMessage",
+  async (messageData) => {
+    const response = await axios.post(
+      `${baseAPIUrl}/messages`,
+      messageData,
+      config
+    );
+    return response.data.data;
+  }
+);
+
 export const messageSlice = createSlice({
   name: "message",
   initialState: {
@@ -26,6 +38,11 @@ export const messageSlice = createSlice({
     isFetchingMsgFailed: false,
     msgError: null,
     messages: [],
+    isSendingMsgLoading: false,
+    isSendingMsgSuccess: false,
+    isSendingMsgFailed: false,
+    sendMsgError: null,
+    newMessage: null,
   },
   reducers: {},
   extraReducers: (builder) => {
@@ -50,6 +67,27 @@ export const messageSlice = createSlice({
         state.isFetchingMsgFailed = true;
         state.msgError = action.error.message;
         state.messages = [];
+      })
+      .addCase(sendMessage.pending, (state) => {
+        state.isSendingMsgLoading = true;
+        state.isSendingMsgSuccess = false;
+        state.isSendingMsgFailed = false;
+        state.sendMsgError = null;
+        state.newMessage = [];
+      })
+      .addCase(sendMessage.fulfilled, (state, action) => {
+        state.isSendingMsgLoading = false;
+        state.isSendingMsgSuccess = true;
+        state.isSendingMsgFailed = false;
+        state.sendMsgError = null;
+        state.newMessage = action.payload;
+      })
+      .addCase(sendMessage.rejected, (state, action) => {
+        state.isSendingMsgLoading = false;
+        state.isSendingMsgSuccess = false;
+        state.isSendingMsgFailed = true;
+        state.sendMsgError = action.error.message;
+        state.newMessage = [];
       });
   },
 });

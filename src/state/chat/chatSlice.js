@@ -1,6 +1,5 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
-import jwt_decode from "jwt-decode";
 
 const baseAPIUrl = "/api/v1";
 const token = localStorage.getItem("token");
@@ -14,6 +13,13 @@ export const getAllChats = createAsyncThunk("chat/getAllChats", async () => {
   const response = await axios.get(`${baseAPIUrl}/chats`, config);
   return response.data.data;
 });
+export const createChat = createAsyncThunk(
+  "chat/createChat",
+  async (chatData) => {
+    const response = await axios.post(`${baseAPIUrl}/chats`, chatData, config);
+    return response.data.data;
+  }
+);
 
 export const chatSlice = createSlice({
   name: "chat",
@@ -22,9 +28,21 @@ export const chatSlice = createSlice({
     isFetchingChatsSuccess: false,
     isFetchingChatsFailed: false,
     fetchingChatsError: null,
+    isCreateChatLoading: false,
+    isCreateChatSuccess: false,
+    isCreateChatFailed: false,
+    createChatsError: null,
     chats: [],
+    selectedChat: null,
   },
-  reducers: {},
+  reducers: {
+    setSelectedChat(state, action) {
+      state.selectedChat = action.payload;
+    },
+    setAllChats(state, action) {
+      state.chats = [...state.action, action.period];
+    },
+  },
   extraReducers: (builder) => {
     builder
       .addCase(getAllChats.pending, (state) => {
@@ -47,8 +65,30 @@ export const chatSlice = createSlice({
         state.isFetchingChatsFailed = true;
         state.error = action.error.message;
         state.chats = [];
+      })
+      .addCase(createChat.pending, (state) => {
+        state.isCreateChatLoading = true;
+        state.isCreateChatSuccess = false;
+        state.isCreateChatFailed = false;
+        state.error = null;
+        state.selectedChat = null;
+      })
+      .addCase(createChat.fulfilled, (state, action) => {
+        state.isCreateChatLoading = false;
+        state.isCreateChatSuccess = true;
+        state.isCreateChatFailed = false;
+        state.error = null;
+        state.selectedChat = action.payload;
+      })
+      .addCase(createChat.rejected, (state, action) => {
+        state.isCreateChatLoading = false;
+        state.isCreateChatSuccess = false;
+        state.isCreateChatFailed = true;
+        state.error = action.error.message;
+        state.selectedChat = null;
       });
   },
 });
 
+export const { setAllChats, setSelectedChat } = chatSlice.actions;
 export default chatSlice.reducer;
