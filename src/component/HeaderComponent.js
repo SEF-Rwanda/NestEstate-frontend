@@ -10,6 +10,7 @@ import {
 import { LinkContainer } from "react-router-bootstrap";
 import { Link } from "react-router-dom";
 import jwt_decode from "jwt-decode";
+import Notification from "./utils/Notification";
 
 const HeaderComponent = () => {
   const token = localStorage.getItem("token");
@@ -63,22 +64,32 @@ const HeaderComponent = () => {
             {user && user.isAdmin ? (
               <>
                 <LinkContainer to="/admin/properties">
-                  <Nav.Link><i className="bi bi-houses"></i>{"  "}Properties</Nav.Link>
+                  <Nav.Link>
+                    <i className="bi bi-houses"></i>
+                    {"  "}Properties
+                  </Nav.Link>
                 </LinkContainer>
                 <LinkContainer to="/admin/users">
-                  <Nav.Link><i className="bi bi-people"></i> users</Nav.Link>
+                  <Nav.Link>
+                    <i className="bi bi-people"></i> users
+                  </Nav.Link>
                 </LinkContainer>
               </>
-            ):(
+            ) : (
               <LinkContainer to="/">
                 <Nav.Link>Home</Nav.Link>
               </LinkContainer>
             )}
-            
+
             {user && user?._id?.length ? (
-              <LinkContainer to="/add-property">
-                <Nav.Link>Add Property</Nav.Link>
-              </LinkContainer>
+              <>
+                <LinkContainer to="/add-property">
+                  <Nav.Link>Add Property</Nav.Link>
+                </LinkContainer>
+                <LinkContainer to="/add-property">
+                  <Notification />
+                </LinkContainer>
+              </>
             ) : (
               <>
                 <LinkContainer to="/about">

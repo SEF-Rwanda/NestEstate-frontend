@@ -1,13 +1,25 @@
 import React, { useEffect, useState } from "react";
-import { Container, Row, Col, ListGroup, Form, Button } from "react-bootstrap";
+import {
+  Container,
+  Row,
+  Col,
+  ListGroup,
+  Form,
+  Button,
+  Badge,
+} from "react-bootstrap";
 import io from "socket.io-client";
 import { useDispatch } from "react-redux";
+import { useSelector } from "react-redux";
+
 import { toast } from "react-toastify";
 import { store } from "../../state/store";
 import { getAllChats } from "./../../state/chat/chatSlice";
 import { getUserProfile } from "./../../state/user/userSlice";
 import { getAllMessage, sendMessage } from "../../state/message/MessageSlice";
-import TypingIndicator from "../../component/utils/TypingIndicaor";
+import TypingIndicator from "../../component/utils/TypingIndicator";
+import Notification from "../../component/utils/Notification";
+
 const ENDPOINT = "http://localhost:5000";
 let socket, selectedChatCompare;
 
@@ -34,6 +46,11 @@ const ChatPage = () => {
   const [isTyping, setIsTyping] = useState(false);
   const [loggedInUser, setLoggedInUser] = useState(null);
   const [notification, setNotification] = useState([]);
+  const [newChat, setNewChat] = useState(null);
+  const [activeChat, setActiveChat] = useState(null);
+
+  const selectChat = (state) => state.chat.selectedChat;
+  let xxchat = useSelector(selectChat);
 
   const dispatch = useDispatch();
 
@@ -43,9 +60,10 @@ const ChatPage = () => {
   }, [dispatch]);
 
   useEffect(() => {
-    console.log("#######################", selectedChat);
-    if (selectedChat !== null) dispatch(getAllMessage(selectedChat._id));
-    selectedChatCompare = selectedChat;
+    if (selectedChat !== null) {
+      dispatch(getAllMessage(selectedChat._id));
+      selectedChatCompare = selectedChat;
+    }
   }, [selectedChat, dispatch]);
 
   useEffect(() => {
@@ -78,11 +96,10 @@ const ChatPage = () => {
       const chosenChat = store.getState().chat.selectedChat;
 
       const newMessage = store.getState().message.newMessage;
-      // console.log(chosenChat);
-      if (chosenChat !== null) {
-        setSelectedChat(chosenChat);
-      }
 
+      if (chosenChat !== null) {
+        setNewChat(chosenChat);
+      }
       setMessages(fetchedMessages);
       if (sendMessageSuccess) {
         socket.emit("new message", newMessage);
@@ -98,10 +115,19 @@ const ChatPage = () => {
     return () => unsubscribe();
   });
 
+  useEffect(() => {
+    if (xxchat !== null) {
+      setSelectedChat(xxchat);
+      if (loggedInUser !== null) {
+        setActiveChat(getSender(loggedInUser, xxchat.users));
+      }
+    }
+  }, [xxchat, loggedInUser]);
+
   const getSender = (loggedUser, users) => {
     return users[0]._id === loggedUser._id
-      ? users[1].firstName
-      : users[0].firstName;
+      ? `${users[1]?.firstName} ${users[1]?.lastName}`
+      : `${users[0]?.firstName} ${users[0]?.lastName}`;
   };
 
   const sendNewMessage = (event) => {
@@ -129,10 +155,16 @@ const ChatPage = () => {
 
   useEffect(() => {
     socket.on("message received", (newMessageReceived) => {
+      console.log(
+        "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!",
+        newMessageReceived.chat._id
+      );
+      console.log("@@@@@@@@@@@@@@@@@@@@", selectedChatCompare._id);
       if (
         !selectedChatCompare ||
         selectedChatCompare._id !== newMessageReceived.chat._id
       ) {
+        console.log("imbwaAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA");
         if (!notification.includes(newMessageReceived)) {
           setNotification([newMessageReceived, ...notification]);
           setFetchAgain(!fetchAgain);
@@ -144,7 +176,6 @@ const ChatPage = () => {
   });
 
   const typingHandler = (e) => {
-    setIsSender(true);
     setNewMessage(e.target.value);
 
     if (!socketConnected) return;
@@ -189,6 +220,16 @@ const ChatPage = () => {
     }
   };
 
+  const getSelectedChat = (chat) => {
+    if (selectedChat?._id === chat?._id) {
+      return true;
+    } else {
+      return false;
+    }
+  };
+
+  console.log("###############", notification);
+
   return (
     <Container
       fluid
@@ -201,7 +242,7 @@ const ChatPage = () => {
     >
       <Row style={{ flexGrow: 1 }}>
         <Col xs={12} md={3} className="mb-3 mb-md-0">
-          <h3>Chats</h3>
+          <h6>Chats</h6>
           <ListGroup
             style={{
               height: "600px",
@@ -218,11 +259,14 @@ const ChatPage = () => {
                   className="mt-3 mb-3 "
                   onClick={() => {
                     setSelectedChat(chat);
-                    setMessages([]);
+                    setActiveChat(getSender(loggedInUser, chat.users));
+                    xxchat = null;
+                    // setMessages([]);
                   }}
                   style={{
-                    backgroundColor:
-                      selectedChat === chat ? "#7F7F7F" : "#cccccc",
+                    backgroundColor: getSelectedChat(chat)
+                      ? "#7F7F7F"
+                      : "#cccccc",
                     color: "white",
                     cursor: "pointer",
                     width: "90%",
@@ -231,18 +275,20 @@ const ChatPage = () => {
                     borderRadius: "10px 10px 10px 10px",
                   }}
                 >
-                  {getSender(loggedInUser, chat.users)}
-                  {chat.latestMessage !== null ||
-                    chat.latestMessage !==
-                      undefined(
-                        <p>
-                          <b>{chat?.latestMessage?.sender?.firstName} : </b>
-                          {chat?.latestMessage?.content?.length > 50
-                            ? chat?.latestMessage?.content.substring(0, 51) +
-                              "..."
-                            : chat?.latestMessage?.content}
-                        </p>
-                      )}
+                  <h6>
+                    {getSender(loggedInUser, chat.users)}
+                    {chat.latestMessage !== null ||
+                      chat.latestMessage !==
+                        undefined(
+                          <p>
+                            <b>{chat?.latestMessage?.sender?.firstName} : </b>
+                            {chat?.latestMessage?.content?.length > 50
+                              ? chat?.latestMessage?.content.substring(0, 51) +
+                                "..."
+                              : chat?.latestMessage?.content}
+                          </p>
+                        )}
+                  </h6>
                 </ListGroup.Item>
               ))
             ) : (
@@ -251,10 +297,15 @@ const ChatPage = () => {
           </ListGroup>
         </Col>
         <Col xs={12} md={9}>
-          <h3>
-            {loggedInUser !== null &&
-              `${loggedInUser.firstName} ${loggedInUser.lastName}`}
-          </h3>
+          <h6> Active Chat: {activeChat !== null ? activeChat : ""}</h6>{" "}
+          {/* <Badge
+            variant="info"
+            pill
+            style={{ color: "White", backgroundColor: "red" }}
+          >
+            {notification.length}
+          </Badge> */}
+          <Notification />
           <Container
             style={{
               border: "1px solid #000000 ",
@@ -279,8 +330,8 @@ const ChatPage = () => {
                         msg.sender._id !== loggedInUser._id ? "30%" : 0,
                     }}
                   >
-                    <p
-                      className="text-start col-12 d-inline-block"
+                    <h6
+                      className="text-start col-12 "
                       style={{
                         ...messageStyle,
                         backgroundColor:
@@ -295,7 +346,7 @@ const ChatPage = () => {
                       }}
                     >
                       {msg.content}
-                    </p>
+                    </h6>
                   </div>
                 ))
               ) : (
@@ -306,11 +357,12 @@ const ChatPage = () => {
               <Row>
                 <Col xs={9} md={9}>
                   <Form.Group controlId="formMessage">
-                    {isTyping && !isSender ? <TypingIndicator /> : <></>}
+                    {isTyping ? <TypingIndicator /> : <></>}
                     <Form.Control
                       value={newMessage}
                       onChange={(e) => {
                         typingHandler(e);
+                        setIsSender(true);
                         handleKeyDown(e);
                       }}
                       type="text"

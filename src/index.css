@@ -92,3 +92,17 @@ footer {
   }
 }
 
+.notification-icon {
+  background-color: #ced4da;
+  position: relative;
+  display: inline-block;
+  margin-right: 10px;
+  margin-top: 3px;
+  margin-left: 25px;
+}
+
+.notification-icon > * {
+  position: absolute;
+  top: 0;
+  right: 0;
+}

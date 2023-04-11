@@ -36,8 +36,8 @@ export const chatSlice = createSlice({
     selectedChat: null,
   },
   reducers: {
-    setSelectedChat(state, action) {
-      state.selectedChat = action.payload;
+    resetSelectedChat(state) {
+      state.selectedChat = null;
     },
     setAllChats(state, action) {
       state.chats = [...state.action, action.period];
@@ -90,5 +90,5 @@ export const chatSlice = createSlice({
   },
 });
 
-export const { setAllChats, setSelectedChat } = chatSlice.actions;
+export const { setAllChats, resetSelectedChat } = chatSlice.actions;
 export default chatSlice.reducer;
