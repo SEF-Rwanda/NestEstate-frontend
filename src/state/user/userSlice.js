@@ -49,8 +49,7 @@ if (token) {
 export const updateUserProfile = createAsyncThunk(
   "user/updateUserProfile",
 
-  async ({ firstName, lastName }, thuknAPI) => {
-    console.log("slice", firstName, lastName);
+  async ({ firstName, lastName }, thunkAPI) => {
     try {
       const response = await axios.put(
         `${baseAPIUrl}/users/profile/${usr._id}`,
@@ -61,11 +60,25 @@ export const updateUserProfile = createAsyncThunk(
       );
       return response.data;
     } catch (err) {
-      return thuknAPI.rejectWithValue(err.response.data);
+      return thunkAPI.rejectWithValue(err.response.data);
     }
   }
 );
 
+export const getUserProfile = createAsyncThunk(
+  "user/getUserProfile",
+  async () => {
+    const token = localStorage.getItem("token");
+    let user = null;
+    if (token) {
+      user = jwt_decode(token);
+    }
+
+    const response = await axios.get(`${baseAPIUrl}/users/profile/${user._id}`);
+
+    return response.data.data;
+  }
+);
 export const userSlice = createSlice({
   name: "user",
   initialState: {
@@ -77,6 +90,7 @@ export const userSlice = createSlice({
     verifyError: null,
     verifyResult: null,
     userUpdated: {},
+    userProfile: null,
   },
   reducers: {},
   extraReducers: (builder) => {
@@ -143,6 +157,24 @@ export const userSlice = createSlice({
       .addCase(login.rejected, (state, action) => {
         state.loading = false;
         state.success = false;
+        state.error = action.error.message;
+      })
+      .addCase(getUserProfile.pending, (state, action) => {
+        state.loading = true;
+        state.success = false;
+        state.userProfile = null;
+        state.error = null;
+      })
+      .addCase(getUserProfile.fulfilled, (state, action) => {
+        state.loading = false;
+        state.success = true;
+        state.error = null;
+        state.userProfile = action.payload;
+      })
+      .addCase(getUserProfile.rejected, (state, action) => {
+        state.loading = false;
+        state.success = false;
+        state.userProfile = null;
         state.error = action.error.message;
       });
   },
