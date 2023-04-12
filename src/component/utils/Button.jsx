@@ -12,6 +12,7 @@ const ButtonComponent = ({ value, type, action }) => {
         marginBottom: "10px",
         width: "160px",
         marginLeft: "10px",
+        border: "none",
       }}
       onClick={action}
     >

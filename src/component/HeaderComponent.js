@@ -9,10 +9,14 @@ import {
 } from "react-bootstrap";
 import { LinkContainer } from "react-router-bootstrap";
 import { Link } from "react-router-dom";
+import { useSelector } from "react-redux";
 import jwt_decode from "jwt-decode";
-import Notification from "./utils/Notification";
+import { IoMdMail } from "react-icons/io";
 
 const HeaderComponent = () => {
+  const selectNotifications = (state) => state.chat.notifications;
+
+  const notifications = useSelector(selectNotifications);
   const token = localStorage.getItem("token");
   let user = null;
   if (token) {
@@ -86,8 +90,19 @@ const HeaderComponent = () => {
                 <LinkContainer to="/add-property">
                   <Nav.Link>Add Property</Nav.Link>
                 </LinkContainer>
-                <LinkContainer to="/add-property">
-                  <Notification />
+                <LinkContainer to="/messages">
+                  <Nav.Link>
+                    <IoMdMail size={20} style={{ color: "#CCCCCC" }} />
+                    <span
+                      style={{
+                        fontSize: "14px",
+                        color: "#ffff",
+                        marginLeft: "-5px",
+                      }}
+                    >
+                      {notifications.length}
+                    </span>
+                  </Nav.Link>
                 </LinkContainer>
               </>
             ) : (

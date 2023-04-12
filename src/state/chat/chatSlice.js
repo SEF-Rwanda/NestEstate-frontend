@@ -34,13 +34,20 @@ export const chatSlice = createSlice({
     createChatsError: null,
     chats: [],
     selectedChat: null,
+    notifications: [],
   },
   reducers: {
-    resetSelectedChat(state) {
+    resetSelectedChat: (state) => {
       state.selectedChat = null;
     },
-    setAllChats(state, action) {
+    setAllChats: (state, action) => {
       state.chats = [...state.action, action.period];
+    },
+    setNotifications: (state, action) => {
+      state.notifications = action.payload;
+    },
+    resetIsCreateChatSuccess: (state) => {
+      state.isCreateChatSuccess = false;
     },
   },
   extraReducers: (builder) => {
@@ -90,5 +97,10 @@ export const chatSlice = createSlice({
   },
 });
 
-export const { setAllChats, resetSelectedChat } = chatSlice.actions;
+export const {
+  setAllChats,
+  resetSelectedChat,
+  setNotifications,
+  resetIsCreateChatSuccess,
+} = chatSlice.actions;
 export default chatSlice.reducer;
