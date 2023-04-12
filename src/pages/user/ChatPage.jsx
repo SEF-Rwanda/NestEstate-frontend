@@ -15,7 +15,7 @@ import { getUserProfile } from "./../../state/user/userSlice";
 import { getAllMessage, sendMessage } from "../../state/message/MessageSlice";
 import TypingIndicator from "../../component/utils/TypingIndicator";
 
-const ENDPOINT = "http://localhost:5000";
+const ENDPOINT = "http://172.29.98.230:5000";
 let socket, selectedChatCompare;
 
 const messageStyle = {
@@ -221,7 +221,7 @@ const ChatPage = () => {
     } else return false;
   };
 
-  console.log("###############", notifications);
+ 
 
   return (
     <Container
