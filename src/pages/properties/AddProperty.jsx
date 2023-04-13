@@ -16,7 +16,7 @@ import Label from "../../component/utils/Label";
 import { addProduct } from "../../state/property/propertySlice";
 
 const categories = ["House", "Plot"];
-const sections = ["For rent", "For sell"];
+const sections = ["For Rent", "For Sale"];
 const masterPlanUses = ["Farming", "Settlement", "Industry", "Commerce"];
 const levels = ["R1", "R2", "R3", "R4", "R5", "R6"];
 

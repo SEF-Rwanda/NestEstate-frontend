@@ -1,12 +1,34 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
-import { Container, Table, Row } from "react-bootstrap";
+import {
+  Container,
+  Table,
+  Row,
+  Col,
+  Form,
+  Button,
+  InputGroup,
+} from "react-bootstrap";
 import { Link } from "react-router-dom";
 
 const baseAPIUrl = "/api/v1";
 const UserProperties = () => {
   const authToken = localStorage.getItem("token");
   const [users, setUsers] = useState([]);
+  const [currentPage] = useState(1);
+  const [usersPerPage] = useState(10);
+  const [startDate, setStartDate] = useState(new Date());
+  const [endDate, setEndDate] = useState(new Date());
+
+  let url = `${baseAPIUrl}/users?perPage=${usersPerPage}&page=${currentPage}&`;
+
+  if (startDate && endDate) {
+    url += `startDate=${startDate}&endDate=${endDate}&`;
+  }
+
+  if (url.endsWith("&")) {
+    url = url.slice(0, -1);
+  }
 
   useEffect(() => {
     const fetchUserData = async () => {
@@ -30,7 +52,13 @@ const UserProperties = () => {
       fetchUserData();
     }
   }, []);
-  
+
+  const handleSearch = async (e) => {
+    e.preventDefault();
+    const { data } = await axios.get(url);
+    setUsers(data.data);
+  };
+
   const makeUserAdmin = async (id) => {
     const config = {
       headers: {
@@ -55,6 +83,38 @@ const UserProperties = () => {
         <i className="bi bi-people"></i> All Users
       </h5>
       <hr />
+      <Form onSubmit={handleSearch}>
+        <Row className="align-items-center">
+          <Col sm={3} className="my-1">
+            <Form.Label htmlFor="inlineFormInputName" visuallyHidden>
+              Start Date
+            </Form.Label>
+            <Form.Control
+              type="date"
+              id="inlineFormInputName"
+              value={startDate}
+              onChange={(e) => setStartDate(e.target.value)}
+            />
+          </Col>
+          <Col sm={3} className="my-1">
+            <Form.Label htmlFor="inlineFormInputGroupUsername" visuallyHidden>
+              End Date
+            </Form.Label>
+            <InputGroup>
+              <Form.Control
+                type="date"
+                id="inlineFormInputGroupUsername"
+                value={endDate}
+                onChange={(e) => setEndDate(e.target.value)}
+              />
+            </InputGroup>
+          </Col>
+          <Col xs="auto" className="my-1">
+            <Button type="submit">Search</Button>
+          </Col>
+        </Row>
+      </Form>{" "}
+      <br />
       <Row>
         {users.length === 0 ? (
           <>
@@ -106,15 +166,19 @@ const UserProperties = () => {
                   </td>
                   <td>
                     <Link
-                      to=""//{`/users/${user.id}`}
+                      to="" //{`/users/${user.id}`}
                       style={{ marginRight: "10px", color: "black" }}
                     >
                       <i className="bi bi-pencil"></i>
                     </Link>
-    
+
                     {user.isAdmin ? (
-                      <Link to="" style={{ marginLeft: "10px", color: "green" }}>
-                        <i className="bi bi-person-up"
+                      <Link
+                        to=""
+                        style={{ marginLeft: "10px", color: "green" }}
+                      >
+                        <i
+                          className="bi bi-person-up"
                           onClick={() => makeUserAdmin(user.id)}
                         ></i>
                       </Link>
