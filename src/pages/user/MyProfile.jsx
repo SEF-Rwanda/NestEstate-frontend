@@ -1,8 +1,9 @@
 import { Container, Row, Col, Button } from "react-bootstrap";
 import { useState, useEffect } from "react";
+import axios from "axios";
 import Modal from "react-bootstrap/Modal";
 import UpdateUserProfile from "./UpdateProfile";
-import http from "../../utils/http";
+
 import jwt_decode from "jwt-decode";
 
 const MyProfile = () => {
@@ -15,7 +16,8 @@ const MyProfile = () => {
   const [userdata, setUserData] = useState({});
 
   const getProfile = async (id) => {
-    const response = await http.get(`/users/profile/${id}`);
+    const response = await axios.get(`/api/v1/users/profile/${id}`);
+    console.log(response.data);
     setUserData(response.data.data);
     return response;
   };

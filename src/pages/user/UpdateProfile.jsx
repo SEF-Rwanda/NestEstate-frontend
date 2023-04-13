@@ -17,12 +17,12 @@ const UpdateUserProfile = () => {
   // console.log(user.id)
   const [userdata, setUserData] = useState({});
   const getProfile = async (id) => {
-    const response = await http.get(`users/profile/${id}`);
+    const response = await http.get(`/api/v1/users/profile/${id}`);
     // console.log(response.data.data);
     setUserData(response.data.data);
     return response;
   };
-  console.log(user)
+  console.log(user);
   useEffect(() => {
     getProfile(user._id);
   }, [user._id]);

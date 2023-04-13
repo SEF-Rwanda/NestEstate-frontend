@@ -21,7 +21,7 @@ import AdminUsers from "./pages/user/AdminUsers";
 import "./App.css";
 import SingleProperty from "./pages/properties/SingleProperty";
 import DashboardInterface from "./pages/admin/DashboardInterface";
-
+import ChatPage from "./pages/user/ChatPage";
 function App() {
   return (
     <Provider store={store}>
@@ -43,6 +43,7 @@ function App() {
         <Route path="/admin/users" element={<AdminUsers />} />
         <Route path="/all-properties/:id" element={<SingleProperty />} />
         <Route path="/admin/analytics" element={<DashboardInterface/>} />
+        <Route path="/messages" element={<ChatPage />} />
         <Route path="/*" element={<h1>404 Not Found</h1>} />
       </Routes>
       <ToastContainer />
