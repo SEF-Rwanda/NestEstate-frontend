@@ -1,6 +1,5 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
-import jwt_decode from "jwt-decode";
 
 const baseAPIUrl = "/api/v1";
 const token = localStorage.getItem("token");
