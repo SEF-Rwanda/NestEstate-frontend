@@ -31,7 +31,7 @@ const UserProperties = () => {
   if (url.endsWith("&")) {
     url = url.slice(0, -1);
   }
-
+  
   const generatePdf = () => {
     const doc = new jsPDF();
 

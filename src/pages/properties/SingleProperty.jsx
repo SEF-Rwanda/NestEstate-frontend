@@ -1,19 +1,21 @@
 import React, { useState, useEffect } from "react";
 import { Carousel, Modal, Card, Container, Row, Col } from "react-bootstrap";
 import { useDispatch } from "react-redux";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { toast } from "react-toastify";
 import ButtonComponent from "../../component/utils/Button";
 import { fetchSingleProduct } from "../../state/property/propertySlice";
+import { createChat } from "../../state/chat/chatSlice";
 import { store } from "../../state/store";
 import Spinner from "../../component/utils/Spinner";
 
 const SingleProperty = () => {
   const [property, setProperty] = useState(null);
+  const [newChat, setNewChat] = useState(null);
   const [images, setImages] = useState([]);
   const dispatch = useDispatch();
   const { id } = useParams();
-
+  const navigate = useNavigate();
   const [index, setIndex] = useState(0);
 
   const [showModal, setShowModal] = useState(false);
@@ -30,6 +32,13 @@ const SingleProperty = () => {
     setShowModal(false);
   };
 
+  const createChatWithLandlord = (id) => {
+    dispatch(
+      createChat({
+        userId: id,
+      })
+    );
+  };
   useEffect(() => {
     dispatch(fetchSingleProduct(id));
   }, [dispatch, id]);
@@ -39,9 +48,12 @@ const SingleProperty = () => {
       const isSuccess = store.getState().property.isFetchingPropertySuccess;
       const error = store.getState().property.fetchingPropertyError;
       const property = store.getState().property.fetchedProperty;
-      setProperty(property);
+      const chat = store.getState().chat.selectedChat;
+      const isCreateChatSuccess = store.getState().chat.isCreateChatSuccess;
+
       if (isSuccess) {
         if (property !== null) {
+          setProperty(property);
           images.push(property?.mainImage?.url);
           property.otherImages.map((image) => images.push(image.url));
           setImages(images);
@@ -49,13 +61,14 @@ const SingleProperty = () => {
       } else if (error) {
         toast.error(error);
       }
+      if (isCreateChatSuccess) {
+        setNewChat(chat);
+        navigate("/messages");
+      }
     });
     return () => unsubscribe();
   });
 
-  console.log(property);
-
-  console.log(images);
   return (
     <>
       {property !== null ? (
@@ -77,12 +90,12 @@ const SingleProperty = () => {
               <ButtonComponent
                 type="submit"
                 value="Contact LandLord"
-                action={() => {}}
+                action={() => createChatWithLandlord(property.postedBy)}
               />
               <ButtonComponent
                 type="submit"
                 value="Pay for property"
-                action={() => {}}
+                onClick={() => {}}
               />
             </Col>
             <Col md={6}>

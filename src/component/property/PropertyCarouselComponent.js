@@ -45,15 +45,15 @@ const ProductCarouselComponent = ({ handleInputChange, handleSearch }) => {
                   <option value="Plot">Plot</option>
                 </Form.Select>
               </Form.Group>
-              {category !== "Plot" ? ( 
-              <Form.Group as={Col} controlId="formGridSection">
-                <Form.Select name="section" onChange={handleInputChange}>
-                  <option>Choose Section...</option>
-                  <option>For Buy</option>
-                  <option>For rent</option>
-                </Form.Select>
-              </Form.Group>
-              ): null}
+              {category !== "Plot" ? (
+                <Form.Group as={Col} controlId="formGridSection">
+                  <Form.Select name="section" onChange={handleInputChange}>
+                    <option>Choose Section...</option>
+                    <option>For Sale</option>
+                    <option>For Rent</option>
+                  </Form.Select>
+                </Form.Group>
+              ) : null}
               <Form.Group as={Col} controlId="formGridZip">
                 <Form.Control
                   placeholder="Title"
