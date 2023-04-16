@@ -1,5 +1,7 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
+import jsPDF from "jspdf";
+import autoTable from "jspdf-autotable";
 import {
   Container,
   Table,
@@ -39,6 +41,54 @@ const UserProperties = () => {
     seconds: "numeric",
   });
 
+  // Write a function to generate reports in pdf
+  const generatePdf = () => {
+    const doc = new jsPDF();
+
+    doc.setFontSize(18);
+    doc.text("Property Report", 20, 20);
+
+    let yOffset = 40;
+
+    autoTable(doc, {
+      head: [["Title", "Description", "Price"]],
+      body: userProperties.map((property) => [
+        property.title,
+        property.description,
+        property.price,
+      ]),
+      startY: yOffset,
+      theme: "grid",
+      styles: {
+        fontSize: 10,
+        cellPadding: 2,
+        overflow: "linebreak",
+        halign: "lefter",
+        valign: "lefter",
+      },
+      columnStyles: {
+        0: { columnWidth: 50 },
+
+        1: {
+          columnWidth: 80,
+          createdCell: (cell) => {
+            cell.styles.fontSize = 10;
+            cell.styles.cellPadding = 2;
+          },
+        },
+        2: {
+          columnWidth: 50,
+          createdCell: (cell) => {
+            cell.styles.fontSize = 8;
+            cell.styles.cellPadding = 2;
+          },
+        },
+      },
+    });
+
+    doc.save(`property-report-${new Date().toJSON()}.pdf`);
+  };
+
   useEffect(() => {
     // Make API request to fetch user data
     const fetchUserData = async () => {
@@ -65,7 +115,7 @@ const UserProperties = () => {
       fetchUserData();
     }
   }, []);
-  
+
   const handleSearch = async (e) => {
     e.preventDefault();
     const { data } = await axios.get(url);
@@ -133,6 +183,11 @@ const UserProperties = () => {
           </Col>
         </Row>
       </Form>
+      <hr />
+      <Button className="btn-btn-primary" onClick={generatePdf}>
+        Generate Pdf
+      </Button>
+      <hr />
       <Row>
         {userProperties.length === 0 ? (
           <>

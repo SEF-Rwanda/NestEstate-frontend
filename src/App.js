@@ -22,6 +22,7 @@ import "./App.css";
 import SingleProperty from "./pages/properties/SingleProperty";
 import DashboardInterface from "./pages/admin/DashboardInterface";
 import ChatPage from "./pages/user/ChatPage";
+
 function App() {
   return (
     <Provider store={store}>

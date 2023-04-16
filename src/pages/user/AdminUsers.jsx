@@ -9,6 +9,8 @@ import {
   Button,
   InputGroup,
 } from "react-bootstrap";
+import jsPDF from "jspdf";
+import autoTable from "jspdf-autotable";
 import { Link } from "react-router-dom";
 
 const baseAPIUrl = "/api/v1";
@@ -29,6 +31,35 @@ const UserProperties = () => {
   if (url.endsWith("&")) {
     url = url.slice(0, -1);
   }
+  
+  const generatePdf = () => {
+    const doc = new jsPDF();
+
+    doc.setFontSize(18);
+    doc.text("User Report", 15, 15);
+
+    let yOffset = 25;
+
+    autoTable(doc, {
+      head: [["Name", "Email", "Phone Number"]],
+      body: users.map((user) => [
+        user.firstName + " " + user.lastName,
+        user.email,
+        user.phone,
+      ]),
+      startY: yOffset,
+      theme: "grid",
+      styles: {
+        fontSize: 10,
+        cellPadding: 2,
+        overflow: "linebreak",
+        halign: "lefter",
+        valign: "lefter",
+      },
+    });
+
+    doc.save(`user-report-${new Date().toJSON()}.pdf`);
+  };
 
   useEffect(() => {
     const fetchUserData = async () => {
@@ -114,6 +145,11 @@ const UserProperties = () => {
           </Col>
         </Row>
       </Form>{" "}
+      <hr />
+      <Button className="btn-btn-primary" onClick={generatePdf}>
+        Generate Pdf
+      </Button>
+      <hr />
       <br />
       <Row>
         {users.length === 0 ? (
