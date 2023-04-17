@@ -8,6 +8,8 @@ import { fetchSingleProduct } from "../../state/property/propertySlice";
 import { createChat } from "../../state/chat/chatSlice";
 import { store } from "../../state/store";
 import Spinner from "../../component/utils/Spinner";
+import StripeCheckout from "react-stripe-checkout";
+import axios from "axios";
 
 const SingleProperty = () => {
   const [property, setProperty] = useState(null);
@@ -39,6 +41,13 @@ const SingleProperty = () => {
       })
     );
   };
+
+  const handleToken = async(token, addresses) => {  
+    const response = await axios.post("/api/v1/properties/checkout", {token, property});
+    console.log(response.status)
+  };
+
+
   useEffect(() => {
     dispatch(fetchSingleProduct(id));
   }, [dispatch, id]);
@@ -92,10 +101,12 @@ const SingleProperty = () => {
                 value="Contact LandLord"
                 action={() => createChatWithLandlord(property.postedBy)}
               />
-              <ButtonComponent
-                type="submit"
-                value="Pay for property"
-                onClick={() => {}}
+              <StripeCheckout
+                stripeKey="pk_test_51MxqNaGBiMBqhHS1GZ4oRDpI8kZtoY1tGM79eHB5xQTrKHWSO8TIQ4lQstS8KBnOr472GUe3TyKhFnZ2vrH8Juzl00uupJhab9"
+                token={handleToken}
+                amount={property.price}
+                billingAddress
+                shippingAddress
               />
             </Col>
             <Col md={6}>
