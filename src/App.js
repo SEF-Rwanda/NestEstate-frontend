@@ -22,6 +22,8 @@ import "./App.css";
 import SingleProperty from "./pages/properties/SingleProperty";
 import DashboardInterface from "./pages/admin/DashboardInterface";
 import ChatPage from "./pages/user/ChatPage";
+import UserDashboardInterface from "./pages/user/UserDashboard";
+import Logs from "./pages/admin/Logs";
 
 function App() {
   return (
@@ -44,7 +46,9 @@ function App() {
         <Route path="/admin/users" element={<AdminUsers />} />
         <Route path="/all-properties/:id" element={<SingleProperty />} />
         <Route path="/admin/analytics" element={<DashboardInterface/>} />
+        <Route path="/user/dashboard" element={<UserDashboardInterface/>} />
         <Route path="/messages" element={<ChatPage />} />
+        <Route path="/admin/logs" element={<Logs/>} />
         <Route path="/*" element={<h1>404 Not Found</h1>} />
       </Routes>
       <ToastContainer />

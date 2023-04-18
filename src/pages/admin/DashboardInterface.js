@@ -28,8 +28,13 @@ const DashboardInterface = () => {
   });
 
   const countRecords = async () => {
+    const token = localStorage.getItem("token");
+    const config = {
+      headers: { Authorization: `Bearer ${token}` },
+    };
     try {
-      const { data } = await axios.get(`${baseAPIUrl}/reports`);
+      
+      const { data } = await axios.get(`${baseAPIUrl}/reports`,config);
       setPropertyCount(data.data.totalProperties);
       setUserCount(data.data.totalUsers);
       setHouseCount(data.data.totalHouseProperties);

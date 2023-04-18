@@ -12,6 +12,7 @@ import { Link } from "react-router-dom";
 import { useSelector } from "react-redux";
 import jwt_decode from "jwt-decode";
 import { IoMdMail } from "react-icons/io";
+import axios from "axios";
 
 const HeaderComponent = () => {
   const selectNotifications = (state) => state.chat.notifications;
@@ -22,9 +23,20 @@ const HeaderComponent = () => {
   if (token) {
     user = jwt_decode(token);
   }
-
-  const handleOnClickLogout = () => {
+  const baseAPIUrl = "/api/v1";
+  const handleOnClickLogout = async() => {
+    const token = localStorage.getItem("token");
+    const config = {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    };
     try {
+      const { data } = await axios({
+        method: "POST",
+        url: `${baseAPIUrl}/users/logout`,
+        headers: config.headers,
+      });      
       localStorage.removeItem("token");
       window.location.href = "/login";
     } catch (e) {
@@ -84,11 +96,22 @@ const HeaderComponent = () => {
                     <i className="bi bi-people"></i> users
                   </Nav.Link>
                 </LinkContainer>
+                <LinkContainer to="/admin/logs">
+                  <Nav.Link>
+                    Logs
+                  </Nav.Link>
+                </LinkContainer>
               </>
             ) : (
-              <LinkContainer to="/">
-                <Nav.Link>Home</Nav.Link>
-              </LinkContainer>
+              <>  
+                <LinkContainer to="/">
+                  <Nav.Link>Home</Nav.Link>
+                </LinkContainer>
+                <LinkContainer to="/user/dashboard">
+                  <Nav.Link>Dashboard</Nav.Link>
+                </LinkContainer>
+              </>
+              
             )}
 
             {user && user?._id?.length ? (

@@ -43,7 +43,7 @@ function SignupForm() {
       if (isSuccess) {
         navigate("/verify-account");
       } else if (error) {
-        toast.error(error);
+        toast.error("Something went wrong. Please try again.");
       }
     });
     return () => unsubscribe();
