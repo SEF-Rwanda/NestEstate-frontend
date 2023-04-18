@@ -106,7 +106,7 @@ const UserProperties = () => {
             Add Property
           </Button>
         </Col>
-        <Col sm={9} className="my-1">
+        {/* <Col sm={9} className="my-1">
           <Form onSubmit={handleSearch}>
             <Row className="align-items-center">
               <Col sm={3} className="my-1">
@@ -141,7 +141,7 @@ const UserProperties = () => {
               </Col>
             </Row>
           </Form>{" "}
-        </Col>
+        </Col> */}
       </Row>
       <hr />
 
