@@ -22,6 +22,8 @@ import "./App.css";
 import SingleProperty from "./pages/properties/SingleProperty";
 import DashboardInterface from "./pages/admin/DashboardInterface";
 import ChatPage from "./pages/user/ChatPage";
+import CheckoutSuccess from "./component/payment/CheckoutSuccess";
+import PaymentFailure from "./component/payment/PaymentFailure";
 
 function App() {
   return (
@@ -43,8 +45,10 @@ function App() {
         <Route path="/admin/properties" element={<AdminProperties />} />
         <Route path="/admin/users" element={<AdminUsers />} />
         <Route path="/all-properties/:id" element={<SingleProperty />} />
-        <Route path="/admin/analytics" element={<DashboardInterface/>} />
+        <Route path="/admin/analytics" element={<DashboardInterface />} />
         <Route path="/messages" element={<ChatPage />} />
+        <Route path="/checkout_success" element={<CheckoutSuccess />} />
+        <Route path="/checkout_cancel" element={<PaymentFailure />} />
         <Route path="/*" element={<h1>404 Not Found</h1>} />
       </Routes>
       <ToastContainer />
