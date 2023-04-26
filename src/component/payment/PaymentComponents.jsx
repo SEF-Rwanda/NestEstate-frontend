@@ -20,9 +20,16 @@ const PaymentComponent = () => {
   useEffect(() => {
     // Make API request to fetch user data
     const fetchPaymentData = async () => {
+      const authToken = localStorage.getItem("token");
+      const config = {
+        headers: {
+          Authorization: `Bearer ${authToken}`,
+        },
+      };
       try {
         const { data } = await axios.get(
-          `${baseAPIUrl}/payments/view-all-payments`
+          `${baseAPIUrl}/payments/view-all-payments`,
+          config
         );
         setPayments(data.data);
         console.log(data.data);

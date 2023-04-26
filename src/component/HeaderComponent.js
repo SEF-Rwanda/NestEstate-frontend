@@ -73,6 +73,12 @@ const HeaderComponent = () => {
                     {"  "}Analytics
                   </Nav.Link>
                 </LinkContainer>
+                <LinkContainer to="/admin/payments">
+                  <Nav.Link>
+                    <i className=""></i>
+                    {"  "}Payments
+                  </Nav.Link>
+                </LinkContainer>
                 <LinkContainer to="/admin/properties">
                   <Nav.Link>
                     <i className="bi bi-houses"></i>
