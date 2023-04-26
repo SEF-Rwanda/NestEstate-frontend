@@ -12,25 +12,23 @@ import {
 import jsPDF from "jspdf";
 import autoTable from "jspdf-autotable";
 
-const baseAPIUrl = "/api/v1";
-
 const Logs = () => {
   const [logs, setLogs] = useState([]);
   const [currentPage] = useState(1);
   const [usersPerPage] = useState(10);
-  const [startDate, setStartDate] = useState(new Date());
-  const [endDate, setEndDate] = useState(new Date());
+  const [startDate, setStartDate] = useState(null);
+  const [endDate, setEndDate] = useState(null);
 
-  let url = `${baseAPIUrl}/users/logs?perPage=${usersPerPage}&page=${currentPage}&`;
+  let url = `http://localhost:5000/api/v1/users/logs`;
 
   if (startDate && endDate) {
-    url += `startDate=${startDate}&endDate=${endDate}&`;
+    url += `?startDate=${startDate}&endDate=${endDate}&`;
   }
 
   if (url.endsWith("&")) {
     url = url.slice(0, -1);
   }
-  
+  console.log("url=========================", url);
   const generatePdf = () => {
     const doc = new jsPDF();
 
@@ -38,11 +36,11 @@ const Logs = () => {
     doc.text("User Report", 15, 15);
 
     let yOffset = 25;
-    
+
     autoTable(doc, {
-      head: [["ID","Action", "User Full Name", "Time"]],
+      head: [["ID", "Action", "User Full Name", "Time"]],
       body: logs.map((log, idx) => [
-        idx+1,
+        idx + 1,
         log.action,
         log.user,
         log.createdAt,
@@ -68,7 +66,8 @@ const Logs = () => {
       };
 
       try {
-        const { data } = await axios.get(`${baseAPIUrl}/users/logs`, config);
+        const { data } = await axios.get(`${url}`, config);
+        console.log(data);
         setLogs(data.data);
       } catch (error) {
         console.error(error);
@@ -90,11 +89,10 @@ const Logs = () => {
     setLogs(data.data);
   };
 
-  
   return (
     <Container>
       <h5 style={{ textAlign: "center", margin: "25px", fontWeight: "bold" }}>
-        <i className="bi bi-people"></i> All Users
+        <i className="bi bi-people"></i> System Logs
       </h5>
       <hr />
       <Form onSubmit={handleSearch}>

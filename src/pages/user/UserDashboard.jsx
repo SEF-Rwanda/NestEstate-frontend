@@ -1,12 +1,15 @@
 import React, { useState, useEffect } from "react";
-import { Container, Row, Col, Card } from "react-bootstrap";
+import { Container, Row, Col, Card, Button } from "react-bootstrap";
+import { Link } from "react-router-dom";
 import axios from "axios";
 import { Chart as ChartJS, registerables } from "chart.js";
 import { Pie, Bar } from "react-chartjs-2";
 import jwt_decode from "jwt-decode";
 import UserLinksComponent from "../../component/UserLinksComponent";
-// import Card from 'react-bootstrap/Card';
+import Collapse from 'react-bootstrap/Collapse';
 import ListGroup from 'react-bootstrap/ListGroup';
+import ChoosingUsComponent from "../../component/ChoosingUsComponent";
+import FooterComponent from "../../component/FooterComponent";
 ChartJS.register(...registerables);
 
 
@@ -34,6 +37,7 @@ const token = localStorage.getItem("token");
 //   const [houseForRentCount, setHouseForRentCount] = useState(0);
   const [availablePlotCount, setAvailablePlotCount] = useState(0);
   const [unavailablePlotCount, setUnavailablePlotCount] = useState(0);
+  const [open, setOpen] = useState(false);
 
   useEffect(() => {
     countRecords();
@@ -117,9 +121,26 @@ const token = localStorage.getItem("token");
           textAlign: "center",
         }}
       >
-        Welcome back {user.firstName} {user.lastName}!
+        Welcome back {user.firstName} {user.lastName}!        
+      
+      
+      
+      <Button
+          className="float-end"
+          style={{ backgroundColor: "#6736CF", border: "none" }}
+          as={Link}
+          to="/add-property"
+        >
+          {" "}
+          <i
+            style={{ margin: "5px", fontWeight: "bold", position:"right"}}
+            className="bi bi-plus-circle"
+          ></i>
+          Add Property
+      </Button>
       </p>
       <hr />
+      
       
       <Row>
         <Col md={3}>
@@ -136,6 +157,7 @@ const token = localStorage.getItem("token");
               <ListGroup.Item>Unavailable properties ({unavailablePropertyCount})</ListGroup.Item>
             </ListGroup>
           </Card>
+        
           < UserLinksComponent />
           
 
@@ -148,33 +170,6 @@ const token = localStorage.getItem("token");
                {"  "} You have posted {propertyCount} properties so far. {houseCount}{" "}houses and {plotCount} plots.
               </p>  
             </Row>
-            {/* <Row>
-              <Col xs={5} md={3}>
-                <Card style={{ backgroundColor: "#ABA0C1" }}>
-                  <Card.Body>
-                    <Card.Title>{propertyCount}</Card.Title>
-                    <Card.Text>Properties</Card.Text>
-                  </Card.Body>
-                </Card>
-              </Col>
-              
-              <Col xs={5} md={3}>
-                <Card style={{ backgroundColor: "#6CB26A" }}>
-                  <Card.Body>
-                    <Card.Title>{houseCount}</Card.Title>
-                    <Card.Text>Houses</Card.Text>
-                  </Card.Body>
-                </Card>
-              </Col>
-              <Col xs={5} md={3}>
-                <Card style={{ backgroundColor: "#FAEB63" }}>
-                  <Card.Body>
-                    <Card.Title>{plotCount}</Card.Title>
-                    <Card.Text>Plots</Card.Text>
-                  </Card.Body>
-                </Card>
-              </Col>
-            </Row> */}
             
             <Row className="mt-3">
               <Col xs={6} md={4}>
@@ -228,9 +223,11 @@ const token = localStorage.getItem("token");
               </>
           )}
         </Col>
-        
+
         
       </Row>
+      <ChoosingUsComponent />
+      <FooterComponent />
     </Container>
   );
 };

@@ -24,7 +24,7 @@ const HeaderComponent = () => {
     user = jwt_decode(token);
   }
   const baseAPIUrl = "/api/v1";
-  const handleOnClickLogout = async() => {
+  const handleOnClickLogout = async () => {
     const token = localStorage.getItem("token");
     const config = {
       headers: {
@@ -36,7 +36,7 @@ const HeaderComponent = () => {
         method: "POST",
         url: `${baseAPIUrl}/users/logout`,
         headers: config.headers,
-      });      
+      });
       localStorage.removeItem("token");
       window.location.href = "/login";
     } catch (e) {
@@ -97,27 +97,24 @@ const HeaderComponent = () => {
                   </Nav.Link>
                 </LinkContainer>
                 <LinkContainer to="/admin/logs">
-                  <Nav.Link>
-                    Logs
-                  </Nav.Link>
+                  <Nav.Link>Logs</Nav.Link>
                 </LinkContainer>
               </>
             ) : (
-              <>  
+              <>
                 <LinkContainer to="/">
                   <Nav.Link>Home</Nav.Link>
                 </LinkContainer>
-                <LinkContainer to="/user/dashboard">
-                  <Nav.Link>Dashboard</Nav.Link>
-                </LinkContainer>
               </>
-              
             )}
 
-            {user && user?._id?.length ? (
+            {user && !user.isAdmin ? (
               <>
                 <LinkContainer to="/add-property">
                   <Nav.Link>Add Property</Nav.Link>
+                </LinkContainer>
+                <LinkContainer to="/user/dashboard">
+                  <Nav.Link>Dashboard</Nav.Link>
                 </LinkContainer>
                 <LinkContainer to="/messages">
                   <Nav.Link>
@@ -135,20 +132,7 @@ const HeaderComponent = () => {
                 </LinkContainer>
               </>
             ) : (
-              <>
-                <LinkContainer to="/about">
-                  <Nav.Link>About</Nav.Link>
-                </LinkContainer>
-                <LinkContainer to="/contact">
-                  <Nav.Link>Contact</Nav.Link>
-                </LinkContainer>
-                <LinkContainer to="/login">
-                  <Nav.Link>Login</Nav.Link>
-                </LinkContainer>
-                <LinkContainer to="/register">
-                  <Nav.Link>Register</Nav.Link>
-                </LinkContainer>
-              </>
+              <></>
             )}
 
             {user && user?._id?.length ? (
@@ -168,7 +152,20 @@ const HeaderComponent = () => {
                 </NavDropdown.Item>
               </NavDropdown>
             ) : (
-              <></>
+              <>
+                <LinkContainer to="/about">
+                  <Nav.Link>About</Nav.Link>
+                </LinkContainer>
+                <LinkContainer to="/contact">
+                  <Nav.Link>Contact</Nav.Link>
+                </LinkContainer>
+                <LinkContainer to="/login">
+                  <Nav.Link>Login</Nav.Link>
+                </LinkContainer>
+                <LinkContainer to="/register">
+                  <Nav.Link>Register</Nav.Link>
+                </LinkContainer>
+              </>
             )}
           </Nav>
         </Navbar.Collapse>
