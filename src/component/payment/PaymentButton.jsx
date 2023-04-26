@@ -6,6 +6,11 @@ const PaymentButton = (property) => {
   const handleCheckout = async () => {
     // Get authentication token
     const authToken = localStorage.getItem("token");
+    const config = {
+      headers: {
+        Authorization: `Bearer ${authToken}`,
+      },
+    };
     // Decode token to get user ID if we have token
     if (authToken) {
       // Decode token to get user ID
@@ -18,8 +23,10 @@ const PaymentButton = (property) => {
         {
           property,
           userId,
-        }
+        },
+        config
       );
+      console.log(data);
       // Redirect user to Stripe checkout
       if (data.url) {
         window.location.href = data.url;
