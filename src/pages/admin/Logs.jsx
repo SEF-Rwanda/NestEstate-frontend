@@ -19,7 +19,7 @@ const Logs = () => {
   const [startDate, setStartDate] = useState(null);
   const [endDate, setEndDate] = useState(null);
 
-  let url = `http://localhost:5000/api/v1/users/logs`;
+  let url = "/api/v1/users/logs";
 
   if (startDate && endDate) {
     url += `?startDate=${startDate}&endDate=${endDate}&`;
@@ -28,7 +28,6 @@ const Logs = () => {
   if (url.endsWith("&")) {
     url = url.slice(0, -1);
   }
-  console.log("url=========================", url);
   const generatePdf = () => {
     const doc = new jsPDF();
 
