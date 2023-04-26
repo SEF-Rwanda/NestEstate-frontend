@@ -40,10 +40,10 @@ const Login = () => {
         window.location.reload()
       }
       else if (isSuccess && user.isAdmin===false) {
-        navigate("/");
+        navigate("/user/dashboard");
         window.location.reload()
       } else if (error) {
-        toast.error(error);
+        toast.error("There was a problem logging in. Please try again using correct credentials.");
       }
     });
     return () => unsubscribe();
