@@ -24,6 +24,7 @@ export const updateProperty = createAsyncThunk(
       description,
       mainImage,
       otherImages,
+      videoTour,
       bedrooms,
       bathrooms,
       masterPlanUse,
@@ -58,6 +59,7 @@ export const updateProperty = createAsyncThunk(
           description,
           mainImage,
           otherImages,
+          videoTour,
           bedrooms,
           bathrooms,
           masterPlanUse,
@@ -92,6 +94,7 @@ export const fetchSingleProduct = createAsyncThunk(
   "properties/fetchSingleProduct",
   async (id) => {
     const response = await axios.get(`${baseAPIUrl}/properties/${id}`);
+
     return response.data.data;
   }
 );

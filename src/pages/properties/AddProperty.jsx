@@ -38,6 +38,7 @@ const AddProperty = () => {
   const [isFormLoading, setIsFormLoading] = useState(false);
   const [location, setLocation] = useState({ latitude: 0, longitude: 0 });
   const [mainImage, setMainImage] = useState({ public_id: "", url: "" });
+  const [videoTour, setVideoTour] = useState({ public_id: "", url: "" });
   const [otherImages, setOtherImages] = useState([]);
   const [isParkingAvailable, setIsParkingAvailable] = useState(false);
   const [isTankAvailable, setIsTankAvailable] = useState(false);
@@ -100,6 +101,26 @@ const AddProperty = () => {
     setOtherImages(images);
   };
 
+  const uploadVideoTour = async (event) => {
+    const VideoTourData = new FormData();
+    VideoTourData.append("file", event.target.files[0]);
+    VideoTourData.append("upload_preset", "wingi-app");
+    try {
+      const { data } = await axios.post(
+        "https://api.cloudinary.com/v1_1/kuranga/video/upload",
+        VideoTourData
+      );
+
+      setVideoTour({
+        public_id: data.public_id,
+        url: data.secure_url,
+      });
+      console.log("Uploaded video=======================>", data.secure_url);
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
   const handleSubmit = async (event) => {
     event.preventDefault();
     const property = {
@@ -112,6 +133,7 @@ const AddProperty = () => {
       description: description,
       mainImage: mainImage,
       otherImages: otherImages,
+      videoTour: videoTour,
       bedrooms: bedrooms,
       bathrooms: bathrooms,
       masterPlanUse: masterPlanUse,
@@ -123,7 +145,7 @@ const AddProperty = () => {
       internet: isInternetAvailable,
       furnished: isFurnished,
     };
-    console.log("to be added================>",property)
+    console.log("to be added================>", property);
     dispatch(addProduct(property));
     console.log(property);
   };
@@ -304,6 +326,15 @@ const AddProperty = () => {
               type="file"
               name="other_images"
               onChange={uploadOtherImages}
+            />
+
+            <FileInput
+              controlId="video_tour"
+              labelText="Video tour"
+              type="file"
+              name="video_tour"
+              value={videoTour}
+              onChange={uploadVideoTour}
             />
 
             <Form.Group controlId="description">

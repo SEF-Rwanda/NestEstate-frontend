@@ -8,6 +8,7 @@ import { fetchSingleProduct } from "../../state/property/propertySlice";
 import { createChat } from "../../state/chat/chatSlice";
 import { store } from "../../state/store";
 import Spinner from "../../component/utils/Spinner";
+import PropertiesComponent from "../../component/property/PropertiesComponent";
 
 const SingleProperty = () => {
   const [property, setProperty] = useState(null);
@@ -54,7 +55,8 @@ const SingleProperty = () => {
       if (isSuccess) {
         if (property !== null) {
           setProperty(property);
-          images.push(property?.mainImage?.url);
+
+          images.push(property.property.mainImage?.url);
           property.otherImages.map((image) => images.push(image.url));
           setImages(images);
         }
@@ -68,6 +70,7 @@ const SingleProperty = () => {
     });
     return () => unsubscribe();
   });
+  console.log(property);
 
   return (
     <>
@@ -122,6 +125,7 @@ const SingleProperty = () => {
                       )}
                       <Card.Text>Size</Card.Text>
                       <Card.Text>UPI</Card.Text>
+                      <Card.Text>Price</Card.Text>
                       <Card.Text>Street Address</Card.Text>
                       <Card.Text>Master plan uses</Card.Text>
                       <Card.Text>Master plan level</Card.Text>
@@ -137,19 +141,20 @@ const SingleProperty = () => {
                       )}
                     </Col>
                     <Col>
-                      <Card.Text> {property?.title}</Card.Text>
-                      <Card.Text> {property.category}</Card.Text>
+                      <Card.Text> {property.property.title}</Card.Text>
+                      <Card.Text> {property.property.category}</Card.Text>
                       {property.category === "House" ? (
                         <Card.Text> {property?.section}</Card.Text>
                       ) : (
                         <></>
                       )}
-                      <Card.Text>{property.size} M square</Card.Text>
-                      <Card.Text>{property.upi} </Card.Text>
-                      <Card.Text>{property?.streetAddress}</Card.Text>
+                      <Card.Text>{property.property.size} M square</Card.Text>
+                      <Card.Text>{property.property.upi} </Card.Text>
+                      <Card.Text>{property.property.price} </Card.Text>
+                      <Card.Text>{property.property.streetAddress}</Card.Text>
 
-                      <Card.Text>{property?.masterPlanUse}</Card.Text>
-                      <Card.Text>{property?.masterPlanLevel}</Card.Text>
+                      <Card.Text>{property.property.masterPlanUse}</Card.Text>
+                      <Card.Text>{property.property.masterPlanLevel}</Card.Text>
                       {property.category === "House" ? (
                         <Card.Text>{property?.bedrooms} </Card.Text>
                       ) : (
@@ -164,6 +169,31 @@ const SingleProperty = () => {
                   </Row>
                 </Card.Body>
               </Card>
+
+              <Row>
+                <label
+                  style={{
+                    color: "#000000",
+                    fontSize: "18px",
+                    fontWeight: 700,
+                    // marginBottom: "10px",
+                  }}
+                >
+                  Video Tour
+                </label>
+                {Object.hasOwn(property.property, "videoTour") ? (
+                  <div className="embed-responsive embed-responsive-16by9">
+                    <iframe
+                      title="embedsPage"
+                      className="embed-responsive-item"
+                      src={property.property.videoTour.url}
+                      allowfullscreen
+                    ></iframe>
+                  </div>
+                ) : (
+                  <></>
+                )}
+              </Row>
             </Col>
           </Row>
           <Row
@@ -183,7 +213,7 @@ const SingleProperty = () => {
               </label>
               <Card>
                 <Card.Body>
-                  <Card.Text>{property.description}</Card.Text>
+                  <Card.Text>{property.property.description}</Card.Text>
                 </Card.Body>
               </Card>
             </Col>
@@ -220,6 +250,16 @@ const SingleProperty = () => {
               className="img-fluid"
             />
           </Modal>
+          <h4
+            style={{
+              marginTop: "10px",
+              marginBottom: "10px",
+              textAlign: "center",
+            }}
+          >
+            Related Properties
+          </h4>
+          <PropertiesComponent properties={property.relatedProperties} />
         </Container>
       ) : (
         <Spinner />

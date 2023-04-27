@@ -8,7 +8,6 @@ const Properties = ({
   setCurrentPage,
   loading,
 }) => {
-  
   return (
     <Container>
       <h4

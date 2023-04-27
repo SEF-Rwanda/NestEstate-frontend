@@ -11,6 +11,7 @@ import { MDBRow, MDBCol } from "mdb-react-ui-kit";
 import ButtonComponent from "../../component/utils/Button";
 import { store } from "../../state/store";
 import { useNavigate } from "react-router-dom";
+import FileInput from "../../component/utils/FileInput";
 
 const baseAPIUrl = "/api/v1";
 const UpdateProperty = () => {
@@ -27,6 +28,8 @@ const UpdateProperty = () => {
   const [description, setDescription] = useState("");
   const [mainImage, setMainImage] = useState("");
   // const [otherImages, setOtherImages] = useState("");
+  const [videoTour, setVideoTour] = useState({ public_id: "", url: "" });
+
   const [bedrooms, setBedrooms] = useState("");
   const [bathrooms, setBathrooms] = useState("");
   const [masterPlanUse, setMasterPlanUse] = useState("");
@@ -171,6 +174,26 @@ const UpdateProperty = () => {
   const handleParking = (event) => {
     setParking(event.target.checked);
   };
+  const uploadVideoTour = async (event) => {
+    const VideoTourData = new FormData();
+    VideoTourData.append("file", event.target.files[0]);
+    VideoTourData.append("upload_preset", "wingi-app");
+    try {
+      const { data } = await axios.post(
+        "https://api.cloudinary.com/v1_1/kuranga/video/upload",
+        VideoTourData
+      );
+
+      setVideoTour({
+        public_id: data.public_id,
+        url: data.secure_url,
+      });
+      console.log("Uploaded video=======================>", data.secure_url);
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
   return (
     <Container className="justify-content-center align-items-center">
       <Row className="mt-5 justify-content-md-center">
@@ -565,6 +588,7 @@ const UpdateProperty = () => {
                 </Row>
               </Col>
             </Form.Group>
+
             <Row>
               {otherImagesUrl.map((image, idx) => (
                 <Form.Group
@@ -602,6 +626,16 @@ const UpdateProperty = () => {
                 </Form.Group>
               ))}
             </Row>
+
+            <FileInput
+              controlId="video_tour"
+              labelText="Video tour"
+              type="file"
+              name="video_tour"
+              value={videoTour}
+              onChange={uploadVideoTour}
+            />
+
             <Row className="justify-content-center align-items-center">
               <ButtonComponent
                 value={
