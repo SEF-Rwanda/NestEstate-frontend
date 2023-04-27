@@ -22,6 +22,7 @@ import "./App.css";
 import SingleProperty from "./pages/properties/SingleProperty";
 import DashboardInterface from "./pages/admin/DashboardInterface";
 import ChatPage from "./pages/user/ChatPage";
+import AddPreference from "./pages/preferences/AddPreference";
 
 function App() {
   return (
@@ -43,8 +44,9 @@ function App() {
         <Route path="/admin/properties" element={<AdminProperties />} />
         <Route path="/admin/users" element={<AdminUsers />} />
         <Route path="/all-properties/:id" element={<SingleProperty />} />
-        <Route path="/admin/analytics" element={<DashboardInterface/>} />
+        <Route path="/admin/analytics" element={<DashboardInterface />} />
         <Route path="/messages" element={<ChatPage />} />
+        <Route path="/add-preference" element={<AddPreference/>}/>
         <Route path="/*" element={<h1>404 Not Found</h1>} />
       </Routes>
       <ToastContainer />
