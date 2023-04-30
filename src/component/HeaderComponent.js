@@ -84,20 +84,6 @@ const HeaderComponent = () => {
                     <i className="bi bi-people"></i> users
                   </Nav.Link>
                 </LinkContainer>
-                <LinkContainer to="/messages">
-                  <Nav.Link>
-                    <IoMdMail size={20} style={{ color: "#CCCCCC" }} />
-                    <span
-                      style={{
-                        fontSize: "14px",
-                        color: "#ffff",
-                        marginLeft: "-5px",
-                      }}
-                    >
-                      {notifications.length}
-                    </span>
-                  </Nav.Link>
-                </LinkContainer>
               </>
             ) : (
               <LinkContainer to="/">
@@ -156,6 +142,9 @@ const HeaderComponent = () => {
                 </NavDropdown.Item>
                 <NavDropdown.Item as={Link} to="/user/properties">
                   My Properties
+                </NavDropdown.Item>
+                <NavDropdown.Item as={Link} to="/add-preference">
+                  Add preference
                 </NavDropdown.Item>
               </NavDropdown>
             ) : (

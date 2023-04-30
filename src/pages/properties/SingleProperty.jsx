@@ -8,6 +8,10 @@ import { fetchSingleProduct } from "../../state/property/propertySlice";
 import { createChat } from "../../state/chat/chatSlice";
 import { store } from "../../state/store";
 import Spinner from "../../component/utils/Spinner";
+import Map from "../../component/utils/Map";
+
+const lat = -1.9693568; // replace with your GPS coordinates
+const lng = 30.1236224; // replace with your GPS coordinates
 
 const SingleProperty = () => {
   const [property, setProperty] = useState(null);
@@ -17,8 +21,10 @@ const SingleProperty = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const [index, setIndex] = useState(0);
-
   const [showModal, setShowModal] = useState(false);
+  const [location, setLocation] = useState({ latitude: 0, longitude: 0 });
+
+  const [showLocationModal, setShowLocationModal] = useState(false);
 
   const handleSelect = (selectedIndex) => {
     setIndex(selectedIndex);
@@ -68,6 +74,31 @@ const SingleProperty = () => {
     });
     return () => unsubscribe();
   });
+  function distance(lat1, lon1, lat2, lon2) {
+    const p = 0.017453292519943295; // Math.PI / 180
+    const c = Math.cos;
+    const a =
+      0.5 -
+      c((lat2 - lat1) * p) / 2 +
+      (c(lat1 * p) * c(lat2 * p) * (1 - c((lon2 - lon1) * p))) / 2;
+    const d = 12742 * Math.asin(Math.sqrt(a)); // 2 * R; R = 6371 km
+    return d;
+  }
+
+  useEffect(() => {
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition((position) => {
+        let lat = position.coords.latitude;
+        let long = position.coords.longitude;
+        setLocation({
+          latitude: lat,
+          longitude: long,
+        });
+      });
+    } else {
+      console.log("Geolocation is not supported by this browser.");
+    }
+  });
 
   return (
     <>
@@ -96,6 +127,11 @@ const SingleProperty = () => {
                 type="submit"
                 value="Pay for property"
                 onClick={() => {}}
+              />
+              <ButtonComponent
+                type="submit"
+                value="Locate property"
+                action={() => setShowLocationModal(true)}
               />
             </Col>
             <Col md={6}>
@@ -219,6 +255,26 @@ const SingleProperty = () => {
               alt={`image_${index}`}
               className="img-fluid"
             />
+          </Modal>
+          <Modal
+            show={showLocationModal}
+            onHide={() => setShowLocationModal(false)}
+          >
+            <Modal.Body>
+              <div>
+                <Map lat={lat} lng={lng} />
+              </div>
+              <Modal.Footer>
+                This Property is located in{" "}
+                {distance(
+                  property.geoLocation.latitude,
+                  property.geoLocation.longitude,
+                  location.latitude,
+                  location.longitude
+                ).toFixed(2)}
+                km from you location
+              </Modal.Footer>
+            </Modal.Body>
           </Modal>
         </Container>
       ) : (

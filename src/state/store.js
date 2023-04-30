@@ -3,6 +3,7 @@ import userReducer from "./user/userSlice";
 import propertyReducer from "./property/propertySlice";
 import chatSlice from "./chat/chatSlice";
 import messageSlice from "./message/MessageSlice";
+import preferenceSlice from "./preference/preferenceSlice";
 
 export const store = configureStore({
   reducer: {
@@ -10,6 +11,7 @@ export const store = configureStore({
     property: propertyReducer,
     chat: chatSlice,
     message: messageSlice,
+    preference: preferenceSlice,
   },
   middleware: (getDefaultMiddleware) => getDefaultMiddleware(),
 });
